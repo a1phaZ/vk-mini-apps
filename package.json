@@ -3,9 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "homepage": "https://a1phaZ.github.io/vk-mini-apps/",
   "scripts": {
     "start": "react-scripts build && serve -s build",
     "dev": "cross-env PORT=10888 react-scripts start",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build",
     "build": "react-scripts build"
   },
   "keywords": [],
@@ -13,6 +16,7 @@
   "license": "MIT",
   "devDependencies": {
     "cross-env": "^5.2.0",
+    "gh-pages": "^2.1.1",
     "react-hot-loader": "^4.9.0",
     "react-scripts": "^3.3.0"
   },
