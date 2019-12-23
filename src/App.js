@@ -37,9 +37,10 @@ const App = () => {
 	}, []);
 
 	const prepareQR = (qr) => {
-		let dt, sum, fn, i, fp;
+		let arr, dt, sum, fn, i, fp;
 
 		if (qr) {
+			arr = qr.match(/t=(\w{8}T\w+)&s=(\w+\.*\w+)&fn=(\w+)&i=(\w+)&fp=(\w+)/);
 			dt = qr.match(/t=([0-9]{8}T[0-9]+)/)[1];
 			sum = qr.match(/s=(\w+\.*\w+)/)[1].split(/\.*/).join('');
 			fn = qr.match(/fn=(\w+)/)[1];
