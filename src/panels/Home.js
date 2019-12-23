@@ -7,8 +7,9 @@ import Group from '@vkontakte/vkui/dist/components/Group/Group';
 import Cell from '@vkontakte/vkui/dist/components/Cell/Cell';
 import Div from '@vkontakte/vkui/dist/components/Div/Div';
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
+import connect from "@vkontakte/vk-connect";
 
-const Home = ({ id, go, fetchedUser }) => (
+const Home = ({ id, go, fetchedUser, qr }) => (
 	<Panel id={id}>
 		<PanelHeader>Example</PanelHeader>
 		{fetchedUser &&
@@ -26,6 +27,25 @@ const Home = ({ id, go, fetchedUser }) => (
 				<Button size="xl" level="2" onClick={go} data-to="persik">
 					Show me the Persik, please
 				</Button>
+			</Div>
+		</Group>
+
+		<Group title="QR Reader">
+			<Div>
+				<Button size="xl" level="2" onClick={() => {
+					connect.send("VKWebAppOpenCodeReader", {});
+				}}>
+					Open QR reader
+				</Button>
+				<div>
+					<ul>
+						<li>{`qr.dt = ${qr.dt}`}</li>
+						<li>{`qr.sum = ${qr.sum}`}</li>
+						<li>{`qr.fn = ${qr.fn}`}</li>
+						<li>{`qr.i = ${qr.i}`}</li>
+						<li>{`qr.fp = ${qr.fp}`}</li>
+					</ul>
+				</div>
 			</Div>
 		</Group>
 	</Panel>
