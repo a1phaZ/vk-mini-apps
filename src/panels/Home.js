@@ -11,7 +11,7 @@ import connect from "@vkontakte/vk-connect";
 
 const Home = ({ id, go, fetchedUser, qr }) => (
 	<Panel id={id}>
-		<PanelHeader>Example</PanelHeader>
+		<PanelHeader>Баланс</PanelHeader>
 		{fetchedUser &&
 		<Group title="User Data Fetched with VK Connect">
 			<Cell
