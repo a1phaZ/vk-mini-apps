@@ -1,9 +1,18 @@
 import React, {useState, useEffect} from 'react';
-import {FormLayout, IOS, Panel, PanelHeader, platform, Input, HeaderButton, FormLayoutGroup} from '@vkontakte/vkui';
+import {
+	FormLayout,
+	IOS,
+	Panel,
+	PanelHeader,
+	platform,
+	Input,
+	HeaderButton,
+	FormLayoutGroup,
+	Group, List, InfoRow, Cell, Button
+} from '@vkontakte/vkui';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import connect from "@vkontakte/vk-connect";
-import Button from "@vkontakte/vkui/dist/components/Button/Button";
 
 const Profile = ({id, go}) =>{
 	const [email, setEmail] = useState('');
@@ -31,28 +40,20 @@ const Profile = ({id, go}) =>{
 				Профиль
 			</PanelHeader>
 			<FormLayout>
-				<FormLayoutGroup top='E-mail'>
-					<Input
-						type='email'
-						top='E-mail'
-						name='email'
-						value={email}
-						onChange={(e) => setEmail(e.currentTarget.value)}
-						status={email ? 'valid' : 'error'}
-						bottom={email ? 'Электронная почта введена верно!' : 'Пожалуйста, введите электронную почту'}
-					/>
-				</FormLayoutGroup>
-				<FormLayoutGroup top='Телефон'>
-					<Input
-						type='phone'
-						top='Телефон'
-						name='phone'
-						value={phone}
-						onChange={(e) => setPhone(e.currentTarget.value)}
-						status={phone ? 'valid' : 'error'}
-						bottom={phone ? 'Телефон введен верно!' : 'Пожалуйста, введите телефон'}
-					/>
-				</FormLayoutGroup>
+				<Group>
+					<List>
+						<Cell>
+							<InfoRow title='E-mail'>
+								{email ? email : 'Необходимо получить email'}
+							</InfoRow>
+						</Cell>
+						<Cell>
+							<InfoRow title='Телефон'>
+								{phone ? phone : 'Необходимо получить телефон'}
+							</InfoRow>
+						</Cell>
+					</List>
+				</Group>
 				<Button size="xl" level="2" onClick={() => {
 					connect.send("VKWebAppGetPersonalCard", {"type": ["phone", "email"]});
 				}}>
