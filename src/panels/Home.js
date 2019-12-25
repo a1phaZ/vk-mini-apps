@@ -30,6 +30,14 @@ const Home = ({ id, go, fetchedUser, qr }) => (
 			</Div>
 		</Group>
 
+		<Group title="Profile">
+			<Div>
+				<Button size="xl" level="2" onClick={go} data-to="profile">
+					Profile
+				</Button>
+			</Div>
+		</Group>
+
 		<Group title="QR Reader">
 			<Div>
 				<Button size="xl" level="2" onClick={() => {
