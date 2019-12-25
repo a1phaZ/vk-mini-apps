@@ -41,12 +41,12 @@ const App = () => {
 		let arr, dt, sum, fn, i, fp;
 
 		if (qr) {
-			arr = qr.match(/t=(\w{8}T\w+)&s=(\w+\.*\w+)&fn=(\w+)&i=(\w+)&fp=(\w+)/);
-			dt = qr.match(/t=([0-9]{8}T[0-9]+)/)[1];
-			sum = qr.match(/s=(\w+\.*\w+)/)[1].split(/\.*/).join('');
-			fn = qr.match(/fn=(\w+)/)[1];
-			i = qr.match(/i=(\w+)/)[1];
-			fp = qr.match(/fp=(\w+)/)[1];
+			[, dt, sum, fn, i, fp] = qr.match(/t=(\w{8}T\w+)&s=(\w+\.*\w+)&fn=(\w+)&i=(\w+)&fp=(\w+)/);
+			// dt = qr.match(/t=([0-9]{8}T[0-9]+)/)[1];
+			// sum = qr.match(/s=(\w+\.*\w+)/)[1].split(/\.*/).join('');
+			// fn = qr.match(/fn=(\w+)/)[1];
+			// i = qr.match(/i=(\w+)/)[1];
+			// fp = qr.match(/fp=(\w+)/)[1];
 		}
 
 		return {

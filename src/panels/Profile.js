@@ -31,7 +31,7 @@ const Profile = ({id, go}) =>{
 				Профиль
 			</PanelHeader>
 			<FormLayout>
-				<FormLayoutGroup>
+				<FormLayoutGroup top='E-mail'>
 					<Input
 						type='email'
 						top='E-mail'
@@ -41,6 +41,8 @@ const Profile = ({id, go}) =>{
 						status={email ? 'valid' : 'error'}
 						bottom={email ? 'Электронная почта введена верно!' : 'Пожалуйста, введите электронную почту'}
 					/>
+				</FormLayoutGroup>
+				<FormLayoutGroup top='Телефон'>
 					<Input
 						type='phone'
 						top='Телефон'
@@ -50,17 +52,15 @@ const Profile = ({id, go}) =>{
 						status={phone ? 'valid' : 'error'}
 						bottom={phone ? 'Телефон введен верно!' : 'Пожалуйста, введите телефон'}
 					/>
-					<Button size="xl" level="2" onClick={() => {
-						connect.send("VKWebAppGetPersonalCard", {"type": ["phone", "email"]});
-					}}>
-						Получить данные из VK
-					</Button>
 				</FormLayoutGroup>
-
+				<Button size="xl" level="2" onClick={() => {
+					connect.send("VKWebAppGetPersonalCard", {"type": ["phone", "email"]});
+				}}>
+					Получить данные из VK
+				</Button>
 			</FormLayout>
 		</Panel>
 	)
 };
 
 export default Profile;
-
