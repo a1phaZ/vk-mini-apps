@@ -7,6 +7,10 @@ import '@vkontakte/vkui/dist/vkui.css';
 import Home from './panels/Home';
 import Persik from './panels/Persik';
 import Profile from "./panels/Profile";
+import {Epic, Tabbar, TabbarItem} from "@vkontakte/vkui";
+import Icon28HomeOutline from '@vkontakte/icons/dist/28/home_outline';
+import Icon28User from '@vkontakte/icons/dist/28/user';
+import Icon24Qr from '@vkontakte/icons/dist/24/qr';
 
 const App = () => {
 	const [activePanel, setActivePanel] = useState('home');
@@ -42,11 +46,6 @@ const App = () => {
 
 		if (qr) {
 			[, dt, sum, fn, i, fp] = qr.match(/t=(\w{8}T\w+)&s=(\w+\.*\w+)&fn=(\w+)&i=(\w+)&fp=(\w+)/);
-			// dt = qr.match(/t=([0-9]{8}T[0-9]+)/)[1];
-			// sum = qr.match(/s=(\w+\.*\w+)/)[1].split(/\.*/).join('');
-			// fn = qr.match(/fn=(\w+)/)[1];
-			// i = qr.match(/i=(\w+)/)[1];
-			// fp = qr.match(/fp=(\w+)/)[1];
 		}
 
 		return {
@@ -65,11 +64,36 @@ const App = () => {
 	};
 
 	return (
-		<View activePanel={activePanel} popout={popout}>
-			<Home id='home' fetchedUser={fetchedUser} go={go} qr={QR}/>
-			<Persik id='persik' go={go} />
-			<Profile id='profile' go={go} />
-		</View>
+		<Epic activeStory={activePanel} tabbar={
+			<Tabbar>
+				<TabbarItem
+					selected={activePanel === 'home'}
+					onClick={go}
+					data-to='home'
+				>
+					<Icon28HomeOutline />
+				</TabbarItem>
+				<TabbarItem
+					selected={activePanel === 'profile'}
+					onClick={go}
+					data-to='profile'
+				>
+					<Icon28User />
+				</TabbarItem>
+				<TabbarItem
+					onClick={() => {connect.send("VKWebAppOpenCodeReader", {});}}
+				>
+					<Icon24Qr height={28} width={28}/>
+				</TabbarItem>
+			</Tabbar>
+		}>
+			<View id='home' activePanel='home' popout={popout}>
+				<Home id='home' fetchedUser={fetchedUser} go={go} qr={QR}/>
+			</View>
+			<View id='profile' activePanel='profile' popout={popout}>
+				<Profile id='profile' go={go} />
+			</View>
+		</Epic>
 	);
 };
 
