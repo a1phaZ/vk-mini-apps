@@ -1,0 +1,1 @@
+{"version":3,"sources":["receipt.css"],"names":[],"mappings":"AAAA,0BACI,uBACJ,CAEA,yBACI,uBACJ","file":"main.d867cdf3.chunk.css","sourcesContent":[".success .Cell__indicator{\r\n    color: #28a745!important;\r\n}\r\n\r\n.danger .Cell__indicator{\r\n    color: #dc3545!important;\r\n}"]}
