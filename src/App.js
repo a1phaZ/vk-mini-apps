@@ -160,6 +160,32 @@ const App = () => {
 				}
 			],
 			"__v" : 0
+		},
+		{
+			"_id" : "5ddf912273e0c321bc89f1f5",
+			"receipts" : [],
+			"userId" : "5dce89f495636e23345b7d34",
+			"dateTime" : "2019-11-15T00:00:00.000",
+			"items" : [
+				{
+					"modifiers" : [],
+					"properties" : [],
+					"_id" : "5ddf912273e0c321bc89f1f6",
+					"name" : "test",
+					"sum" : 1000000,
+					"income" : true
+				},
+				{
+					"modifiers" : [],
+					"properties" : [],
+					"_id" : "5ddf99d96db8bf32044d2009",
+					"name" : "test",
+					"sum" : 1500000,
+					"income" : true
+				}
+			],
+			"totalSum" : 2500000,
+			"__v" : 0
 		}
 	]);
 

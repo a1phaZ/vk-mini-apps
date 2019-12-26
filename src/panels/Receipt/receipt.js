@@ -4,16 +4,24 @@ import Cell from "@vkontakte/vkui/dist/components/Cell/Cell";
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import prepare from "../../handlers/prepare";
+import ColoredSum from "../ColoredSum";
 
 const Receipt = ({items, id, dateTime, go}) => {
 	const osName = platform();
+
 	const receiptItem = (items.map((item, index) => {
+		const sum = item.income ? item.sum : (-1) * item.sum ;
+
 		return(
 			<Group title={item.name} key={index}>
 				<List>
-					{item.price ? <Cell indicator={item.price / 100}>Цена</Cell> : null}
+					{item.price ? <Cell indicator={prepare.sum(item.price)}>Цена</Cell> : null}
 					{item.quantity ? <Cell indicator={item.quantity}>Кол-во</Cell> : null}
-					<Cell indicator={item.income ? item.sum / 100 : (-1) *item.sum / 100}>Сумма</Cell>
+					<Cell
+						indicator={<ColoredSum sum={sum}/>}
+					>
+						Сумма
+					</Cell>
 				</List>
 			</Group>
 		)

@@ -10,6 +10,7 @@ import Div from '@vkontakte/vkui/dist/components/Div/Div';
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
 import connect from "@vkontakte/vk-connect";
 import prepare from "../handlers/prepare";
+import ColoredSum from "./ColoredSum";
 
 const Home = ({ id, go, fetchedUser, qr, receipts }) => {
 	return (
@@ -28,7 +29,17 @@ const Home = ({ id, go, fetchedUser, qr, receipts }) => {
 			<Group title='Чеки'>
 				<List>
 					{receipts.map((receipt, index) => {
-						return (<Cell key={index} expandable onClick={go} data-to={receipt._id} indicator={receipt.totalSum / 100}>{prepare.date(receipt.dateTime)}</Cell>)
+						return (
+							<Cell
+								key={index}
+								expandable
+								onClick={go}
+								data-to={receipt._id}
+								indicator={<ColoredSum sum={receipt.totalSum}/>}
+							>
+								{prepare.date(receipt.dateTime)}
+							</Cell>
+						)
 					})}
 				</List>
 			</Group>

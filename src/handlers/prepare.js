@@ -60,4 +60,8 @@ export default class Prepare {
 		}
 		return `${dt.getDate()} ${monthName} ${dt.getFullYear()}`;
 	}
+
+	static sum(n) {
+		return new Intl.NumberFormat('ru-RU', {style: 'currency', currency: 'RUB'}).format(n / 100);
+	}
 }
