@@ -1,9 +1,12 @@
 import React from 'react';
-import {Group, List, Panel, PanelHeader} from "@vkontakte/vkui";
+import {Group, HeaderButton, IOS, List, Panel, PanelHeader, platform} from "@vkontakte/vkui";
 import Cell from "@vkontakte/vkui/dist/components/Cell/Cell";
+import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
+import Icon24Back from '@vkontakte/icons/dist/24/back';
 import prepare from "../../handlers/prepare";
 
-const Receipt = ({items, id, dateTime}) => {
+const Receipt = ({items, id, dateTime, go}) => {
+	const osName = platform();
 	const receiptItem = (items.map((item, index) => {
 		return(
 			<Group title={item.name} key={index}>
@@ -18,7 +21,9 @@ const Receipt = ({items, id, dateTime}) => {
 
 	return(
 		<Panel id={id}>
-			<PanelHeader>
+			<PanelHeader left={<HeaderButton onClick={go} data-to="home">
+				{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
+			</HeaderButton>}>
 				{prepare.date(dateTime)}
 			</PanelHeader>
 			{receiptItem}

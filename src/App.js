@@ -235,7 +235,7 @@ const App = () => {
 			{receipts.map((receipt, index) => {
 				return(
 					<View id={receipt._id} activePanel={receipt._id} key={index}>
-						<Receipt id={receipt._id} dateTime={receipt.dateTime} items={receipt.items} />
+						<Receipt id={receipt._id} dateTime={receipt.dateTime} items={receipt.items} go={go}/>
 					</View>
 				)
 			})}
