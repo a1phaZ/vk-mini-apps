@@ -14,6 +14,7 @@ import Home from './panels/Home';
 import Profile from "./panels/Profile";
 import Info from "./panels/Info";
 import Receipt from "./panels/Receipt";
+import prepare from "./handlers/prepare";
 
 const App = () => {
 	const [activePanel, setActivePanel] = useState('home');
@@ -185,23 +186,7 @@ const App = () => {
 		fetchData();
 	}, []);
 
-	const prepareQR = (qr) => {
-		let dt, sum, fn, i, fp;
-
-		if (qr) {
-			[, dt, sum, fn, i, fp] = qr.match(/t=(\w{8}T\w+)&s=(\w+\.*\w+)&fn=(\w+)&i=(\w+)&fp=(\w+)/);
-		}
-
-		return {
-			dt,
-			sum,
-			fn,
-			i,
-			fp
-		}
-	};
-
-	const QR = prepareQR(qr);
+	const QR = prepare.qr(qr);
 
 	const go = e => {
 		setActivePanel(e.currentTarget.dataset.to);

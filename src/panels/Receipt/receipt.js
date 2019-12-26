@@ -1,6 +1,7 @@
 import React from 'react';
 import {Group, List, Panel, PanelHeader} from "@vkontakte/vkui";
 import Cell from "@vkontakte/vkui/dist/components/Cell/Cell";
+import prepare from "../../handlers/prepare";
 
 const Receipt = ({items, id, dateTime}) => {
 	const receiptItem = (items.map((item, index) => {
@@ -18,7 +19,7 @@ const Receipt = ({items, id, dateTime}) => {
 	return(
 		<Panel id={id}>
 			<PanelHeader>
-				{dateTime}
+				{prepare.date(dateTime)}
 			</PanelHeader>
 			{receiptItem}
 		</Panel>
