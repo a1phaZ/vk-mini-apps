@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.js": "/vk-mini-apps/static/js/main.ba942e43.chunk.js",
-    "main.js.map": "/vk-mini-apps/static/js/main.ba942e43.chunk.js.map",
+    "main.js": "/vk-mini-apps/static/js/main.22a07d7d.chunk.js",
+    "main.js.map": "/vk-mini-apps/static/js/main.22a07d7d.chunk.js.map",
     "runtime-main.js": "/vk-mini-apps/static/js/runtime-main.ea509f27.js",
     "runtime-main.js.map": "/vk-mini-apps/static/js/runtime-main.ea509f27.js.map",
     "static/css/2.2cfa1b23.chunk.css": "/vk-mini-apps/static/css/2.2cfa1b23.chunk.css",
     "static/js/2.1739122d.chunk.js": "/vk-mini-apps/static/js/2.1739122d.chunk.js",
     "static/js/2.1739122d.chunk.js.map": "/vk-mini-apps/static/js/2.1739122d.chunk.js.map",
     "index.html": "/vk-mini-apps/index.html",
-    "precache-manifest.85f404f5c1619b0b879004d148b06542.js": "/vk-mini-apps/precache-manifest.85f404f5c1619b0b879004d148b06542.js",
+    "precache-manifest.05eec05b37175d08e6e60ffa060ad644.js": "/vk-mini-apps/precache-manifest.05eec05b37175d08e6e60ffa060ad644.js",
     "service-worker.js": "/vk-mini-apps/service-worker.js",
     "static/css/2.2cfa1b23.chunk.css.map": "/vk-mini-apps/static/css/2.2cfa1b23.chunk.css.map",
     "static/js/2.1739122d.chunk.js.LICENSE": "/vk-mini-apps/static/js/2.1739122d.chunk.js.LICENSE"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.ea509f27.js",
     "static/css/2.2cfa1b23.chunk.css",
     "static/js/2.1739122d.chunk.js",
-    "static/js/main.ba942e43.chunk.js"
+    "static/js/main.22a07d7d.chunk.js"
   ]
 }
