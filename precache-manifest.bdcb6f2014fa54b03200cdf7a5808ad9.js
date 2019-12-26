@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "de0a1a2f6a440e6b1ddc3c7746aba352",
+    "revision": "588e67e5bb2c1071c138f894711c5409",
     "url": "/vk-mini-apps/index.html"
   },
   {
-    "revision": "fd32e823dd99b215701b",
+    "revision": "25326fd9cde5e4be75c8",
     "url": "/vk-mini-apps/static/css/2.2cfa1b23.chunk.css"
   },
   {
-    "revision": "fd32e823dd99b215701b",
-    "url": "/vk-mini-apps/static/js/2.4b666756.chunk.js"
+    "revision": "25326fd9cde5e4be75c8",
+    "url": "/vk-mini-apps/static/js/2.b38aaed4.chunk.js"
   },
   {
     "revision": "d705cb622423d72c5defbf368ca70dcc",
-    "url": "/vk-mini-apps/static/js/2.4b666756.chunk.js.LICENSE"
+    "url": "/vk-mini-apps/static/js/2.b38aaed4.chunk.js.LICENSE"
   },
   {
-    "revision": "93af08400bb607a86799",
-    "url": "/vk-mini-apps/static/js/main.45f3fe4a.chunk.js"
+    "revision": "30a7c8d9d3238583e2ba",
+    "url": "/vk-mini-apps/static/js/main.96516464.chunk.js"
   },
   {
     "revision": "39f89162dd94cf00ab92",
