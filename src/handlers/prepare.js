@@ -64,4 +64,15 @@ export default class Prepare {
 	static sum(n) {
 		return new Intl.NumberFormat('ru-RU', {style: 'currency', currency: 'RUB'}).format(n / 100);
 	}
+
+	static totalReceiptSum(arr) {
+		let totalSum = 0;
+		const totalSumArr = arr.map((item) => {
+			return item.totalSum;
+		});
+		for (let i=0; i<totalSumArr.length; i++) {
+			totalSum += totalSumArr[i];
+		}
+		return totalSum;
+	}
 }
