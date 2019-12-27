@@ -26,6 +26,12 @@ const Home = ({ id, go, fetchedUser, qr, receipts }) => {
 				</Cell>
 			</Group>}
 
+			<Group title='Баланс'>
+				<Div style={{fontSize: '200%', fontWeight: 'bold'}}>
+					<ColoredSum sum={prepare.totalReceiptSum(receipts)} />
+				</Div>
+			</Group>
+
 			<Group title='Чеки'>
 				<List>
 					{receipts.map((receipt, index) => {
