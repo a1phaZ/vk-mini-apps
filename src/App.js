@@ -224,8 +224,8 @@ const App = () => {
 			}, {})
 	};
 
-  const queryParams = this.parseQueryString(window.location.search);
-  const hashParams = this.parseQueryString(window.location.hash);
+  const queryParams = parseQueryString(window.location.search);
+  const hashParams = parseQueryString(window.location.hash);
 
 	const QR = prepare.qr(qr);
 
