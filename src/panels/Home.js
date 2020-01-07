@@ -77,7 +77,7 @@ const Home = ({ id, go, fetchedUser, qr, receipts, queryParams, hashParams }) =>
 				</Div>
 			</Group>
 
-			<Group title="Query params">
+			<Group title={window.location.search}>
 				<List>
 					{Object.keys(queryParams).map((key) => {
 						let value = queryParams[key];
