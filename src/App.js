@@ -212,6 +212,21 @@ const App = () => {
 		fetchData();
 	}, []);
 
+	const parseQueryString = (string) => {
+		return string.slice(1).split('&')
+			.map((queryParam) => {
+				let kvp = queryParam.split('=');
+				return {key: kvp[0], value: kvp[1]}
+			})
+			.reduce((query, kvp) => {
+				query[kvp.key] = kvp.value;
+				return query
+			}, {})
+	};
+
+  const queryParams = this.parseQueryString(window.location.search);
+  const hashParams = this.parseQueryString(window.location.hash);
+
 	const QR = prepare.qr(qr);
 
 	const go = e => {
@@ -250,7 +265,15 @@ const App = () => {
 			</Tabbar>
 		}>
 			<View id='home' activePanel='home' popout={popout}>
-				<Home id='home' fetchedUser={fetchedUser} go={go} qr={QR} receipts={receipts}/>
+				<Home
+					id='home'
+					fetchedUser={fetchedUser}
+					go={go}
+					qr={QR}
+					receipts={receipts}
+					queryParams={queryParams}
+					hashParams={hashParams}
+				/>
 			</View>
 			<View id='profile' activePanel='profile' popout={popout}>
 				<Profile id='profile' go={go} />

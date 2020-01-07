@@ -12,7 +12,7 @@ import connect from "@vkontakte/vk-connect";
 import prepare from "../handlers/prepare";
 import ColoredSum from "./ColoredSum";
 
-const Home = ({ id, go, fetchedUser, qr, receipts }) => {
+const Home = ({ id, go, fetchedUser, qr, receipts, queryParams, hashParams }) => {
 	return (
 		<Panel id={id}>
 			<PanelHeader>Баланс</PanelHeader>
@@ -75,6 +75,24 @@ const Home = ({ id, go, fetchedUser, qr, receipts }) => {
 						</ul>
 					</div>
 				</Div>
+			</Group>
+
+			<Group title="Query params">
+				<List>
+					{Object.keys(queryParams).map((key) => {
+						let value = queryParams[key];
+						return <Cell description={key}>{value ? value : <span style={{color: 'red'}}>-</span>}</Cell>;
+					})}
+				</List>
+			</Group>
+
+			<Group title="Hash params">
+				<List>
+					{Object.keys(hashParams).map((key) => {
+						let value = hashParams[key];
+						return <Cell description={key}>{value ? value : <span style={{color: 'red'}}>-</span>}</Cell>;
+					})}
+				</List>
 			</Group>
 		</Panel>
 	)
