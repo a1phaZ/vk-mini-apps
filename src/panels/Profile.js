@@ -13,8 +13,9 @@ import {
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import connect from "@vkontakte/vk-connect";
+import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
 
-const Profile = ({id, go}) =>{
+const Profile = ({id, go, fetchedUser}) =>{
 	const [email, setEmail] = useState('');
 	const [phone, setPhone] = useState('');
 	const osName = platform();
@@ -39,6 +40,15 @@ const Profile = ({id, go}) =>{
 			>
 				Профиль
 			</PanelHeader>
+			{fetchedUser &&
+			<Group title={fetchedUser.id}>
+				<Cell
+					before={fetchedUser.photo_200 ? <Avatar src={fetchedUser.photo_200}/> : null}
+					description={fetchedUser.city && fetchedUser.city.title ? fetchedUser.city.title : ''}
+				>
+					{`${fetchedUser.first_name} ${fetchedUser.last_name}`}
+				</Cell>
+			</Group>}
 			<FormLayout>
 				<Group>
 					<List>

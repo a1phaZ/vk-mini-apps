@@ -212,21 +212,6 @@ const App = () => {
 		fetchData();
 	}, []);
 
-	const parseQueryString = (string) => {
-		return string.slice(1).split('&')
-			.map((queryParam) => {
-				let kvp = queryParam.split('=');
-				return {key: kvp[0], value: kvp[1]}
-			})
-			.reduce((query, kvp) => {
-				query[kvp.key] = kvp.value;
-				return query
-			}, {})
-	};
-
-  const queryParams = parseQueryString(window.location.search);
-  const hashParams = parseQueryString(window.location.hash);
-
 	const QR = prepare.qr(qr);
 
 	const go = e => {
@@ -271,15 +256,13 @@ const App = () => {
 					go={go}
 					qr={QR}
 					receipts={receipts}
-					queryParams={queryParams}
-					hashParams={hashParams}
 				/>
 			</View>
 			<View id='profile' activePanel='profile' popout={popout}>
-				<Profile id='profile' go={go} />
+				<Profile id='profile' go={go} fetchedUser={fetchedUser}/>
 			</View>
 			<View id='info' activePanel='info' popout={popout}>
-				<Info id='info' go={go} />
+				<Info id='info' go={go}/>
 			</View>
 			{/*Для отображения отдельных чеков*/}
 			{receipts.map((receipt, index) => {
