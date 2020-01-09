@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 import { List } from '@vkontakte/vkui';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
@@ -11,8 +11,10 @@ import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
 import connect from "@vkontakte/vk-connect";
 import prepare from "../handlers/prepare";
 import ColoredSum from "./ColoredSum";
+import Calendar from 'react-calendar';
 
 const Home = ({ id, go, fetchedUser, qr, receipts }) => {
+	const [date, setDate] = useState(new Date());
 	return (
 		<Panel id={id}>
 			<PanelHeader>Баланс</PanelHeader>
@@ -30,6 +32,12 @@ const Home = ({ id, go, fetchedUser, qr, receipts }) => {
 				<Div style={{fontSize: '200%', fontWeight: 'bold'}}>
 					<ColoredSum sum={prepare.totalReceiptSum(receipts)} />
 				</Div>
+			</Group>
+
+			<Group title='Календарь'>
+				<Calendar
+					value={date}
+				/>
 			</Group>
 
 			<Group title='Чеки'>
