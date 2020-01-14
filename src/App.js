@@ -234,26 +234,31 @@ const App = () => {
 			 * Если нет, пытаемся залогиниться
 			 * Если пользователя нет на сервере - регистрируемся
 			 * */
-			if (token) {
-				await apiService.userCurrent({token})
-					.then(user => onData(user))
-					.catch(err => onError(err));
-			} else {
-				const body = {
-					user:{
-						id: vk_user.id,
-					}
-				};
-				await apiService.userLogin(body)
-					.then(async user => {
-						if (user) {
-							onData(user)
-						} else {
-							const user = await apiService.userRegister(body);
-							onData(user);
+			if (vk_user.id) {
+				if (token) {
+					await apiService.userCurrent({token})
+						.then(user => onData(user))
+						.catch(err => onError(err));
+				} else {
+					const body = {
+						user:{
+							id: vk_user.id,
 						}
-					})
-					.catch(err => onError(err));
+					};
+					await apiService.userLogin(body)
+						.then(async user => {
+							if (user) {
+								onData(user)
+							} else {
+								const user = await apiService.userRegister(body);
+								onData(user);
+							}
+						})
+						.catch(err => onError(err));
+				}
+			} else {
+				const error = new Error('Неполучен пользователь vkontakte');
+				onError(error);
 			}
 		}
 		fetchData();
