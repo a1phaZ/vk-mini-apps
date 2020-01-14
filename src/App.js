@@ -194,6 +194,7 @@ const App = () => {
 	]);
 
 	const onData = user => {
+		console.log(user);
 		setUser(user);
 		setToken(user.token);
 		setError(null);
@@ -201,6 +202,7 @@ const App = () => {
 	};
 
 	const onError = error => {
+		console.log(error);
 		setUser(null);
 		setToken(null);
 		setError(error);
@@ -222,8 +224,16 @@ const App = () => {
 					break;
 			}
 		});
+		/**
+		 * Получаем данные о пользователе
+		 * */
 		async function fetchData() {
 			const vk_user = await connect.sendPromise('VKWebAppGetUserInfo');
+			/**
+			 * Если есть токен, то пытаемся авторизоваться
+			 * Если нет, пытаемся залогиниться
+			 * Если пользователя нет на сервере - регистрируемся
+			 * */
 			if (token) {
 				await apiService.userCurrent({token})
 					.then(user => onData(user))
@@ -235,7 +245,14 @@ const App = () => {
 					}
 				};
 				await apiService.userLogin(body)
-					.then(user => onData(user))
+					.then(async user => {
+						if (user) {
+							onData(user)
+						} else {
+							const user = await apiService.userRegister(body);
+							onData(user);
+						}
+					})
 					.catch(err => onError(err));
 			}
 		}
