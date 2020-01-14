@@ -15,10 +15,14 @@ import Profile from "./panels/Profile";
 import Info from "./panels/Info";
 import Receipt from "./panels/Receipt";
 import prepare from "./handlers/prepare";
+import ApiService from './services/api';
 
 const App = () => {
+	const apiService = new ApiService();
 	const [activePanel, setActivePanel] = useState('home');
 	const [fetchedUser, setUser] = useState(null);
+	const [token, setToken] = useState(null);
+	const [error, setError] = useState(null);
 	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
 	const [qr, setQR] = useState('');
 	const [receipts, setReceipts] = useState([
@@ -189,6 +193,20 @@ const App = () => {
 		}
 	]);
 
+	const onData = user => {
+		setUser(user);
+		setToken(user.token);
+		setError(null);
+		setPopout(null);
+	};
+
+	const onError = error => {
+		setUser(null);
+		setToken(null);
+		setError(error);
+		setPopout(null);
+	};
+
 	useEffect(() => {
 		connect.subscribe(({ detail: { type, data }}) => {
 			switch (type) {
@@ -205,9 +223,21 @@ const App = () => {
 			}
 		});
 		async function fetchData() {
-			const user = await connect.sendPromise('VKWebAppGetUserInfo');
-			setUser(user);
-			setPopout(null);
+			const vk_user = await connect.sendPromise('VKWebAppGetUserInfo');
+			if (token) {
+				await apiService.userCurrent({token})
+					.then(user => onData(user))
+					.catch(err => onError(err));
+			} else {
+				const body = {
+					user:{
+						id: vk_user.id,
+					}
+				};
+				await apiService.userLogin(body)
+					.then(user => onData(user))
+					.catch(err => onError(err));
+			}
 		}
 		fetchData();
 	}, []);
