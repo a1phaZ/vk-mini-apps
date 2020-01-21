@@ -1,14 +1,10 @@
 import React from 'react';
-import {Group, HeaderButton, IOS, List, Panel, PanelHeader, platform} from "@vkontakte/vkui";
+import {Group, List} from "@vkontakte/vkui";
 import Cell from "@vkontakte/vkui/dist/components/Cell/Cell";
-import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
-import Icon24Back from '@vkontakte/icons/dist/24/back';
 import prepare from "../../handlers/prepare";
 import ColoredSum from "../ColoredSum";
 
-const Receipt = ({items, id, dateTime, go}) => {
-	const osName = platform();
-
+const Receipt = ({items, id, dateTime, setActiveModal}) => {
 	const receiptItem = (items.map((item, index) => {
 		const sum = item.income ? item.sum : (-1) * item.sum ;
 
@@ -28,14 +24,9 @@ const Receipt = ({items, id, dateTime, go}) => {
 	}));
 
 	return(
-		<Panel id={id}>
-			<PanelHeader left={<HeaderButton onClick={go} data-to="home">
-				{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
-			</HeaderButton>}>
-				{prepare.date(dateTime)}
-			</PanelHeader>
+		<Group id={id}>
 			{receiptItem}
-		</Panel>
+		</Group>
 	)
 };
 

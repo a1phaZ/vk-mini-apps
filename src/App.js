@@ -24,6 +24,7 @@ const App = () => {
 	const [token, setToken] = useState(null);
 	const [error, setError] = useState(null);
 	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
+	// const [popout, setPopout] = useState(null);
 	const [qr, setQR] = useState('');
 	const [receipts, setReceipts] = useState([
 		{
@@ -301,15 +302,14 @@ const App = () => {
 				</TabbarItem>
 			</Tabbar>
 		}>
-			<View id='home' activePanel='home' popout={popout}>
-				<Home
-					id='home'
-					fetchedUser={fetchedUser}
-					go={go}
-					qr={QR}
-					receipts={receipts}
-				/>
-			</View>
+			<Home
+				id='home'
+				fetchedUser={fetchedUser}
+				go={go}
+				qr={QR}
+				receipts={receipts}
+				popout={popout}
+			/>
 			<View id='profile' activePanel='profile' popout={popout}>
 				<Profile id='profile' go={go} fetchedUser={fetchedUser}/>
 			</View>

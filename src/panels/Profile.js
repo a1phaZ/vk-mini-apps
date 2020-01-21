@@ -5,9 +5,7 @@ import {
 	Panel,
 	PanelHeader,
 	platform,
-	Input,
 	HeaderButton,
-	FormLayoutGroup,
 	Group, List, InfoRow, Cell, Button
 } from '@vkontakte/vkui';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
@@ -26,6 +24,7 @@ const Profile = ({id, go, fetchedUser}) =>{
 				case 'VKWebAppGetPersonalCardResult':
 					setEmail(data.email);
 					setPhone(data.phone);
+					break;
 				default:
 					break;
 			}
