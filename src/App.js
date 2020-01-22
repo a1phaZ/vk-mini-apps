@@ -316,14 +316,7 @@ const App = () => {
 			<View id='info' activePanel='info' popout={popout}>
 				<Info id='info' go={go}/>
 			</View>
-			{/*Для отображения отдельных чеков*/}
-			{receipts.map((receipt, index) => {
-				return(
-					<View id={receipt._id} activePanel={receipt._id} key={index}>
-						<Receipt id={receipt._id} dateTime={receipt.dateTime} items={receipt.items} go={go}/>
-					</View>
-				)
-			})}
+
 		</Epic>
 	);
 };
