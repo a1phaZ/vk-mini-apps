@@ -50,7 +50,6 @@ export default class Home extends Component {
 			activeModal,
 			modalHistory
 		});
-		console.log(this.state);
 	};
 
 	render() {
