@@ -66,7 +66,7 @@ export default class Home extends Component {
 							header={
 								<ModalPageHeader
 									left={osName !== IOS && <HeaderButton onClick={this.modalBack}><Icon24Cancel /></HeaderButton>}
-									right={<HeaderButton onClick={this.modalBack}>{osName === IOS ? 'Готово' : <Icon24Dismiss />}</HeaderButton>}
+									right={osName === IOS && <HeaderButton onClick={this.modalBack}>{osName === IOS ? 'Готово' : <Icon24Dismiss />}</HeaderButton>}
 								>
 									{prepare.date(receipt.dateTime)}
 								</ModalPageHeader>
