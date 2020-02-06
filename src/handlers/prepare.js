@@ -1,4 +1,9 @@
 export default class Prepare {
+	/**
+	 * Преобразование qr кода
+	 * @param str
+	 * @returns {{dt: *, fn: *, i: *, sum: *, fp: *}}
+	 */
 	static qr (str){
 		let dt, sum, fn, i, fp;
 
@@ -15,6 +20,11 @@ export default class Prepare {
 		}
 	}
 
+	/**
+	 * Преобразование даты
+	 * @param str
+	 * @returns {string}
+	 */
 	static date(str) {
 		const dt = new Date(str);
 		let monthName;
@@ -61,18 +71,43 @@ export default class Prepare {
 		return `${dt.getDate()} ${monthName} ${dt.getFullYear()}`;
 	}
 
+	/**
+	 * Преобразование суммы
+	 * @param n
+	 * @returns {string}
+	 */
 	static sum(n) {
 		return new Intl.NumberFormat('ru-RU', {style: 'currency', currency: 'RUB'}).format(n / 100);
 	}
 
+	/**
+	 * Расчет общей суммы
+	 * @param arr
+	 * @returns {number}
+	 */
 	static totalReceiptSum(arr) {
-		let totalSum = 0;
-		const totalSumArr = arr.map((item) => {
+		const reducer = (previousValue, currentValue) => previousValue + currentValue;
+		return arr.map((item) => {
 			return item.totalSum;
-		});
-		for (let i=0; i<totalSumArr.length; i++) {
-			totalSum += totalSumArr[i];
-		}
-		return totalSum;
+		}).reduce(reducer);
+	}
+
+	/**
+	 * Подсчет суммарных доходов / расходов
+	 * @param arr
+	 * @param income
+	 * @returns {number}
+	 */
+	static totalSum(arr, income) {
+		const reducer = (previousValue, currentValue) => previousValue + currentValue;
+		const ts = arr.map(items => {
+			return items.items.map(item => {
+				if (income) {
+					return item.income ? item.sum : 0
+				}
+				return !item.income ? item.sum : 0
+			}).reduce(reducer)
+		}).reduce(reducer);
+		return income ? ts : -1 * ts;
 	}
 }
