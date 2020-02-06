@@ -4,18 +4,34 @@ import View from '@vkontakte/vkui/dist/components/View/View';
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 import '@vkontakte/vkui/dist/vkui.css';
 
-import {Epic, Tabbar, TabbarItem} from "@vkontakte/vkui";
+import {
+	Epic,
+	Panel,
+	PanelHeader,
+	PanelHeaderContent,
+	Tabbar,
+	TabbarItem,
+	Avatar,
+	PanelHeaderButton,
+	Placeholder, Separator
+} from "@vkontakte/vkui";
 import Icon28HomeOutline from '@vkontakte/icons/dist/28/home_outline';
 import Icon28User from '@vkontakte/icons/dist/28/user';
 import Icon24Qr from '@vkontakte/icons/dist/24/qr';
 import Icon28InfoOutline from '@vkontakte/icons/dist/28/info_outline';
+import Icon56GoodsCollection from '@vkontakte/icons/dist/56/goods_collection';
+import Icon16Up from '@vkontakte/icons/dist/16/up';
+import Icon16Down from '@vkontakte/icons/dist/16/down';
 
-import Home from './panels/Home';
-import Profile from "./panels/Profile";
-import Info from "./panels/Info";
-import Receipt from "./panels/Receipt";
+// import Home from './panels/Home';
+// import Profile from "./panels/Profile";
+// import Info from "./panels/Info";
+// import Receipt from "./panels/Receipt";
 import prepare from "./handlers/prepare";
 import ApiService from './services/api';
+import ColoredSum from "./panels/ColoredSum";
+import Button from "@vkontakte/vkui/dist/components/Button/Button";
+// import PanelHeaderButton from "@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton";
 
 const App = () => {
 	const apiService = new ApiService();
@@ -23,8 +39,8 @@ const App = () => {
 	const [fetchedUser, setUser] = useState(null);
 	const [token, setToken] = useState(null);
 	const [error, setError] = useState(null);
-	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
-	// const [popout, setPopout] = useState(null);
+	// const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
+	const [popout, setPopout] = useState(null);
 	const [qr, setQR] = useState('');
 	const [receipts, setReceipts] = useState([
 		{
@@ -271,53 +287,84 @@ const App = () => {
 		setActivePanel(e.currentTarget.dataset.to);
 	};
 
-	return (
-		<Epic activeStory={activePanel} tabbar={
-			<Tabbar>
-				<TabbarItem
-					selected={activePanel === 'home'}
-					onClick={go}
-					data-to='home'
-				>
-					<Icon28HomeOutline />
-				</TabbarItem>
-				<TabbarItem
-					onClick={() => {connect.send("VKWebAppOpenCodeReader", {});}}
-				>
-					<Icon24Qr height={28} width={28}/>
-				</TabbarItem>
-				<TabbarItem
-					selected={activePanel === 'profile'}
-					onClick={go}
-					data-to='profile'
-				>
-					<Icon28User />
-				</TabbarItem>
-				<TabbarItem
-					selected={activePanel === 'info'}
-					onClick={go}
-					data-to='info'
-				>
-					<Icon28InfoOutline />
-				</TabbarItem>
-			</Tabbar>
-		}>
-			<Home
-				id='home'
-				fetchedUser={fetchedUser}
-				go={go}
-				qr={QR}
-				receipts={receipts}
-				popout={popout}
-			/>
-			<View id='profile' activePanel='profile' popout={popout}>
-				<Profile id='profile' go={go} fetchedUser={fetchedUser}/>
-			</View>
-			<View id='info' activePanel='info' popout={popout}>
-				<Info id='info' go={go}/>
-			</View>
+	// return (
+	// 	<Epic activeStory={activePanel} tabbar={
+	// 		<Tabbar>
+	// 			<TabbarItem
+	// 				selected={activePanel === 'home'}
+	// 				onClick={go}
+	// 				data-to='home'
+	// 			>
+	// 				<Icon28HomeOutline />
+	// 			</TabbarItem>
+	// 			<TabbarItem
+	// 				onClick={() => {connect.send("VKWebAppOpenCodeReader", {});}}
+	// 			>
+	// 				<Icon24Qr height={28} width={28}/>
+	// 			</TabbarItem>
+	// 			<TabbarItem
+	// 				selected={activePanel === 'profile'}
+	// 				onClick={go}
+	// 				data-to='profile'
+	// 			>
+	// 				<Icon28User />
+	// 			</TabbarItem>
+	// 			<TabbarItem
+	// 				selected={activePanel === 'info'}
+	// 				onClick={go}
+	// 				data-to='info'
+	// 			>
+	// 				<Icon28InfoOutline />
+	// 			</TabbarItem>
+	// 		</Tabbar>
+	// 	}>
+	// 		<Home
+	// 			id='home'
+	// 			fetchedUser={fetchedUser}
+	// 			go={go}
+	// 			qr={QR}
+	// 			receipts={receipts}
+	// 			popout={popout}
+	// 		/>
+	// 		<View id='profile' activePanel='profile' popout={popout}>
+	// 			<Profile id='profile' go={go} fetchedUser={fetchedUser}/>
+	// 		</View>
+	// 		<View id='info' activePanel='info' popout={popout}>
+	// 			<Info id='info' go={go}/>
+	// 		</View>
+	//
+	// 	</Epic>
+	// );
 
-		</Epic>
+	return (
+		<View activePanel={activePanel}>
+			<Panel id='home'>
+				<PanelHeader>Balance</PanelHeader>
+				<Placeholder
+					icon={<Icon56GoodsCollection />}
+					header={<ColoredSum sum={prepare.totalReceiptSum(receipts)} fs={'2em'}/>}
+					action={<Button size="l">Добавить доход / расход</Button>}
+				>
+					Добавляйте доходы/расходы
+				</Placeholder>
+				<Separator/>
+				<div style={{
+					display: 'flex',
+					flexDirection: 'row',
+					justifyContent: 'space-around',
+					border: '1px solid black'
+				}}>
+					<div style={{flex: '1 1 auto', display: 'flex',justifyContent: 'flex-end',}}>
+						<ColoredSum sum={prepare.totalSum(receipts, true)} fs={'1.4em'}/>
+						<Icon16Up width={28} height={28} fill={'#28a745'}/>
+					</div>
+					<div style={{flex: '1 1 auto', display: 'flex',justifyContent: 'flex-start',}}>
+						<Icon16Down width={28} height={28} fill={'#dc3545'}/>
+						<ColoredSum sum={prepare.totalSum(receipts, false)} fs={'1.4em'}/>
+					</div>
+				</div>
+			</Panel>
+		</View>
 	);
 };
 
