@@ -15,7 +15,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "cross-env": "^5.2.0",
+    "cross-env": "^7.0.0",
     "gh-pages": "^2.1.1",
     "react-hot-loader": "^4.9.0",
     "react-scripts": "^3.3.0"
@@ -23,9 +23,9 @@
   "dependencies": {
     "@vkontakte/icons": "^1.10.0",
     "@vkontakte/vk-connect": "^1.7.1",
-    "@vkontakte/vkui": "^2.30.7",
+    "@vkontakte/vkui": "^3.0.2",
     "babel-eslint": "^10.0.3",
-    "chalk": "^2.4.2",
+    "chalk": "^3.0.0",
     "core-js": "^3.1.4",
     "prop-types": "^15.7.2",
     "react": "^16.9.0",
