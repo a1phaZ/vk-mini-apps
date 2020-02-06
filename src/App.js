@@ -351,16 +351,22 @@ const App = () => {
 				<div style={{
 					display: 'flex',
 					flexDirection: 'row',
-					justifyContent: 'space-around',
-					border: '1px solid black'
+					justifyContent: 'space-between',
+					paddingTop: '1em',
 				}}>
-					<div style={{flex: '1 1 auto', display: 'flex',justifyContent: 'flex-end',}}>
-						<ColoredSum sum={prepare.totalSum(receipts, true)} fs={'1.4em'}/>
-						<Icon16Up width={28} height={28} fill={'#28a745'}/>
+					<div style={{flex: '0 1 50%', display: 'flex',justifyContent: 'flex-end',}}>
+						<div style={{display: 'flex', flexDirection: 'column', paddingRight: '10px'}}>
+							<span style={{color: '#6F6F6F', fontSize: '0.7em', textAlign: 'end'}}>Доходы</span>
+							<ColoredSum sum={prepare.totalSum(receipts, true)} fs={'1.4em'}/>
+						</div>
+						<Icon16Up width={16} height={40} fill={'#28a745'}/>
 					</div>
-					<div style={{flex: '1 1 auto', display: 'flex',justifyContent: 'flex-start',}}>
-						<Icon16Down width={28} height={28} fill={'#dc3545'}/>
-						<ColoredSum sum={prepare.totalSum(receipts, false)} fs={'1.4em'}/>
+					<div style={{flex: '0 1 50%', display: 'flex',justifyContent: 'flex-start',}}>
+						<Icon16Down width={16} height={40} fill={'#dc3545'}/>
+						<div style={{display: 'flex', flexDirection: 'column', paddingLeft: '10px'}}>
+							<span style={{color: '#6F6F6F', fontSize: '0.7em'}}>Расходы</span>
+							<ColoredSum sum={prepare.totalSum(receipts, false)} fs={'1.4em'}/>
+						</div>
 					</div>
 				</div>
 			</Panel>
