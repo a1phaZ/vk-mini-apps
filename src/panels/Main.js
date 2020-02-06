@@ -4,26 +4,26 @@ import {
 	ModalPage,
 	ModalRoot,
 	ModalPageHeader,
-	HeaderButton,
 	IOS,
-	platform
+	platform, Placeholder, Separator
 } from '@vkontakte/vkui';
 import Panel from '@vkontakte/vkui/dist/components/Panel/Panel';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
 import Button from '@vkontakte/vkui/dist/components/Button/Button';
 import Group from '@vkontakte/vkui/dist/components/Group/Group';
 import Cell from '@vkontakte/vkui/dist/components/Cell/Cell';
-import Div from '@vkontakte/vkui/dist/components/Div/Div';
-import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar';
-import connect from "@vkontakte/vk-connect";
 import prepare from "../handlers/prepare";
 import ColoredSum from "./ColoredSum";
 import View from "@vkontakte/vkui/dist/components/View/View";
 import Receipt from "./Receipt";
 import Icon24Cancel from '@vkontakte/icons/dist/24/cancel';
 import Icon24Dismiss from '@vkontakte/icons/dist/24/dismiss';
+import PanelHeaderButton from "@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton";
+import Icon56GoodsCollection from '@vkontakte/icons/dist/56/goods_collection';
+import Icon16Up from '@vkontakte/icons/dist/16/up';
+import Icon16Down from '@vkontakte/icons/dist/16/down';
 
-export default class Home extends Component {
+export default class Main extends Component {
 	state = {
 		activeModal: null,
 		modalHistory: [],
@@ -65,8 +65,8 @@ export default class Home extends Component {
 							onClose={this.modalBack}
 							header={
 								<ModalPageHeader
-									left={osName !== IOS && <HeaderButton onClick={this.modalBack}><Icon24Cancel /></HeaderButton>}
-									right={osName === IOS && <HeaderButton onClick={this.modalBack}>{osName === IOS ? 'Готово' : <Icon24Dismiss />}</HeaderButton>}
+									left={osName !== IOS && <PanelHeaderButton onClick={this.modalBack}><Icon24Cancel /></PanelHeaderButton>}
+									right={osName === IOS && <PanelHeaderButton onClick={this.modalBack}>{osName === IOS ? 'Готово' : <Icon24Dismiss />}</PanelHeaderButton>}
 								>
 									{prepare.date(receipt.dateTime)}
 								</ModalPageHeader>
@@ -76,31 +76,44 @@ export default class Home extends Component {
 								<Receipt id={receipt._id} dateTime={receipt.dateTime} items={receipt.items}/>
 							</List>
 						</ModalPage>
-
 					)
 				})}
 			</ModalRoot>
 		);
 
 		return (
-			<View id='home' activePanel='home' popout={popout} modal={modal}>
+			<View id={id} activePanel={id} popout={popout} modal={modal}>
 				<Panel id={id}>
-					<PanelHeader>Баланс</PanelHeader>
-					{fetchedUser &&
-					<Group title="User Data Fetched with VK Connect">
-						<Cell
-							before={fetchedUser.photo_200 ? <Avatar src={fetchedUser.photo_200}/> : null}
-							description={fetchedUser.city && fetchedUser.city.title ? fetchedUser.city.title : ''}
-						>
-							{`${fetchedUser.first_name} ${fetchedUser.last_name}`}
-						</Cell>
-					</Group>}
-
-					<Group title='Баланс'>
-						<Div style={{fontSize: '200%', fontWeight: 'bold'}}>
-							<ColoredSum sum={prepare.totalReceiptSum(receipts)} />
-						</Div>
-					</Group>
+					<PanelHeader>Balance</PanelHeader>
+					<Placeholder
+						icon={<Icon56GoodsCollection />}
+						header={<ColoredSum sum={prepare.totalReceiptSum(receipts)} fs={'2em'}/>}
+						action={<Button size="l">Добавить доход / расход</Button>}
+					>
+						Добавляйте доходы/расходы
+					</Placeholder>
+					<Separator/>
+					<div style={{
+						display: 'flex',
+						flexDirection: 'row',
+						justifyContent: 'space-between',
+						paddingTop: '1em',
+					}}>
+						<div style={{flex: '0 1 50%', display: 'flex',justifyContent: 'flex-end',}}>
+							<div style={{display: 'flex', flexDirection: 'column', paddingRight: '10px'}}>
+								<span style={{color: '#6F6F6F', fontSize: '0.7em', textAlign: 'end'}}>Доходы</span>
+								<ColoredSum sum={prepare.totalSum(receipts, true)} fs={'1.4em'}/>
+							</div>
+							<Icon16Up width={16} height={40} fill={'#28a745'}/>
+						</div>
+						<div style={{flex: '0 1 50%', display: 'flex',justifyContent: 'flex-start',}}>
+							<Icon16Down width={16} height={40} fill={'#dc3545'}/>
+							<div style={{display: 'flex', flexDirection: 'column', paddingLeft: '10px'}}>
+								<span style={{color: '#6F6F6F', fontSize: '0.7em'}}>Расходы</span>
+								<ColoredSum sum={prepare.totalSum(receipts, false)} fs={'1.4em'}/>
+							</div>
+						</div>
+					</div>
 
 					<Group title='Чеки'>
 						<List>
@@ -118,33 +131,6 @@ export default class Home extends Component {
 								)
 							})}
 						</List>
-					</Group>
-
-					<Group title="Profile">
-						<Div>
-							<Button size="xl" level="2" onClick={go} data-to="profile">
-								Profile
-							</Button>
-						</Div>
-					</Group>
-
-					<Group title="QR Reader">
-						<Div>
-							<Button size="xl" level="2" onClick={() => {
-								connect.send("VKWebAppOpenCodeReader", {});
-							}}>
-								Open QR reader
-							</Button>
-							<div>
-								<ul>
-									<li>{`qr.dt = ${qr.dt}`}</li>
-									<li>{`qr.sum = ${qr.sum}`}</li>
-									<li>{`qr.fn = ${qr.fn}`}</li>
-									<li>{`qr.i = ${qr.i}`}</li>
-									<li>{`qr.fp = ${qr.fp}`}</li>
-								</ul>
-							</div>
-						</Div>
 					</Group>
 				</Panel>
 			</View>
