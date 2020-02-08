@@ -1,7 +1,15 @@
-.success .Cell__indicator{
-    color: #28a745!important;
+.receipt-item{
+    display: flex;
+    flex: 1 1 auto;
+    justify-content: space-between;
+    font-size: 0.8em;
+    padding-left: 1em;
 }
 
-.danger .Cell__indicator{
-    color: #dc3545!important;
+.receipt-item span {
+    width: calc(55%/3);
+}
+
+.receipt-item .receipt-item-name{
+    width: 45%;
 }

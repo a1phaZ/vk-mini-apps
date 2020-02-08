@@ -1,32 +1,36 @@
 import React from 'react';
-import {Group, List} from "@vkontakte/vkui";
-import Cell from "@vkontakte/vkui/dist/components/Cell/Cell";
+import {Separator} from "@vkontakte/vkui";
 import prepare from "../../handlers/prepare";
 import ColoredSum from "../ColoredSum";
 
-const Receipt = ({items, id, dateTime, setActiveModal}) => {
+import './receipt.css';
+import FormLayout from "@vkontakte/vkui/dist/components/FormLayout/FormLayout";
+
+const Receipt = ({items, id}) => {
 	const receiptItem = (items.map((item, index) => {
 		const sum = item.income ? item.sum : (-1) * item.sum ;
 
 		return(
-			<Group title={item.name} key={index}>
-				<List>
-					{item.price ? <Cell indicator={prepare.sum(item.price)}>Цена</Cell> : null}
-					{item.quantity ? <Cell indicator={item.quantity}>Кол-во</Cell> : null}
-					<Cell
-						indicator={<ColoredSum sum={sum}/>}
-					>
-						Сумма
-					</Cell>
-				</List>
-			</Group>
+			<div key={index} className={'receipt-item'}>
+				<span className={'receipt-item-name'}>{item.name}</span>
+				{item.price ? <span>{prepare.sum(item.price)}</span> : null}
+				{item.quantity ? <span>{item.quantity}</span> : null}
+				{sum ? <span>{<ColoredSum sum={sum}/>}</span> : null}
+			</div>
 		)
 	}));
 
 	return(
-		<Group id={id}>
+		<FormLayout id={id}>
+			<div className={'receipt-item'}>
+				<span className={'receipt-item-name'}>Наименование</span>
+				<span>Цена</span>
+				<span>Кол-во</span>
+				<span>Сумма</span>
+			</div>
+			<Separator />
 			{receiptItem}
-		</Group>
+		</FormLayout>
 	)
 };
 
