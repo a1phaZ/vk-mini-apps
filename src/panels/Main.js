@@ -22,6 +22,8 @@ import PanelHeaderButton from "@vkontakte/vkui/dist/components/PanelHeaderButton
 import Icon56GoodsCollection from '@vkontakte/icons/dist/56/goods_collection';
 import Icon16Up from '@vkontakte/icons/dist/16/up';
 import Icon16Down from '@vkontakte/icons/dist/16/down';
+import AddNote from "./AddNote";
+import Info from "./Info";
 
 export default class Main extends Component {
 	state = {
@@ -82,13 +84,13 @@ export default class Main extends Component {
 		);
 
 		return (
-			<View id={id} activePanel={id} popout={popout} modal={modal}>
-				<Panel id={id}>
+			<View id={'home'} activePanel={id} popout={popout} modal={modal}>
+				<Panel id={'balance'}>
 					<PanelHeader>Balance</PanelHeader>
 					<Placeholder
 						icon={<Icon56GoodsCollection />}
 						header={<ColoredSum sum={prepare.totalReceiptSum(receipts)} fs={'2em'}/>}
-						action={<Button size="l">Добавить доход / расход</Button>}
+						action={<Button size="l" onClick={go} data-to={'addnote'}>Добавить доход / расход</Button>}
 					>
 						Добавляйте доходы/расходы
 					</Placeholder>
@@ -133,6 +135,8 @@ export default class Main extends Component {
 						</List>
 					</Group>
 				</Panel>
+				<AddNote id={'addnote'} go={go}/>
+				<Info id={'info'} />
 			</View>
 		)
 	}

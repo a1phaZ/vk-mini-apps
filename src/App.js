@@ -8,12 +8,12 @@ import Main from "./panels/Main";
 
 const App = () => {
 	const apiService = new ApiService();
-	const [activePanel, setActivePanel] = useState('home');
+	const [activePanel, setActivePanel] = useState('balance');
 	const [fetchedUser, setUser] = useState(null);
 	const [token, setToken] = useState(null);
 	const [error, setError] = useState(null);
-	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
-	//const [popout, setPopout] = useState(null);
+	// const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
+	const [popout, setPopout] = useState(null);
 	const [qr, setQR] = useState('');
 	const [receipts, setReceipts] = useState([
 		{
@@ -251,7 +251,7 @@ const App = () => {
 				onError(error);
 			}
 		}
-		fetchData();
+		//fetchData();
 	}, []);
 
 	const QR = prepare.qr(qr);
@@ -262,7 +262,7 @@ const App = () => {
 
 	return (
 		<Main
-			id='receipts-list'
+			id={activePanel}
 			fetchedUser={fetchedUser}
 			go={go}
 			qr={QR}
