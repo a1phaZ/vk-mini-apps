@@ -12,4 +12,7 @@
 
 .receipt-item .receipt-item-name{
     width: 45%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
