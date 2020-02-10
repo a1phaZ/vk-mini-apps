@@ -180,6 +180,96 @@ const App = () => {
 			],
 			"totalSum" : 2500000,
 			"__v" : 0
+		},
+		{
+			"_id" : "5ddf912273e0c321bc89f1f6",
+			"receipts" : [],
+			"userId" : "5dce89f495636e23345b7d34",
+			"dateTime" : "2020-02-09T14:16:00",
+			"items": [
+				{
+					"price": 590,
+					"properties": [],
+					"sum": 590,
+					"name": "Пакет-майка Магнит",
+					"quantity": 1,
+					"modifiers": []
+				},
+				{
+					"price": 6292,
+					"properties": [],
+					"sum": 881,
+					"name": "ЯБЛОКИ новый урожай 1кг",
+					"quantity": 0.14,
+					"modifiers": []
+				},
+				{
+					"price": 6291,
+					"properties": [],
+					"sum": 10821,
+					"name": "ЯБЛОКИ новый урожай 1кг",
+					"quantity": 1.72,
+					"modifiers": []
+				},
+				{
+					"price": 32447,
+					"properties": [],
+					"sum": 16483,
+					"name": "АВОКАДО 1кг",
+					"quantity": 0.508,
+					"modifiers": []
+				},
+				{
+					"price": 14832,
+					"properties": [],
+					"sum": 2907,
+					"name": "ОГУРЦЫ гладкие 1кг",
+					"quantity": 0.196,
+					"modifiers": []
+				},
+				{
+					"price": 14831,
+					"properties": [],
+					"sum": 9610,
+					"name": "ОГУРЦЫ гладкие 1кг",
+					"quantity": 0.648,
+					"modifiers": []
+				},
+				{
+					"price": 4490,
+					"properties": [],
+					"sum": 8980,
+					"name": "СИБИРСКАЯ ЯГОДА Протерт Земляника0,2",
+					"quantity": 2,
+					"modifiers": []
+				},
+				{
+					"price": 4240,
+					"properties": [],
+					"sum": 8480,
+					"name": "Молоко паст 2,5% 1л ф/п (Нытвенский",
+					"quantity": 2,
+					"modifiers": []
+				},
+				{
+					"price": 1590,
+					"properties": [],
+					"sum": 1590,
+					"name": "САДЫ ПРИДОНЬЯ Сок яблоко персик 0,2л",
+					"quantity": 1,
+					"modifiers": []
+				},
+				{
+					"price": 1590,
+					"properties": [],
+					"sum": 1590,
+					"name": "САДЫ ПРИДОНЬЯ Сок мультифруктовый 0,",
+					"quantity": 1,
+					"modifiers": []
+				}
+			],
+			"totalSum" : -61932,
+			"__v" : 0
 		}
 	]);
 
