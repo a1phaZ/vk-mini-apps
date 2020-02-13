@@ -5,13 +5,14 @@ import '@vkontakte/vkui/dist/vkui.css';
 import prepare from "./handlers/prepare";
 import ApiService from './services/api';
 import Main from "./panels/Main";
+import useApi from "./hooks/useApi";
 
 const App = () => {
 	const apiService = new ApiService();
 	const [activePanel, setActivePanel] = useState('balance');
 	const [fetchedUser, setUser] = useState(null);
 	const [token, setToken] = useState(null);
-	const [error, setError] = useState(null);
+	//const [error, setError] = useState(null);
 	// const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
 	const [popout, setPopout] = useState(null);
 	const [qr, setQR] = useState('');
@@ -272,12 +273,15 @@ const App = () => {
 			"__v" : 0
 		}
 	]);
+	const [{response, isLoading, error}, doApiFetch] = useApi('someurl');
+
+	console.log({response, isLoading, error});
 
 	const onData = user => {
 		console.log(user);
 		setUser(user);
 		setToken(user.token);
-		setError(null);
+		//setError(null);
 		setPopout(null);
 	};
 
@@ -285,7 +289,7 @@ const App = () => {
 		console.log(error);
 		setUser(null);
 		setToken(null);
-		setError(error);
+		//setError(error);
 		setPopout(null);
 	};
 
