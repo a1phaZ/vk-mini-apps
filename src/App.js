@@ -5,14 +5,13 @@ import '@vkontakte/vkui/dist/vkui.css';
 import prepare from "./handlers/prepare";
 import ApiService from './services/api';
 import Main from "./panels/Main";
-import useApi from "./hooks/useApi";
+import useVK from "./hooks/useVK";
 
 const App = () => {
 	const apiService = new ApiService();
 	const [activePanel, setActivePanel] = useState('balance');
 	const [fetchedUser, setUser] = useState(null);
 	const [token, setToken] = useState(null);
-	//const [error, setError] = useState(null);
 	// const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
 	const [popout, setPopout] = useState(null);
 	const [qr, setQR] = useState('');
@@ -273,25 +272,7 @@ const App = () => {
 			"__v" : 0
 		}
 	]);
-	const [{response, isLoading, error}, doApiFetch] = useApi('someurl');
-
-	console.log({response, isLoading, error});
-
-	const onData = user => {
-		console.log(user);
-		setUser(user);
-		setToken(user.token);
-		//setError(null);
-		setPopout(null);
-	};
-
-	const onError = error => {
-		console.log(error);
-		setUser(null);
-		setToken(null);
-		//setError(error);
-		setPopout(null);
-	};
+	const [{response, isLoading, error}, doVKFetch] = useVK('VKWebAppGetUserInfo');
 
 	useEffect(() => {
 		connect.subscribe(({ detail: { type, data }}) => {
@@ -308,44 +289,45 @@ const App = () => {
 					break;
 			}
 		});
-		/**
-		 * Получаем данные о пользователе
-		 * */
-		async function fetchData() {
-			const vk_user = await connect.send('VKWebAppGetUserInfo');
-			/**
-			 * Если есть токен, то пытаемся авторизоваться
-			 * Если нет, пытаемся залогиниться
-			 * Если пользователя нет на сервере - регистрируемся
-			 * */
-			if (vk_user.id) {
-				if (token) {
-					await apiService.userCurrent({token})
-						.then(user => onData(user))
-						.catch(err => onError(err));
-				} else {
-					const body = {
-						user:{
-							id: vk_user.id,
-						}
-					};
-					await apiService.userLogin(body)
-						.then(async user => {
-							if (user) {
-								onData(user)
-							} else {
-								const user = await apiService.userRegister(body);
-								onData(user);
-							}
-						})
-						.catch(err => onError(err));
-				}
-			} else {
-				const error = new Error('Неполучен пользователь vkontakte');
-				onError(error);
-			}
-		}
-		//fetchData();
+		doVKFetch({});
+		// /**
+		//  * Получаем данные о пользователе
+		//  * */
+		// async function fetchData() {
+		// 	const vk_user = await connect.send('VKWebAppGetUserInfo');
+		// 	/**
+		// 	 * Если есть токен, то пытаемся авторизоваться
+		// 	 * Если нет, пытаемся залогиниться
+		// 	 * Если пользователя нет на сервере - регистрируемся
+		// 	 * */
+		// 	if (vk_user.id) {
+		// 		if (token) {
+		// 			await apiService.userCurrent({token})
+		// 				.then(user => onData(user))
+		// 				.catch(err => onError(err));
+		// 		} else {
+		// 			const body = {
+		// 				user:{
+		// 					id: vk_user.id,
+		// 				}
+		// 			};
+		// 			await apiService.userLogin(body)
+		// 				.then(async user => {
+		// 					if (user) {
+		// 						onData(user)
+		// 					} else {
+		// 						const user = await apiService.userRegister(body);
+		// 						onData(user);
+		// 					}
+		// 				})
+		// 				.catch(err => onError(err));
+		// 		}
+		// 	} else {
+		// 		const error = new Error('Неполучен пользователь vkontakte');
+		// 		onError(error);
+		// 	}
+		// }
+		// //fetchData();
 	}, []);
 
 	const QR = prepare.qr(qr);
@@ -355,6 +337,7 @@ const App = () => {
 	};
 
 	return (
+		// JSON.stringify(response)
 		<Main
 			id={activePanel}
 			fetchedUser={fetchedUser}
