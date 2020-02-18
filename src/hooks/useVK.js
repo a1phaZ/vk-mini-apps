@@ -17,7 +17,7 @@ export default method => {
       return
     }
     async function fetchData() {
-			await connect.sendPromise(method, options)
+			await connect.send(method, options)
         .then(res => {
           setResponse(res.data);
           setIsLoading(false);
