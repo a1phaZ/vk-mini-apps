@@ -4,13 +4,13 @@ import connect from '@vkontakte/vk-connect';
 export default method => {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false)
-  const [options, setOptions] = useState({})
+  const [isLoading, setIsLoading] = useState(false);
+  const [options, setOptions] = useState({});
 
   const doVKFetch = (options = {}) => {
     setOptions(options);
     setIsLoading(true);
-  }
+  };
 
   useEffect(() => {
     if (!isLoading) {
