@@ -7,6 +7,7 @@ import ApiService from './services/api';
 import Main from "./panels/Main";
 import useVK from "./hooks/useVK";
 import useFakeUser from "./hooks/useFakeUser";
+import useApi from "./hooks/useApi";
 
 const App = () => {
 	const apiService = new ApiService();
@@ -274,6 +275,7 @@ const App = () => {
 		}
 	]);
 	const [{response, isLoading, error}, doVKFetch] = useFakeUser('VKWebAppGetUserInfo');
+	const [api, doApiFetch] = useApi('/users/login');
 
 	useEffect(() => {
 		connect.subscribe(({ detail: { type, data }}) => {
@@ -291,45 +293,18 @@ const App = () => {
 			}
 		});
 		doVKFetch({});
-		// /**
-		//  * Получаем данные о пользователе
-		//  * */
-		// async function fetchData() {
-		// 	const vk_user = await connect.send('VKWebAppGetUserInfo');
-		// 	/**
-		// 	 * Если есть токен, то пытаемся авторизоваться
-		// 	 * Если нет, пытаемся залогиниться
-		// 	 * Если пользователя нет на сервере - регистрируемся
-		// 	 * */
-		// 	if (vk_user.id) {
-		// 		if (token) {
-		// 			await apiService.userCurrent({token})
-		// 				.then(user => onData(user))
-		// 				.catch(err => onError(err));
-		// 		} else {
-		// 			const body = {
-		// 				user:{
-		// 					id: vk_user.id,
-		// 				}
-		// 			};
-		// 			await apiService.userLogin(body)
-		// 				.then(async user => {
-		// 					if (user) {
-		// 						onData(user)
-		// 					} else {
-		// 						const user = await apiService.userRegister(body);
-		// 						onData(user);
-		// 					}
-		// 				})
-		// 				.catch(err => onError(err));
-		// 		}
-		// 	} else {
-		// 		const error = new Error('Неполучен пользователь vkontakte');
-		// 		onError(error);
-		// 	}
-		// }
-		// //fetchData();
 	}, []);
+
+	useEffect(() => {
+		if (response) {
+			doApiFetch({
+				method: 'POST',
+				user: {
+					id: response.id
+				}
+			});
+		}
+	}, [response]);
 
 	const QR = prepare.qr(qr);
 
