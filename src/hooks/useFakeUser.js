@@ -17,12 +17,11 @@ export default method => {
 		}
 
 		setResponse({
-			id: '1',
+			id: 3479465,
 			first_name: 'Artemiy',
 			last_name: 'Zebzeev',
 		});
 
 	}, [isLoading]);
-
 	return [{response, error, isLoading}, doVKFetch];
 }
