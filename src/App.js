@@ -6,6 +6,7 @@ import prepare from "./handlers/prepare";
 import ApiService from './services/api';
 import Main from "./panels/Main";
 import useVK from "./hooks/useVK";
+import useFakeUser from "./hooks/useFakeUser";
 
 const App = () => {
 	const apiService = new ApiService();
@@ -272,7 +273,7 @@ const App = () => {
 			"__v" : 0
 		}
 	]);
-	const [{response, isLoading, error}, doVKFetch] = useVK('VKWebAppGetUserInfo');
+	const [{response, isLoading, error}, doVKFetch] = useFakeUser('VKWebAppGetUserInfo');
 
 	useEffect(() => {
 		connect.subscribe(({ detail: { type, data }}) => {
@@ -337,10 +338,9 @@ const App = () => {
 	};
 
 	return (
-		// JSON.stringify(response)
 		<Main
 			id={activePanel}
-			fetchedUser={fetchedUser}
+			fetchedUser={response}
 			go={go}
 			qr={QR}
 			receipts={receipts}
