@@ -30,6 +30,6 @@ export default url => {
 			});
 
 
-	}, [isLoading]);
+	}, [isLoading, apiService, bodyFields, method, url]);
 	return [{isLoading, response, error}, doApiFetch];
 }

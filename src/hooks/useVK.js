@@ -28,7 +28,7 @@ export default method => {
         });    
 		}
     fetchData();
-  }, [isLoading]);
+  }, [isLoading, method, options]);
 
   return [{response, error, isLoading}, doVKFetch];
 }

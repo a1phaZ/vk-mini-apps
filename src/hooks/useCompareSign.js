@@ -41,7 +41,7 @@ export default () => {
 			.replace(/=$/, '');
 
 		setMatch(paramsHash === params.sign);
-	}, [isLoading]);
+	}, [isLoading, urlParams]);
 
 	return [{vkUserId, matchUrlParams}, setParams];
 }
