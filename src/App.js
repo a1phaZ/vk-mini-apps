@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import connect from '@vkontakte/vk-connect';
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 import '@vkontakte/vkui/dist/vkui.css';
@@ -8,6 +8,7 @@ import useVK from "./hooks/useVK";
 import useFakeUser from "./hooks/useFakeUser";
 import useApi from "./hooks/useApi";
 import useCompareSign from "./hooks/useCompareSign";
+import {CurrentUserContext} from "./contexts/currentUser";
 
 const App = () => {
 	const [activePanel, setActivePanel] = useState('balance');
@@ -272,6 +273,7 @@ const App = () => {
 	]);
 	const [apiUser, doApiFetch] = useApi('/users');
 	const [{vkUserId, matchUrlParams}, setParams] = useCompareSign();
+	const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext);
 
 	useEffect(() => {
 		connect.subscribe(({ detail: { type, data }}) => {
@@ -292,7 +294,7 @@ const App = () => {
 		 * Проверка параметров подписи запуска приложения
 		 */
 		setParams(window.location.search.slice(1));
-	}, []);
+	}, [setParams]);
 
 	useEffect(() => {
 		if (!vkUserId) return;
@@ -303,7 +305,18 @@ const App = () => {
 			}
 		});
 		setPopout(null);
-	}, [vkUserId]);
+	}, [vkUserId, doApiFetch]);
+
+	useEffect(() => {
+		if (!apiUser.response) return;
+
+		setCurrentUserState(state => ({
+			...state,
+			isLoading: false,
+			isLoggedIn: true,
+			currentUser: apiUser.response.user
+		}))
+	}, [apiUser.response, setCurrentUserState]);
 
 	const QR = prepare.qr(qr);
 
@@ -311,7 +324,7 @@ const App = () => {
 		setActivePanel(e.currentTarget.dataset.to);
 	};
 
-	console.log({vkUserId, matchUrlParams, apiUser});
+	console.log(currentUserState.isLoggedIn);
 	return (
 		<div>
 			{matchUrlParams
