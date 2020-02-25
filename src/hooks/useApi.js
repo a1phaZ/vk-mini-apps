@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useCallback} from 'react';
 import ApiService from '../services/api';
 
 export default url => {
@@ -8,10 +8,10 @@ export default url => {
 	const [options, setOptions] = useState({});
 	const apiService = new ApiService();
 
-	const doApiFetch = (options) => {
+	const doApiFetch = useCallback((options) => {
 		setOptions(options);
 		setIsLoading(true);
-	};
+	}, []);
 
 	const { method, token, ...bodyFields} = options;
 	useEffect(() => {
