@@ -3,19 +3,15 @@ import connect from '@vkontakte/vk-connect';
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 import '@vkontakte/vkui/dist/vkui.css';
 import prepare from "./handlers/prepare";
-import ApiService from './services/api';
 import Main from "./panels/Main";
 import useVK from "./hooks/useVK";
 import useFakeUser from "./hooks/useFakeUser";
 import useApi from "./hooks/useApi";
+import useCompareSign from "./hooks/useCompareSign";
 
 const App = () => {
-	const apiService = new ApiService();
 	const [activePanel, setActivePanel] = useState('balance');
-	const [fetchedUser, setUser] = useState(null);
-	const [token, setToken] = useState(null);
-	// const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
-	const [popout, setPopout] = useState(null);
+	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
 	const [qr, setQR] = useState('');
 	const [receipts, setReceipts] = useState([
 		{
@@ -274,8 +270,8 @@ const App = () => {
 			"__v" : 0
 		}
 	]);
-	const [{response, isLoading, error}, doVKFetch] = useFakeUser('VKWebAppGetUserInfo');
-	const [api, doApiFetch] = useApi('/users/login');
+	const [apiUser, doApiFetch] = useApi('/users');
+	const [{vkUserId, matchUrlParams}, setParams] = useCompareSign();
 
 	useEffect(() => {
 		connect.subscribe(({ detail: { type, data }}) => {
@@ -292,19 +288,22 @@ const App = () => {
 					break;
 			}
 		});
-		doVKFetch({});
+		/**
+		 * Проверка параметров подписи запуска приложения
+		 */
+		setParams(window.location.search.slice(1));
 	}, []);
 
 	useEffect(() => {
-		if (response) {
-			doApiFetch({
-				method: 'POST',
-				user: {
-					id: response.id
-				}
-			});
-		}
-	}, [response]);
+		if (!vkUserId) return;
+		doApiFetch({
+			method: 'POST',
+			user: {
+				id: +vkUserId
+			}
+		});
+		setPopout(null);
+	}, [vkUserId]);
 
 	const QR = prepare.qr(qr);
 
@@ -312,17 +311,23 @@ const App = () => {
 		setActivePanel(e.currentTarget.dataset.to);
 	};
 
+	console.log({vkUserId, matchUrlParams, apiUser});
 	return (
-		<Main
-			id={activePanel}
-			fetchedUser={response}
-			go={go}
-			qr={QR}
-			receipts={receipts}
-			popout={popout}
-		/>
+		<div>
+			{matchUrlParams
+				?
+					<Main
+						id={activePanel}
+						go={go}
+						qr={QR}
+						receipts={receipts}
+						popout={popout}
+					/>
+				:
+					null
+			}
+		</div>
 	);
 };
 
 export default App;
-
