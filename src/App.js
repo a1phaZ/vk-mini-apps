@@ -4,21 +4,21 @@ import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenS
 import '@vkontakte/vkui/dist/vkui.css';
 import prepare from "./handlers/prepare";
 import Main from "./panels/Main";
-import useVK from "./hooks/useVK";
-import useFakeUser from "./hooks/useFakeUser";
 import useApi from "./hooks/useApi";
-import useCompareSign from "./hooks/useCompareSign";
 import {CurrentUserContext} from "./contexts/currentUser";
+import {AppSignContext} from "./contexts/appSign";
 import fakeData from './handlers/receipts';
 
 const App = () => {
 	const [activePanel, setActivePanel] = useState('balance');
 	const [popout, setPopout] = useState(<ScreenSpinner size='large' />);
 	const [qr, setQR] = useState('');
-	const [receipts, setReceipts] = useState(fakeData);
+	const [receipts] = useState(fakeData);
 	const [apiUser, doApiFetch] = useApi('/users');
-	const [{vkUserId, matchUrlParams}, setParams] = useCompareSign();
 	const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext);
+	const [{vkUserId, matchUrlParams}] = useContext(AppSignContext);
+
+	console.log({vkUserId, matchUrlParams});
 
 	useEffect(() => {
 		connect.subscribe(({ detail: { type, data }}) => {
@@ -35,11 +35,7 @@ const App = () => {
 					break;
 			}
 		});
-		/**
-		 * Проверка параметров подписи запуска приложения
-		 */
-		setParams(window.location.search.slice(1));
-	}, [setParams]);
+	}, []);
 
 	useEffect(() => {
 		if (!vkUserId) return;
