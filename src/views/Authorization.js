@@ -44,7 +44,7 @@ const Authorization = ({go, type}) => {
 			<PanelHeader>{type === 'login' ? 'Авторизация' : 'Регистрация'}</PanelHeader>
 			<Placeholder
 				icon={type === 'login' ? <Icon56LockOutline /> : <Icon56UserAddOutline />}
-				header={'Введите пароль'}
+				header={type === 'login' ? 'Введите пароль' : 'Придумайте пароль'}
 			>
 				<FormLayout>
 					{formStatus()}
