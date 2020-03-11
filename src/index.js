@@ -6,6 +6,7 @@ import connect from '@vkontakte/vk-connect';
 import App from './App';
 import {CurrentUserProvider} from "./contexts/currentUser";
 import {AppSignProvider} from "./contexts/appSign";
+import InstallingTheme from "./components/InstallingTheme";
 // import registerServiceWorker from './sw';
 
 // Init VK  Mini App
@@ -18,10 +19,13 @@ connect.send('VKWebAppInit');
 // registerServiceWorker();
 
 ReactDOM.render(
-	<AppSignProvider>
-		<CurrentUserProvider>
-			<App />
-		</CurrentUserProvider>
-	</AppSignProvider>,
+	<InstallingTheme>
+		<AppSignProvider>
+			<CurrentUserProvider>
+				<App />
+			</CurrentUserProvider>
+		</AppSignProvider>
+	</InstallingTheme>
+	,
 	document.getElementById('root')
 );
