@@ -27,7 +27,7 @@ const Authorization = ({go, type, loadIndicator}) => {
 		}
 
 		if (password !== confirmPassword) {
-			setFormError({status: 'Пароли не совпадают', message: 'Для продолжнения пароли должны совпадать'});
+			setFormError({status: 'Ошибка валидации', message: 'Пароли не совпадают. Проверьте ввод и повторите попытку.'});
 		}
 	}, [password, confirmPassword, type]);
 
