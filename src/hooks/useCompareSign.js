@@ -17,7 +17,6 @@ export default () => {
 		if( !isLoading ) return;
 
 		const params = qs.parse(urlParams);
-		console.log(params);
 
 		if (!params) return;
 
