@@ -1,12 +1,11 @@
 import {useState, useEffect, useCallback} from 'react';
-import ApiService from '../services/api';
 
 export default url => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [response, setResponse] = useState(null);
 	const [error, setError] = useState(null);
 	const [options, setOptions] = useState({});
-	const apiService = new ApiService();
+	const _apiBase = `http://localhost:3000/api`;
 
 	const doApiFetch = useCallback((options) => {
 		setOptions(options);
@@ -19,17 +18,27 @@ export default url => {
 			return
 		}
 
-		apiService.callApi(method, url, bodyFields)
+		const headers = {
+			'Content-Type': 'application/json',
+			'Authorization': token ? `Token ${token}` : '',
+		};
+
+		fetch(`${_apiBase}${url}`, {
+			method,
+			mode: 'cors',
+			headers,
+			body: method !== 'GET' ? JSON.stringify(bodyFields) : null,
+		})
+			.then(res => res.json())
 			.then(r => {
-				setResponse(r);
 				setIsLoading(false);
+				setResponse(r);
 			})
 			.catch(e => {
-				setError(e);
 				setIsLoading(false);
+				setError(e);
 			});
 
-
-	}, [isLoading, apiService, bodyFields, method, url]);
+	}, [isLoading, bodyFields, method, url, _apiBase, token]);
 	return [{isLoading, response, error}, doApiFetch];
 }

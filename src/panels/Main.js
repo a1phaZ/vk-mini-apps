@@ -13,9 +13,6 @@ const Main = () => {
 	const {isLoading, isLoggedIn,	currentUser} = currentUserState;
 	const [apiResponse, doApiFetch] = useApi('/day');
 
-	console.log({currentUser});
-	console.log({dateRange});
-
 	useEffect(() => {
 		if (!currentUser || !isLoggedIn) return;
 		doApiFetch({
