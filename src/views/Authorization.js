@@ -16,7 +16,7 @@ const Authorization = ({go, type, loadIndicator}) => {
 	const [{response}, doApiFetch] = useApi(`/users/${type}`);
 	const [{vkUserId}] = useContext(AppSignContext);
 	const [startFetchData, setStartFetchData] = useState(false);
-	const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext);
+	const [, setCurrentUserState] = useContext(CurrentUserContext);
 
 	useEffect(()=>{
 		if (type === 'login') return;
@@ -83,8 +83,6 @@ const Authorization = ({go, type, loadIndicator}) => {
 		setStartFetchData(true);
 		loadIndicator(<ScreenSpinner size='large' />);
 	};
-
-	console.log({currentUserState});
 
 	return (
 		<Fragment>
