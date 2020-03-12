@@ -13,7 +13,7 @@ const Authorization = ({go, type, loadIndicator}) => {
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const [formError, setFormError] = useState(null);
-	const [{response}, doApiFetch] = useApi(`/users/${type}`);
+	const [{response, error}, doApiFetch] = useApi(`/users/${type}`);
 	const [{vkUserId}] = useContext(AppSignContext);
 	const [startFetchData, setStartFetchData] = useState(false);
 	const [, setCurrentUserState] = useContext(CurrentUserContext);
@@ -60,6 +60,12 @@ const Authorization = ({go, type, loadIndicator}) => {
 
 		loadIndicator(null);
 	}, [response, setCurrentUserState, loadIndicator]);
+
+	useEffect(() => {
+		if (!error) return;
+		setFormError(error);
+		loadIndicator(null);
+	}, [error, loadIndicator]);
 
 	const onInput = (e) => {
 		e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,4);
