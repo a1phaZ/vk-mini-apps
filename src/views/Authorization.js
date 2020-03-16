@@ -77,7 +77,7 @@ const Authorization = ({go, goView, type, loadIndicator}) => {
 		loadIndicator(null);
 	}, [error, loadIndicator]);
 
-	const onInput = (e) => {
+	const onChange = (e) => {
 		e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,4);
 		if (e.target.name === 'password') {
 			setPassword(e.target.value);
@@ -110,13 +110,13 @@ const Authorization = ({go, goView, type, loadIndicator}) => {
 				<FormLayout>
 					{formStatus()}
 					<FormLayoutGroup top={'Введите пароль'}>
-						<Input name={'password'} type={'number'} onChange = {onInput} align="center" value={password}/>
+						<Input name={'password'} type={'number'} onChange = {onChange} align="center" value={password}/>
 					</FormLayoutGroup>
 					{
 						type !== 'login'
 							?
 							<FormLayoutGroup top={'Повторите пароль'}>
-								<Input type={'number'} name={'confirmPassword'} onChange = {onInput} align="center" value={confirmPassword}/>
+								<Input type={'number'} name={'confirmPassword'} onChange = {onChange} align="center" value={confirmPassword}/>
 							</FormLayoutGroup>
 							:
 						null
