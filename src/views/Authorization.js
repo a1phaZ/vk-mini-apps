@@ -9,7 +9,7 @@ import {AppSignContext} from "../contexts/appSign";
 import {CurrentUserContext} from "../contexts/currentUser";
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 
-const Authorization = ({go, type, loadIndicator}) => {
+const Authorization = ({go, goView, type, loadIndicator}) => {
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const [formError, setFormError] = useState(null);
@@ -59,7 +59,15 @@ const Authorization = ({go, type, loadIndicator}) => {
 		}));
 
 		loadIndicator(null);
-	}, [response, setCurrentUserState, loadIndicator]);
+		if (response.user) {
+			const {name, phone, email, kktPassword} = response.user;
+			if (!name || !phone || !email || !kktPassword) {
+				goView('profile');
+				go('profile.edit');
+			}
+			console.log(response.user);
+		}
+	}, [response, setCurrentUserState, loadIndicator, go, goView]);
 
 	useEffect(() => {
 		if (!error) return;
