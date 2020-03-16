@@ -58,14 +58,16 @@ const Authorization = ({go, goView, type, loadIndicator}) => {
 			currentUser: response.user || null
 		}));
 
+
+
 		loadIndicator(null);
 		if (response.user) {
-			const {name, phone, email, kktPassword} = response.user;
+			const {name, phone, email, kktPassword, token} = response.user;
+			localStorage.setItem('token', token);
 			if (!name || !phone || !email || !kktPassword) {
 				goView('profile');
 				go('profile.edit');
 			}
-			console.log(response.user);
 		}
 	}, [response, setCurrentUserState, loadIndicator, go, goView]);
 
