@@ -8,6 +8,7 @@ import useApi from "../hooks/useApi";
 import {AppSignContext} from "../contexts/appSign";
 import {CurrentUserContext} from "../contexts/currentUser";
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
+import useLocalStorage from "../hooks/useLocalStorage";
 
 const Authorization = ({go, goView, type, loadIndicator}) => {
 	const [password, setPassword] = useState('');
@@ -17,6 +18,7 @@ const Authorization = ({go, goView, type, loadIndicator}) => {
 	const [{vkUserId}] = useContext(AppSignContext);
 	const [startFetchData, setStartFetchData] = useState(false);
 	const [, setCurrentUserState] = useContext(CurrentUserContext);
+	const [, setToken] = useLocalStorage('token');
 
 	useEffect(()=>{
 		if (type === 'login') return;
@@ -62,8 +64,8 @@ const Authorization = ({go, goView, type, loadIndicator}) => {
 
 		loadIndicator(null);
 		if (response.user) {
-			const {name, phone, email, kktPassword, token} = response.user;
-			localStorage.setItem('token', token);
+			const {name, phone, email, kktPassword} = response.user;
+			setToken(response.user.token);
 			if (!name || !phone || !email || !kktPassword) {
 				goView('profile');
 				go('profile.edit');
