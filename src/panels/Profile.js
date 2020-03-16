@@ -1,11 +1,10 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Fragment} from 'react';
 import {
 	FormLayout,
 	IOS,
-	Panel,
 	PanelHeader,
 	platform,
-	HeaderButton,
+	PanelHeaderButton,
 	Group, List, InfoRow, Cell, Button
 } from '@vkontakte/vkui';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
@@ -16,6 +15,8 @@ import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
 const Profile = ({id, go, fetchedUser}) =>{
 	const [email, setEmail] = useState('');
 	const [phone, setPhone] = useState('');
+	const [name, setName] = useState('');
+	const [kktPassword, setKktPassword] = useState('');
 	const osName = platform();
 
 	useEffect(()=>{
@@ -31,11 +32,11 @@ const Profile = ({id, go, fetchedUser}) =>{
 		});
 	}, []);
 	return(
-		<Panel id={id} >
+		<Fragment>
 			<PanelHeader
-				left={<HeaderButton onClick={go} data-to="home">
+				left={<PanelHeaderButton onClick={go} data-to="home">
 					{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
-				</HeaderButton>}
+				</PanelHeaderButton>}
 			>
 				Профиль
 			</PanelHeader>
@@ -69,7 +70,7 @@ const Profile = ({id, go, fetchedUser}) =>{
 					Получить данные из VK
 				</Button>
 			</FormLayout>
-		</Panel>
+		</Fragment>
 	)
 };
 
