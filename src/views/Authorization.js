@@ -17,8 +17,17 @@ const Authorization = ({go, goView, type, loadIndicator}) => {
 	const [{response, error}, doApiFetch] = useApi(`/users/${type}`);
 	const [{vkUserId}] = useContext(AppSignContext);
 	const [startFetchData, setStartFetchData] = useState(false);
-	const [, setCurrentUserState] = useContext(CurrentUserContext);
+	const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext);
 	const [, setToken] = useLocalStorage('token');
+
+	useEffect(() => {
+		if (!currentUserState.isLoggedIn) return;
+		const {name, phone, email, kktPassword} = currentUserState.currentUser;
+		if (!name || !phone || !email || !kktPassword) {
+			goView('profile');
+			go('profile.edit');
+		}
+	},[go, goView, currentUserState]);
 
 	useEffect(()=>{
 		if (type === 'login') return;
@@ -52,6 +61,8 @@ const Authorization = ({go, goView, type, loadIndicator}) => {
 
 		if (!response.user && response.error) {
 			setFormError(response.error);
+		} else {
+			setToken(response.user.token);
 		}
 		setCurrentUserState(state => ({
 			...state,
@@ -60,17 +71,7 @@ const Authorization = ({go, goView, type, loadIndicator}) => {
 			currentUser: response.user || null
 		}));
 
-
-
 		loadIndicator(null);
-		if (response.user) {
-			const {name, phone, email, kktPassword} = response.user;
-			setToken(response.user.token);
-			if (!name || !phone || !email || !kktPassword) {
-				goView('profile');
-				go('profile.edit');
-			}
-		}
 	}, [response, setCurrentUserState, loadIndicator, go, goView, setToken]);
 
 	useEffect(() => {
