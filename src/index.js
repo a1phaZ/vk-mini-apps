@@ -7,6 +7,7 @@ import App from './App';
 import {CurrentUserProvider} from "./contexts/currentUser";
 import {AppSignProvider} from "./contexts/appSign";
 import InstallingTheme from "./components/InstallingTheme";
+import CurrentUserChecker from "./components/CurrentUserChecker";
 // import registerServiceWorker from './sw';
 
 // Init VK  Mini App
@@ -22,7 +23,9 @@ ReactDOM.render(
 	<InstallingTheme>
 		<AppSignProvider>
 			<CurrentUserProvider>
-				<App />
+				<CurrentUserChecker>
+					<App />
+				</CurrentUserChecker>
 			</CurrentUserProvider>
 		</AppSignProvider>
 	</InstallingTheme>
