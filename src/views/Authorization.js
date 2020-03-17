@@ -71,7 +71,7 @@ const Authorization = ({go, goView, type, loadIndicator}) => {
 				go('profile.edit');
 			}
 		}
-	}, [response, setCurrentUserState, loadIndicator, go, goView]);
+	}, [response, setCurrentUserState, loadIndicator, go, goView, setToken]);
 
 	useEffect(() => {
 		if (!error) return;
