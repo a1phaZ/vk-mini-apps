@@ -1,18 +1,20 @@
 import {useState, useEffect, useCallback} from 'react';
+import useLocalStorage from "./useLocalStorage";
 
 export default url => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [response, setResponse] = useState(null);
 	const [error, setError] = useState(null);
 	const [options, setOptions] = useState({});
+	const [token] = useLocalStorage('token');
 	const _apiBase = `http://localhost:3000/api`;
 
-	const doApiFetch = useCallback((options) => {
+	const doApiFetch = useCallback((options = {}) => {
 		setOptions(options);
 		setIsLoading(true);
 	}, []);
 
-	const { method, token, ...bodyFields} = options;
+	const { method = 'GET', ...bodyFields} = options;
 	useEffect(() => {
 		if (!isLoading) {
 			return
@@ -20,7 +22,7 @@ export default url => {
 
 		const headers = {
 			'Content-Type': 'application/json',
-			'Authorization': token ? `Token ${token}` : '',
+			Authorization: token ? `Token ${token}` : '',
 		};
 
 		fetch(`${_apiBase}${url}`, {
