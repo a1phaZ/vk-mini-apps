@@ -8,6 +8,7 @@ import {CurrentUserProvider} from "./contexts/currentUser";
 import {AppSignProvider} from "./contexts/appSign";
 import InstallingTheme from "./components/InstallingTheme";
 import CurrentUserChecker from "./components/CurrentUserChecker";
+import {RouterContextProvider} from "./contexts/routerContext";
 // import registerServiceWorker from './sw';
 
 // Init VK  Mini App
@@ -23,9 +24,11 @@ ReactDOM.render(
 	<InstallingTheme>
 		<AppSignProvider>
 			<CurrentUserProvider>
-				<CurrentUserChecker>
-					<App />
-				</CurrentUserChecker>
+				<RouterContextProvider>
+					<CurrentUserChecker>
+						<App />
+					</CurrentUserChecker>
+				</RouterContextProvider>
 			</CurrentUserProvider>
 		</AppSignProvider>
 	</InstallingTheme>

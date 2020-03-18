@@ -9,6 +9,7 @@ import {AppSignContext} from "../contexts/appSign";
 import {CurrentUserContext} from "../contexts/currentUser";
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 import useLocalStorage from "../hooks/useLocalStorage";
+import {RouterContext} from "../contexts/routerContext";
 
 const Authorization = ({go, goView, type, loadIndicator}) => {
 	const [password, setPassword] = useState('');
@@ -19,15 +20,20 @@ const Authorization = ({go, goView, type, loadIndicator}) => {
 	const [startFetchData, setStartFetchData] = useState(false);
 	const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext);
 	const [, setToken] = useLocalStorage('token');
+	const [,setRouterContext] = useContext(RouterContext);
 
 	useEffect(() => {
 		if (!currentUserState.isLoggedIn) return;
-		const {name, phone, email, kktPassword} = currentUserState.currentUser;
-		if (!name || !phone || !email || !kktPassword) {
-			goView('profile');
-			go('profile.edit');
+		const {name, phone, email, password} = currentUserState.currentUser;
+		console.log({name, phone, email, password});
+		if (!name || !phone || !email || !password) {
+			setRouterContext(state =>({
+				...state,
+				view: 'profile',
+				panel: 'profile.edit'
+			}));
 		}
-	},[go, goView, currentUserState]);
+	},[currentUserState, setRouterContext]);
 
 	useEffect(()=>{
 		if (type === 'login') return;
@@ -131,8 +137,13 @@ const Authorization = ({go, goView, type, loadIndicator}) => {
 				<Button
 					stretched
 					mode="tertiary"
-					onClick={go}
-					data-to={type === 'login' ? 'authorization.registration' : 'authorization.login'}
+					onClick={(e) => {
+						setRouterContext(state => ({
+							...state,
+							panel: e.currentTarget.dataset.to
+						}));
+					}}
+					data-to={type === 'login' ? 'authorization.register' : 'authorization.login'}
 				>{type === 'login' ? 'Нет пароля?' : 'Есть пароль?'}</Button>
 			</Div>
 		</Fragment>
