@@ -24,7 +24,7 @@ import Icon16Up from '@vkontakte/icons/dist/16/up';
 import Icon16Down from '@vkontakte/icons/dist/16/down';
 import AddNote from "./AddNote";
 import Info from "./Info";
-import Main from "./Main";
+import Balance from "./Balance";
 
 export default class Main_ extends Component {
 	state = {
@@ -56,7 +56,7 @@ export default class Main_ extends Component {
 	};
 
 	render() {
-		const { receipts, fetchedUser, qr, go, popout, id} = this.props;
+		const { receipts, go, popout, id} = this.props;
 		const osName = platform();
 		const modal = (
 			<ModalRoot activeModal={this.state.activeModal}>
@@ -96,7 +96,7 @@ export default class Main_ extends Component {
 						Добавляйте доходы/расходы
 					</Placeholder>
 					<Separator/>
-					<Main />
+					<Balance />
 					<div style={{
 						display: 'flex',
 						flexDirection: 'row',

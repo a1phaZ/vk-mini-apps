@@ -1,9 +1,10 @@
 import React, {useContext, useState} from 'react';
 import '@vkontakte/vkui/dist/vkui.css';
 import {Root, Panel, View} from "@vkontakte/vkui";
-import Authorization from "./views/Authorization";
+import Authorization from "./panels/Authorization";
 import Profile from "./panels/Profile";
 import {RouterContext} from "./contexts/routerContext";
+import Balance from "./panels/Balance";
 
 
 const App = () => {
@@ -26,7 +27,12 @@ const App = () => {
 			</View>
 			<View id={'profile'} activePanel={routerContext.panel} popout={popout}>
 				<Panel id={'profile.edit'}>
-					<Profile />
+					<Profile loadIndicator={loadIndicator}/>
+				</Panel>
+			</View>
+			<View id={'balance'} activePanel={routerContext.panel} popout={popout}>
+				<Panel id={'balance.home'}>
+					<Balance loadIndicator={loadIndicator}/>
 				</Panel>
 			</View>
 		</Root>
