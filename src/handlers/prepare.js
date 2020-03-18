@@ -86,6 +86,7 @@ export default class Prepare {
 	 * @returns {number}
 	 */
 	static totalReceiptSum(arr) {
+		if (arr.length === 0) return 0;
 		const reducer = (previousValue, currentValue) => previousValue + currentValue;
 		return arr.map((item) => {
 			return item.totalSum;
@@ -99,6 +100,7 @@ export default class Prepare {
 	 * @returns {number}
 	 */
 	static totalSum(arr, income) {
+		if (arr.length === 0) return 0;
 		const reducer = (previousValue, currentValue) => previousValue + currentValue;
 		const ts = arr.map(items => {
 			return items.items.map(item => {
