@@ -5,6 +5,7 @@ import Authorization from "./panels/Authorization";
 import Profile from "./panels/Profile";
 import {RouterContext} from "./contexts/routerContext";
 import Balance from "./panels/Balance";
+import AddDay from "./panels/AddDay";
 
 
 const App = () => {
@@ -33,6 +34,9 @@ const App = () => {
 			<View id={'balance'} activePanel={routerContext.panel} popout={popout}>
 				<Panel id={'balance.home'}>
 					<Balance loadIndicator={loadIndicator}/>
+				</Panel>
+				<Panel id={'balance.add'}>
+					<AddDay loadIndicator={loadIndicator}/>
 				</Panel>
 			</View>
 		</Root>

@@ -22,7 +22,7 @@ import PanelHeaderButton from "@vkontakte/vkui/dist/components/PanelHeaderButton
 import Icon56GoodsCollection from '@vkontakte/icons/dist/56/goods_collection';
 import Icon16Up from '@vkontakte/icons/dist/16/up';
 import Icon16Down from '@vkontakte/icons/dist/16/down';
-import AddNote from "./AddNote";
+import AddDay from "./AddDay";
 import Info from "./Info";
 import Balance from "./Balance";
 
@@ -137,7 +137,7 @@ export default class Main_ extends Component {
 						</List>
 					</Group>
 				</Panel>
-				<AddNote id={'addnote'} go={go}/>
+				<AddDay id={'addnote'} go={go}/>
 				<Info id={'info'} />
 			</View>
 		)

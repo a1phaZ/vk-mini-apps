@@ -1,4 +1,4 @@
-import React, {useState, useEffect, Fragment} from 'react';
+import React, {useState, useEffect, Fragment, useContext} from 'react';
 import useApi from "../hooks/useApi";
 import ScreenSpinner from "@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner";
 import PanelHeader from "@vkontakte/vkui/dist/components/PanelHeader/PanelHeader";
@@ -11,6 +11,7 @@ import Cell from "@vkontakte/vkui/dist/components/Cell/Cell";
 import Icon56GoodsCollection from '@vkontakte/icons/dist/56/goods_collection';
 import Icon16Up from '@vkontakte/icons/dist/16/up';
 import Icon16Down from '@vkontakte/icons/dist/16/down';
+import {RouterContext} from "../contexts/routerContext";
 
 const Balance = ({ loadIndicator }) => {
 	const [initialFetch, setInitialFetch] = useState(true);
@@ -21,6 +22,7 @@ const Balance = ({ loadIndicator }) => {
 	]);
 	const [receipts, setReceipts] = useState([]);
 	const [{response, error}, doApiFetch] = useApi('/day');
+	const [, setRouterContext] = useContext(RouterContext);
 
 	useEffect(() => {
 		if (!initialFetch) return;
@@ -42,7 +44,12 @@ const Balance = ({ loadIndicator }) => {
 			<Placeholder
 				icon={<Icon56GoodsCollection />}
 				header={<ColoredSum sum={prepare.totalReceiptSum(receipts)} fs={'2em'}/>}
-				action={<Button size="l" onClick={()=>{}} data-to={'addnote'}>Добавить доход / расход</Button>}
+				action={<Button size="l" onClick={()=>{
+					setRouterContext(state => ({
+						...state,
+						panel: 'balance.add'
+					}));
+				}} data-to={'addnote'}>Добавить доход / расход</Button>}
 			>
 				Добавляйте доходы/расходы
 			</Placeholder>
