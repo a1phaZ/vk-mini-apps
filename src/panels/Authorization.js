@@ -25,12 +25,17 @@ const Authorization = ({go, goView, type, loadIndicator}) => {
 	useEffect(() => {
 		if (!currentUserState.isLoggedIn) return;
 		const {name, phone, email, password} = currentUserState.currentUser;
-		console.log({name, phone, email, password});
 		if (!name || !phone || !email || !password) {
 			setRouterContext(state =>({
 				...state,
 				view: 'profile',
 				panel: 'profile.edit'
+			}));
+		} else {
+			setRouterContext(state => ({
+				...state,
+				view: 'balance',
+				panel: 'balance.home'
 			}));
 		}
 	},[currentUserState, setRouterContext]);
