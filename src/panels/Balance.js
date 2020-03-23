@@ -1,6 +1,5 @@
 import React, {useState, useEffect, Fragment, useContext} from 'react';
 import useApi from "../hooks/useApi";
-import ScreenSpinner from "@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner";
 import PanelHeader from "@vkontakte/vkui/dist/components/PanelHeader/PanelHeader";
 import {List, Placeholder, Separator} from "@vkontakte/vkui";
 import ColoredSum from "./ColoredSum";
@@ -16,33 +15,25 @@ import {LoadingContext} from "../contexts/loadingContext";
 
 const Balance = () => {
 	const [initialFetch, setInitialFetch] = useState(true);
-	const currentDate = new Date();
-	const [dateRange, setDateRange] = useState([
-		new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
-		new Date(currentDate.getFullYear(), currentDate.getMonth()+1, 0),
-	]);
+	//const currentDate = new Date();
+	// const [dateRange, setDateRange] = useState([
+	// 	new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
+	// 	new Date(currentDate.getFullYear(), currentDate.getMonth()+1, 0),
+	// ]);
 	const [receipts, setReceipts] = useState([]);
-	const [{response, error}, doApiFetch] = useApi('/day');
+	const [{response}, doApiFetch] = useApi('/day');
 	const [, setRouterContext] = useContext(RouterContext);
 	const [, setPopout] = useContext(LoadingContext);
 
 	useEffect(() => {
 		if (!initialFetch) return;
 		doApiFetch();
-		setPopout(state => ({
-			...state,
-			popout: <ScreenSpinner size='large' />
-		}));
 		setInitialFetch(false);
 	}, [initialFetch, setInitialFetch, doApiFetch, setPopout]);
 
 	useEffect(() => {
 		if (!response) return;
 		setReceipts(response);
-		setPopout(state => ({
-			...state,
-			popout: null
-		}));
 	}, [response, setPopout]);
 
 	return(

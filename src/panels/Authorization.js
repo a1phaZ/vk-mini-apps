@@ -7,10 +7,8 @@ import Icon56UserAddOutline from '@vkontakte/icons/dist/56/user_add_outline';
 import useApi from "../hooks/useApi";
 import {AppSignContext} from "../contexts/appSign";
 import {CurrentUserContext} from "../contexts/currentUser";
-import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 import useLocalStorage from "../hooks/useLocalStorage";
 import {RouterContext} from "../contexts/routerContext";
-import {LoadingContext} from "../contexts/loadingContext";
 
 const Authorization = ({go, goView, type}) => {
 	const [password, setPassword] = useState('');
@@ -22,7 +20,6 @@ const Authorization = ({go, goView, type}) => {
 	const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext);
 	const [, setToken] = useLocalStorage('token');
 	const [,setRouterContext] = useContext(RouterContext);
-	const [, setPopout] = useContext(LoadingContext);
 
 	useEffect(() => {
 		if (!currentUserState.isLoggedIn) return;
@@ -84,20 +81,12 @@ const Authorization = ({go, goView, type}) => {
 			currentUser: response.user || null
 		}));
 
-		setPopout(state => ({
-			...state,
-			popout: null
-		}));
-	}, [response, setCurrentUserState, setPopout, go, goView, setToken]);
+	}, [response, setCurrentUserState, go, goView, setToken]);
 
 	useEffect(() => {
 		if (!error) return;
 		setFormError(error);
-		setPopout(state => ({
-			...state,
-			popout: null
-		}));
-	}, [error, setPopout]);
+	}, [error]);
 
 	const onChange = (e) => {
 		e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,4);
@@ -119,10 +108,6 @@ const Authorization = ({go, goView, type}) => {
 
 	const formButtonClick = async () => {
 		setStartFetchData(true);
-		setPopout(state => ({
-			...state,
-			popout: <ScreenSpinner size='large' />
-		}));
 	};
 
 	return (
