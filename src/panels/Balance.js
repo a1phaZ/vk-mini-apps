@@ -12,8 +12,9 @@ import Icon56GoodsCollection from '@vkontakte/icons/dist/56/goods_collection';
 import Icon16Up from '@vkontakte/icons/dist/16/up';
 import Icon16Down from '@vkontakte/icons/dist/16/down';
 import {RouterContext} from "../contexts/routerContext";
+import {LoadingContext} from "../contexts/loadingContext";
 
-const Balance = ({ loadIndicator }) => {
+const Balance = () => {
 	const [initialFetch, setInitialFetch] = useState(true);
 	const currentDate = new Date();
 	const [dateRange, setDateRange] = useState([
@@ -23,20 +24,26 @@ const Balance = ({ loadIndicator }) => {
 	const [receipts, setReceipts] = useState([]);
 	const [{response, error}, doApiFetch] = useApi('/day');
 	const [, setRouterContext] = useContext(RouterContext);
+	const [, setPopout] = useContext(LoadingContext);
 
 	useEffect(() => {
 		if (!initialFetch) return;
-		// if (!currentUser || !isLoggedIn) return;
 		doApiFetch();
-		loadIndicator(<ScreenSpinner size='large' />);
+		setPopout(state => ({
+			...state,
+			popout: <ScreenSpinner size='large' />
+		}));
 		setInitialFetch(false);
-	}, [initialFetch, setInitialFetch, doApiFetch, loadIndicator]);
+	}, [initialFetch, setInitialFetch, doApiFetch, setPopout]);
 
 	useEffect(() => {
 		if (!response) return;
 		setReceipts(response);
-		loadIndicator(null);
-	}, [response, loadIndicator]);
+		setPopout(state => ({
+			...state,
+			popout: null
+		}));
+	}, [response, setPopout]);
 
 	return(
 		<Fragment>

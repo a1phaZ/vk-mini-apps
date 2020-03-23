@@ -10,8 +10,9 @@ import {CurrentUserContext} from "../contexts/currentUser";
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner';
 import useLocalStorage from "../hooks/useLocalStorage";
 import {RouterContext} from "../contexts/routerContext";
+import {LoadingContext} from "../contexts/loadingContext";
 
-const Authorization = ({go, goView, type, loadIndicator}) => {
+const Authorization = ({go, goView, type}) => {
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const [formError, setFormError] = useState(null);
@@ -21,6 +22,7 @@ const Authorization = ({go, goView, type, loadIndicator}) => {
 	const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext);
 	const [, setToken] = useLocalStorage('token');
 	const [,setRouterContext] = useContext(RouterContext);
+	const [, setPopout] = useContext(LoadingContext);
 
 	useEffect(() => {
 		if (!currentUserState.isLoggedIn) return;
@@ -82,14 +84,20 @@ const Authorization = ({go, goView, type, loadIndicator}) => {
 			currentUser: response.user || null
 		}));
 
-		loadIndicator(null);
-	}, [response, setCurrentUserState, loadIndicator, go, goView, setToken]);
+		setPopout(state => ({
+			...state,
+			popout: null
+		}));
+	}, [response, setCurrentUserState, setPopout, go, goView, setToken]);
 
 	useEffect(() => {
 		if (!error) return;
 		setFormError(error);
-		loadIndicator(null);
-	}, [error, loadIndicator]);
+		setPopout(state => ({
+			...state,
+			popout: null
+		}));
+	}, [error, setPopout]);
 
 	const onChange = (e) => {
 		e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,4);
@@ -111,7 +119,10 @@ const Authorization = ({go, goView, type, loadIndicator}) => {
 
 	const formButtonClick = async () => {
 		setStartFetchData(true);
-		loadIndicator(<ScreenSpinner size='large' />);
+		setPopout(state => ({
+			...state,
+			popout: <ScreenSpinner size='large' />
+		}));
 	};
 
 	return (

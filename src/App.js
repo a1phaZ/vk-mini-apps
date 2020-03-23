@@ -1,42 +1,39 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import '@vkontakte/vkui/dist/vkui.css';
 import {Root, Panel, View} from "@vkontakte/vkui";
 import Authorization from "./panels/Authorization";
 import Profile from "./panels/Profile";
 import {RouterContext} from "./contexts/routerContext";
+import {LoadingContext} from "./contexts/loadingContext";
 import Balance from "./panels/Balance";
 import AddDay from "./panels/AddDay";
 
 
 const App = () => {
 	const [routerContext] = useContext(RouterContext);
-	const [popout, setPopout] = useState(null);
-
-	const loadIndicator = (indicator) => {
-		setPopout(indicator);
-	};
+	const [{popout}] = useContext(LoadingContext);
 
 	return (
 		<Root activeView={routerContext.view}>
 			<View id={'authorization'} activePanel={routerContext.panel} popout={popout}>
 				<Panel id={'authorization.login'}>
-					<Authorization type={'login'} loadIndicator={loadIndicator}/>
+					<Authorization type={'login'} />
 				</Panel>
 				<Panel id={'authorization.register'}>
-					<Authorization type={'register'} loadIndicator={loadIndicator}/>
+					<Authorization type={'register'} />
 				</Panel>
 			</View>
 			<View id={'profile'} activePanel={routerContext.panel} popout={popout}>
 				<Panel id={'profile.edit'}>
-					<Profile loadIndicator={loadIndicator}/>
+					<Profile />
 				</Panel>
 			</View>
 			<View id={'balance'} activePanel={routerContext.panel} popout={popout}>
 				<Panel id={'balance.home'}>
-					<Balance loadIndicator={loadIndicator}/>
+					<Balance />
 				</Panel>
 				<Panel id={'balance.add'}>
-					<AddDay loadIndicator={loadIndicator}/>
+					<AddDay />
 				</Panel>
 			</View>
 		</Root>
