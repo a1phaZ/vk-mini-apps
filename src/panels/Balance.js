@@ -1,4 +1,4 @@
-import React, {useState, useEffect, Fragment, useContext} from 'react';
+import React, {useState, useEffect, Fragment, useContext, useCallback} from 'react';
 import useApi from "../hooks/useApi";
 import PanelHeader from "@vkontakte/vkui/dist/components/PanelHeader/PanelHeader";
 import {List, Placeholder, Separator} from "@vkontakte/vkui";
@@ -12,10 +12,11 @@ import Icon16Up from '@vkontakte/icons/dist/16/up';
 import Icon16Down from '@vkontakte/icons/dist/16/down';
 import {RouterContext} from "../contexts/routerContext";
 import {LoadingContext} from "../contexts/loadingContext";
+import Calendar from "../components/Calendar";
 
 const Balance = () => {
 	const [initialFetch, setInitialFetch] = useState(true);
-	//const currentDate = new Date();
+	const [currentDate, setCurrentDate] = useState(new Date());
 	// const [dateRange, setDateRange] = useState([
 	// 	new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
 	// 	new Date(currentDate.getFullYear(), currentDate.getMonth()+1, 0),
@@ -24,6 +25,13 @@ const Balance = () => {
 	const [{response}, doApiFetch] = useApi('/day');
 	const [, setRouterContext] = useContext(RouterContext);
 	const [, setPopout] = useContext(LoadingContext);
+
+	const setDateFromCalendar = useCallback((date) => {
+		setCurrentDate(date);
+		 console.log('date', date);
+	}, []);
+
+	console.log('currentDate', currentDate);
 
 	useEffect(() => {
 		if (!initialFetch) return;
@@ -76,6 +84,7 @@ const Balance = () => {
 
 			<Group title='Чеки'>
 				<List>
+					<Calendar setDateFromCalendar={setDateFromCalendar}/>
 					{receipts.map((receipt, index) => {
 						return (
 							<Cell
