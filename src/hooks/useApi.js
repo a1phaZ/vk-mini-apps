@@ -8,8 +8,8 @@ export default url => {
 	const [error, setError] = useState(null);
 	const [options, setOptions] = useState({});
 	const [token] = useLocalStorage('token');
-	const _apiBase = `http://localhost:3000/api`;
-	// const _apiBase = `http://35.238.182.107:8080/api`;
+	// const _apiBase = `http://localhost:3000/api`;
+	const _apiBase = `http://35.238.182.107:8080/api`;
 
 	const doApiFetch = useCallback((options = {}) => {
 		setOptions(options);
