@@ -47,6 +47,6 @@ export default url => {
 				setIsLoading(false);
 				setError(e);
 			});
-	}, [isLoading, bodyFields, method, url, _apiBase, token]);
+	}, [isLoading, bodyFields, method, url, _apiBase, token, params]);
 	return [{isLoading, response, error}, doApiFetch];
 }

@@ -25,7 +25,7 @@ const AddDay = () => {
   const [price, setPrice] = useState('');
   const [income, setIncome] = useState(false);
   const [, setRouterContext] = useContext(RouterContext);
-  const [{response, error}, doApiFetch] = useApi('/day');
+  const [{response}, doApiFetch] = useApi('/day');
   const [startFetchData, setStartFetchData] = useState(false);
   const osname = platform();
 

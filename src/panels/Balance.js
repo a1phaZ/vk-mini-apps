@@ -41,7 +41,7 @@ const Balance = () => {
 			}
 		});
 		setInitialFetch(false);
-	}, [initialFetch, setInitialFetch, doApiFetch, setPopout]);
+	}, [initialFetch, setInitialFetch, doApiFetch, setPopout, currentDate]);
 
 	useEffect(() => {
 		if (!response) return;
