@@ -13,6 +13,7 @@ import Icon16Down from '@vkontakte/icons/dist/16/down';
 import {RouterContext} from "../contexts/routerContext";
 import {LoadingContext} from "../contexts/loadingContext";
 import Calendar from "../components/Calendar";
+import {format} from 'date-fns';
 
 const Balance = () => {
 	const [initialFetch, setInitialFetch] = useState(true);
@@ -25,17 +26,20 @@ const Balance = () => {
 	const [{response}, doApiFetch] = useApi('/day');
 	const [, setRouterContext] = useContext(RouterContext);
 	const [, setPopout] = useContext(LoadingContext);
+	const dateFormat = 'yyyy-MM-dd';
 
 	const setDateFromCalendar = useCallback((date) => {
 		setCurrentDate(date);
-		 console.log('date', date);
+		setInitialFetch(true);
 	}, []);
-
-	console.log('currentDate', currentDate);
 
 	useEffect(() => {
 		if (!initialFetch) return;
-		doApiFetch();
+		doApiFetch({
+			params: {
+				date: format(currentDate, dateFormat)
+			}
+		});
 		setInitialFetch(false);
 	}, [initialFetch, setInitialFetch, doApiFetch, setPopout]);
 

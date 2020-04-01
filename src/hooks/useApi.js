@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import useLocalStorage from "./useLocalStorage";
+import queryString from 'query-string';
 
 export default url => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -7,8 +8,8 @@ export default url => {
 	const [error, setError] = useState(null);
 	const [options, setOptions] = useState({});
 	const [token] = useLocalStorage('token');
-	//const _apiBase = `http://localhost:3000/api`;
-	const _apiBase = `http://35.238.182.107:8080/api`;
+	const _apiBase = `http://localhost:3000/api`;
+	// const _apiBase = `http://35.238.182.107:8080/api`;
 
 	const doApiFetch = useCallback((options = {}) => {
 		setOptions(options);
@@ -16,7 +17,7 @@ export default url => {
 
 	}, []);
 
-	const { method = 'GET', ...bodyFields} = options;
+	const { method = 'GET', params, ...bodyFields} = options;
 	useEffect(() => {
 		if (!isLoading) {
 			return
@@ -27,7 +28,11 @@ export default url => {
 			Authorization: token ? `Token ${token}` : '',
 		};
 
-		fetch(`${_apiBase}${url}`, {
+		const qString = params ? queryString.stringify(params) : null;
+
+		const uri = qString ? `${_apiBase}${url}?${qString}` : `${_apiBase}${url}`;
+
+		fetch(uri, {
 			method,
 			mode: 'cors',
 			headers,
