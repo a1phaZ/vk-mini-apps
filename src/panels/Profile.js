@@ -13,6 +13,7 @@ import connect from "@vkontakte/vk-connect";
 import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
 import useApi from "../hooks/useApi";
 import {CurrentUserContext} from "../contexts/currentUser";
+import {RouterContext} from "../contexts/routerContext";
 
 const Profile = ({go, fetchedUser}) =>{
 	const [email, setEmail] = useState('');
@@ -21,9 +22,10 @@ const Profile = ({go, fetchedUser}) =>{
 	const [kktPassword, setKktPassword] = useState('');
 	const [fetchToFns, setFetchToFns] = useState(false);
 	//TODO Использовать {response, error} чтобы делать переход или показывать ошибки
-	const [, doApiFetch] = useApi(`/users/profile`);
+	const [{response}, doApiFetch] = useApi(`/users/profile`);
 	const [startFetchData, setStartFetchData] = useState(false);
 	const [currentUserState] = useContext(CurrentUserContext);
+	const [,setRouterContext] = useContext(RouterContext);
 	const osName = platform();
 
 	useEffect(()=>{
@@ -62,6 +64,19 @@ const Profile = ({go, fetchedUser}) =>{
 		doApiFetch(body);
 		setStartFetchData(false);
 	},[startFetchData, doApiFetch, email, phone, name, kktPassword]);
+
+	useEffect(() => {
+		if (!response) return;
+		const { user } = response;
+		if (!user.name || !user.phone || !user.email || !user.password) {
+			return;
+		}
+		setRouterContext(state => ({
+			...state,
+			view: 'balance',
+			panel: 'balance.home'
+		}));
+	}, [response, setRouterContext]);
 
 	return(
 		<Fragment>
