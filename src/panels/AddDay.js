@@ -3,7 +3,7 @@ import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader
 import FormLayout from "@vkontakte/vkui/dist/components/FormLayout/FormLayout";
 import Input from "@vkontakte/vkui/dist/components/Input/Input";
 import PanelHeaderButton from "@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton";
-import {IOS, platform} from "@vkontakte/vkui";
+import {IOS, platform, Snackbar} from "@vkontakte/vkui";
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Checkbox from "@vkontakte/vkui/dist/components/Checkbox/Checkbox";
@@ -12,8 +12,11 @@ import Icon24Qr from '@vkontakte/icons/dist/24/qr';
 import PanelHeaderContent from "@vkontakte/vkui/dist/components/PanelHeaderContent/PanelHeaderContent";
 import {RouterContext} from "../contexts/routerContext";
 import useApi from "../hooks/useApi";
+import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
+import Icon16Done from '@vkontakte/icons/dist/16/done';
 
 const AddDay = () => {
+  const SUCCESS_MESSAGE = 'Добавление прошло успешно';
   const [name, setName] = useState('');
   const [date, setDate] = useState(() => {
     const date = new Date();
@@ -24,6 +27,7 @@ const AddDay = () => {
   const [quantity, setQuantity] = useState(1);
   const [price, setPrice] = useState('');
   const [income, setIncome] = useState(false);
+  const [snackbar, setSnackbar] = useState(null);
   const [, setRouterContext] = useContext(RouterContext);
   const [{response}, doApiFetch] = useApi('/day');
   const [startFetchData, setStartFetchData] = useState(false);
@@ -57,7 +61,13 @@ const AddDay = () => {
 
   useEffect(() => {
     if (!response) return;
-    console.log(response);
+    setSnackbar(<Snackbar
+      layout="vertical"
+      onClose={() => setSnackbar(null)}
+      before={<Avatar size={24} style={{backgroundColor: 'var(--accent)'}}><Icon16Done fill="#fff" width={14} height={14} /></Avatar>}
+    >
+      {SUCCESS_MESSAGE}
+    </Snackbar>)
   }, [response]);
 
   return(
@@ -122,6 +132,8 @@ const AddDay = () => {
           Добавить {income ? "доход" : "расход"}
         </Button>
       </FormLayout>
+
+      {snackbar}
     </Fragment>
   )
 };
