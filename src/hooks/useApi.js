@@ -9,7 +9,7 @@ export default url => {
 	const [options, setOptions] = useState({});
 	const [token] = useLocalStorage('token');
 	// const _apiBase = `http://localhost:3000/api`;
-	const _apiBase = `http://35.238.182.107:8080/api`;
+	const _apiBase = `https://35.238.182.107:8080/api`;
 
 	const doApiFetch = useCallback((options = {}) => {
 		setOptions(options);
