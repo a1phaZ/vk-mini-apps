@@ -11,21 +11,15 @@ import Icon56GoodsCollection from '@vkontakte/icons/dist/56/goods_collection';
 import Icon16Up from '@vkontakte/icons/dist/16/up';
 import Icon16Down from '@vkontakte/icons/dist/16/down';
 import {RouterContext} from "../contexts/routerContext";
-import {LoadingContext} from "../contexts/loadingContext";
 import Calendar from "../components/Calendar";
 import {format} from 'date-fns';
 
 const Balance = () => {
 	const [initialFetch, setInitialFetch] = useState(true);
 	const [currentDate, setCurrentDate] = useState(new Date());
-	// const [dateRange, setDateRange] = useState([
-	// 	new Date(currentDate.getFullYear(), currentDate.getMonth(), 1),
-	// 	new Date(currentDate.getFullYear(), currentDate.getMonth()+1, 0),
-	// ]);
 	const [receipts, setReceipts] = useState([]);
 	const [{response}, doApiFetch] = useApi('/day');
 	const [, dispatch] = useContext(RouterContext);
-	const [, setPopout] = useContext(LoadingContext);
 	const dateFormat = 'yyyy-MM-dd';
 
 	const setDateFromCalendar = useCallback((date) => {
@@ -41,12 +35,12 @@ const Balance = () => {
 			}
 		});
 		setInitialFetch(false);
-	}, [initialFetch, setInitialFetch, doApiFetch, setPopout, currentDate]);
+	}, [initialFetch, setInitialFetch, doApiFetch, currentDate]);
 
 	useEffect(() => {
 		if (!response) return;
 		setReceipts(response);
-	}, [response, setPopout]);
+	}, [response]);
 
 	return(
 		<Fragment>
