@@ -34,23 +34,27 @@ export default url => {
 
 		const uri = qString ? `${_apiBase}${url}?${qString}` : `${_apiBase}${url}`;
 
-		fetch(uri, {
-			method,
-			mode: 'cors',
-			headers,
-			body: method !== 'GET' ? JSON.stringify(bodyFields) : null,
-		})
-			.then(res => res.json())
-			.then(r => {
-				setIsLoading(false);
-				dispatch({ type: 'HIDE_LOADING' });
-				setResponse(r);
+		const fetchData = async () => {
+			await fetch(uri, {
+				method,
+				mode: 'cors',
+				headers,
+				body: method !== 'GET' ? JSON.stringify(bodyFields) : null,
 			})
-			.catch(e => {
-				setIsLoading(false);
-				dispatch({ type: 'HIDE_LOADING' });
-				setError(e);
-			});
+				.then(res => res.json())
+				.then(r => {
+					setIsLoading(false);
+					dispatch({ type: 'HIDE_LOADING' });
+					setResponse(r);
+				})
+				.catch(e => {
+					setIsLoading(false);
+					dispatch({ type: 'HIDE_LOADING' });
+					setError(e);
+				});
+		};
+
+		fetchData();
 	}, [isLoading, bodyFields, method, url, _apiBase, token, params, dispatch]);
 	return [{isLoading, response, error}, doApiFetch];
 }
