@@ -1,8 +1,10 @@
 import React, { createContext, useReducer } from 'react';
+import {PopoutWrapper, ScreenSpinner} from "@vkontakte/vkui";
 
 const initialState = {
 	view: 'authorization',
-	panel: 'authorization.login'
+	panel: 'authorization.login',
+	popout: null,
 };
 
 const reducer = (state, action) => {
@@ -17,6 +19,20 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				panel: `${state.view}.${action.payload.panel}`
+			};
+		case 'SHOW_LOADING':
+			return {
+				...state,
+				popout: (
+					<PopoutWrapper>
+						<ScreenSpinner />
+					</PopoutWrapper>
+				)
+			};
+		case 'HIDE_LOADING':
+			return {
+				...state,
+				popout: null
 			};
 		default:
 			return state;

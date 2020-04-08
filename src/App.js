@@ -11,7 +11,7 @@ const App = () => {
 	const [routerContext] = useContext(RouterContext);
 
 	return (
-		<Root activeView={routerContext.view}>
+		<Root activeView={routerContext.view} popout={routerContext.popout}>
 			<View id={'authorization'} activePanel={routerContext.panel}>
 				<Panel id={'authorization.login'}>
 					<Authorization type={'login'} />
