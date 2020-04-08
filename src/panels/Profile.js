@@ -25,7 +25,7 @@ const Profile = ({go, fetchedUser}) =>{
 	const [{response}, doApiFetch] = useApi(`/users/profile`);
 	const [startFetchData, setStartFetchData] = useState(false);
 	const [currentUserState] = useContext(CurrentUserContext);
-	const [,setRouterContext] = useContext(RouterContext);
+	const [, dispatch] = useContext(RouterContext);
 	const osName = platform();
 
 	useEffect(()=>{
@@ -71,12 +71,8 @@ const Profile = ({go, fetchedUser}) =>{
 		if (!user.name || !user.phone || !user.email || !user.password) {
 			return;
 		}
-		setRouterContext(state => ({
-			...state,
-			view: 'balance',
-			panel: 'balance.home'
-		}));
-	}, [response, setRouterContext]);
+		dispatch({type: 'SET_VIEW', payload: { view: 'balance', panel: 'home'}});
+	}, [response, dispatch]);
 
 	return(
 		<Fragment>

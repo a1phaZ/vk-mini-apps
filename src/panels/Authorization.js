@@ -19,25 +19,17 @@ const Authorization = ({go, goView, type}) => {
 	const [startFetchData, setStartFetchData] = useState(false);
 	const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext);
 	const [, setToken] = useLocalStorage('token');
-	const [,setRouterContext] = useContext(RouterContext);
+	const [,dispatch] = useContext(RouterContext);
 
 	useEffect(() => {
 		if (!currentUserState.isLoggedIn) return;
 		const {name, phone, email, password} = currentUserState.currentUser;
 		if (!name || !phone || !email || !password) {
-			setRouterContext(state =>({
-				...state,
-				view: 'profile',
-				panel: 'profile.edit'
-			}));
+			dispatch({type: 'SET_VIEW', payload: { view: 'profile', panel: 'edit'}});
 		} else {
-			setRouterContext(state => ({
-				...state,
-				view: 'balance',
-				panel: 'balance.home'
-			}));
+			dispatch({type: 'SET_VIEW', payload: { view: 'balance', panel: 'home'}})
 		}
-	},[currentUserState, setRouterContext]);
+	},[currentUserState, dispatch]);
 
 	useEffect(()=>{
 		if (type === 'login') return;
@@ -139,12 +131,9 @@ const Authorization = ({go, goView, type}) => {
 					stretched
 					mode="tertiary"
 					onClick={(e) => {
-						setRouterContext(state => ({
-							...state,
-							panel: e.currentTarget.dataset.to
-						}));
+						dispatch({type: 'SET_PANEL', payload: { panel: e.currentTarget.dataset.to}});
 					}}
-					data-to={type === 'login' ? 'authorization.register' : 'authorization.login'}
+					data-to={type === 'login' ? 'register' : 'login'}
 				>{type === 'login' ? 'Нет пароля?' : 'Есть пароль?'}</Button>
 			</Div>
 		</Fragment>

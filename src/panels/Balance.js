@@ -24,7 +24,7 @@ const Balance = () => {
 	// ]);
 	const [receipts, setReceipts] = useState([]);
 	const [{response}, doApiFetch] = useApi('/day');
-	const [, setRouterContext] = useContext(RouterContext);
+	const [, dispatch] = useContext(RouterContext);
 	const [, setPopout] = useContext(LoadingContext);
 	const dateFormat = 'yyyy-MM-dd';
 
@@ -54,12 +54,9 @@ const Balance = () => {
 			<Placeholder
 				icon={<Icon56GoodsCollection />}
 				header={<ColoredSum sum={prepare.totalReceiptSum(receipts)} fs={'2em'}/>}
-				action={<Button size="l" onClick={()=>{
-					setRouterContext(state => ({
-						...state,
-						panel: 'balance.add'
-					}));
-				}} data-to={'addnote'}>Добавить доход / расход</Button>}
+				action={<Button size="l" onClick={(e)=>{
+					dispatch({type: 'SET_PANEL', payload: { panel: e.currentTarget.dataset.to}});
+				}} data-to={'add'}>Добавить доход / расход</Button>}
 			>
 				Добавляйте доходы/расходы
 			</Placeholder>

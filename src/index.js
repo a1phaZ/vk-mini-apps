@@ -26,11 +26,11 @@ ReactDOM.render(
 		<AppSignProvider>
 			{/*<LoadingProvider>*/}
 				<CurrentUserProvider>
-					<RouterContextProvider>
-						<CurrentUserChecker>
+					<CurrentUserChecker>
+						<RouterContextProvider>
 							<App />
-						</CurrentUserChecker>
-					</RouterContextProvider>
+						</RouterContextProvider>
+					</CurrentUserChecker>
 				</CurrentUserProvider>
 			{/*</LoadingProvider>*/}
 		</AppSignProvider>

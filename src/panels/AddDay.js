@@ -28,7 +28,7 @@ const AddDay = () => {
   const [price, setPrice] = useState('');
   const [income, setIncome] = useState(false);
   const [snackbar, setSnackbar] = useState(null);
-  const [, setRouterContext] = useContext(RouterContext);
+  const [, dispatch] = useContext(RouterContext);
   const [{response}, doApiFetch] = useApi('/day');
   const [startFetchData, setStartFetchData] = useState(false);
   const osname = platform();
@@ -74,12 +74,9 @@ const AddDay = () => {
     <Fragment>
       <PanelHeader
         left={
-          <PanelHeaderButton key={'back'} onClick={() => {
-            setRouterContext(state => ({
-              ...state,
-              panel: 'balance.home'
-            }));
-          }} data-to={'balance'}>{osname === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}</PanelHeaderButton>
+          <PanelHeaderButton key={'back'} onClick={(e) => {
+            dispatch({type: 'SET_PANEL', payload: { panel: e.currentTarget.dataset.to}});
+          }} data-to={'home'}>{osname === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}</PanelHeaderButton>
         }
       >
         <PanelHeaderContent
