@@ -41,7 +41,10 @@ export default url => {
 				headers,
 				body: method !== 'GET' ? JSON.stringify(bodyFields) : null,
 			})
-				.then(res => res.json())
+				.then(res => {
+					if (!res.ok) throw Error(res.statusText);
+					return res.json();
+				})
 				.then(r => {
 					setIsLoading(false);
 					dispatch({ type: 'HIDE_LOADING' });
