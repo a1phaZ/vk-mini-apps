@@ -4,18 +4,16 @@ import {
 	IOS,
 	PanelHeader,
 	platform,
-	PanelHeaderButton,
-	Group, Cell, Button, Input, FormLayoutGroup, FormStatus
+	PanelHeaderButton, Button, Input, FormLayoutGroup, FormStatus
 } from '@vkontakte/vkui';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import connect from "@vkontakte/vk-connect";
-import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
 import useApi from "../hooks/useApi";
 import {CurrentUserContext} from "../contexts/currentUser";
 import {RouterContext} from "../contexts/routerContext";
 
-const Profile = ({fetchedUser}) =>{
+const Profile = () =>{
 	const [email, setEmail] = useState('');
 	const [phone, setPhone] = useState('');
 	const [name, setName] = useState('');
@@ -25,7 +23,7 @@ const Profile = ({fetchedUser}) =>{
 	//TODO Использовать {response, error} чтобы делать переход или показывать ошибки
 	const [{response}, doApiFetch] = useApi(`/users/profile`);
 	const [startFetchData, setStartFetchData] = useState(false);
-	const [currentUserState] = useContext(CurrentUserContext);
+	const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext);
 	const [, dispatch] = useContext(RouterContext);
 	const osName = platform();
 
@@ -74,8 +72,14 @@ const Profile = ({fetchedUser}) =>{
 		if (!user.name || !user.phone || !user.email || !user.password) {
 			return;
 		}
+		setCurrentUserState(state => ({
+			...state,
+			isLoading: false,
+			isLoggedIn: !!response.user,
+			currentUser: response.user || null
+		}));
 		dispatch({type: 'SET_VIEW', payload: { view: 'balance', panel: 'home'}});
-	}, [response, dispatch]);
+	}, [response, dispatch, setCurrentUserState]);
 
 	return(
 		<Fragment>
@@ -88,15 +92,6 @@ const Profile = ({fetchedUser}) =>{
 			>
 				Профиль
 			</PanelHeader>
-			{fetchedUser &&
-			<Group title={fetchedUser.id}>
-				<Cell
-					before={fetchedUser.photo_200 ? <Avatar src={fetchedUser.photo_200}/> : null}
-					description={fetchedUser.city && fetchedUser.city.title ? fetchedUser.city.title : ''}
-				>
-					{`${fetchedUser.first_name} ${fetchedUser.last_name}`}
-				</Cell>
-			</Group>}
 			<FormLayout>
 				{fetchToFns && <FormStatus header="Запрос на получение пароля успешно отправлен" mode="default">
 					Пароль должен придти к вам в смс. Введите пароль в соответствующее поле. Если пароль не пришел повторите попытку позже.
