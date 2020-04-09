@@ -15,7 +15,7 @@ import Calendar from "../components/Calendar";
 import {format} from 'date-fns';
 import MainMenu from "../components/mainMenu/MainMenu";
 
-const Balance = ({setReceiptsFromBalance, onClickActiveModal}) => {
+const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
 	const viewTitle = 'Баланс'
 	const [initialFetch, setInitialFetch] = useState(true);
 	const [currentDate, setCurrentDate] = useState(new Date());
@@ -42,8 +42,7 @@ const Balance = ({setReceiptsFromBalance, onClickActiveModal}) => {
 	useEffect(() => {
 		if (!response) return;
 		setReceipts(response);
-		setReceiptsFromBalance(response);
-	}, [response, setReceiptsFromBalance]);
+	}, [response, setReceiptFromBalance]);
 
 	return(
 		<Fragment>
@@ -89,7 +88,10 @@ const Balance = ({setReceiptsFromBalance, onClickActiveModal}) => {
 							<Cell
 								key={index}
 								expandable
-								onClick={(e) => onClickActiveModal(e.currentTarget.dataset.to)}
+								onClick={() => {
+									onClickActiveModal('modal-page');
+									setReceiptFromBalance(receipt);
+								}}
 								data-to={receipt._id}
 								indicator={<ColoredSum sum={receipt.totalSum}/>}
 							>
