@@ -26,7 +26,7 @@ const App = () => {
 		if (!receipts) return;
 		const osName = platform();
 		setModal(
-			<ModalRoot activeModal={activeModal}>
+			<ModalRoot activeModal={activeModal} onClose={modalBack}>
 				{receipts.map((receipt, index) => {
 					return(
 						<ModalPage
