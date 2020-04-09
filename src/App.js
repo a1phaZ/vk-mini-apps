@@ -1,14 +1,73 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState, useEffect, useCallback} from 'react';
 import '@vkontakte/vkui/dist/vkui.css';
-import {Root, Panel, View} from "@vkontakte/vkui";
+import {Root, Panel, View, platform, ModalRoot, ModalPage, ModalPageHeader, IOS, List} from "@vkontakte/vkui";
 import Authorization from "./panels/Authorization";
 import Profile from "./panels/Profile";
 import {RouterContext} from "./contexts/routerContext";
 import Balance from "./panels/Balance";
 import AddDay from "./panels/AddDay";
+import PanelHeaderButton from "@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton";
+import prepare from "./handlers/prepare";
+import Receipt from "./panels/Receipt";
+import Icon24Cancel from '@vkontakte/icons/dist/24/cancel';
+import Icon24Dismiss from '@vkontakte/icons/dist/24/dismiss';
 
 const App = () => {
 	const [routerContext] = useContext(RouterContext);
+	const [activeModal, setActiveModal] = useState(null);
+	const [modal, setModal] = useState(null);
+	const [receipts, setReceipts] = useState(null);
+
+	const setReceiptsFromBalance = useCallback((receipts) => {
+		setReceipts(null);
+		setReceipts(receipts);
+	}, []);
+
+	const setModalFromBalance = useCallback((modal) => {
+		setModal(modal);
+	}, [])
+
+	const onClickActiveModal = (id) => {
+		setActiveModal(id);
+	}
+
+	useEffect(() => {
+		console.log(activeModal);
+	},[activeModal]);
+
+	const modalBack = () => {
+		setActiveModal(null);
+	}
+
+	useEffect(() => {
+		if (!receipts) return;
+		const osName = platform();
+		setModal(
+			<ModalRoot activeModal={activeModal}>
+				{receipts.map((receipt, index) => {
+					return(
+						<ModalPage
+							key={index}
+							id={receipt._id}
+							onClose={modalBack}
+							header={
+								<ModalPageHeader
+									left={osName !== IOS && <PanelHeaderButton onClick={modalBack}><Icon24Cancel /></PanelHeaderButton>}
+									right={osName === IOS && <PanelHeaderButton onClick={modalBack}>{osName === IOS ? 'Готово' : <Icon24Dismiss />}</PanelHeaderButton>}
+								>
+									{prepare.date(receipt.dateTime)}
+								</ModalPageHeader>
+							}
+						>
+							<List>
+								<Receipt id={receipt._id} dateTime={receipt.dateTime} items={receipt.items}/>
+							</List>
+						</ModalPage>
+					)
+				})}
+			</ModalRoot>
+		);
+	}, [receipts, activeModal])
 
 	return (
 		<Root activeView={routerContext.view} popout={routerContext.popout}>
@@ -25,9 +84,13 @@ const App = () => {
 					<Profile />
 				</Panel>
 			</View>
-			<View id={'balance'} activePanel={routerContext.panel}>
+			<View id={'balance'} activePanel={routerContext.panel} modal={modal} >
 				<Panel id={'balance.home'}>
-					<Balance />
+					<Balance
+						setReceiptsFromBalance={setReceiptsFromBalance}
+						onClickActiveModal={onClickActiveModal}
+						setModalFromBalance={setModalFromBalance}
+					/>
 				</Panel>
 				<Panel id={'balance.add'}>
 					<AddDay />
