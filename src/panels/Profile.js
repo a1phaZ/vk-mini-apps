@@ -15,12 +15,13 @@ import useApi from "../hooks/useApi";
 import {CurrentUserContext} from "../contexts/currentUser";
 import {RouterContext} from "../contexts/routerContext";
 
-const Profile = ({go, fetchedUser}) =>{
+const Profile = ({fetchedUser}) =>{
 	const [email, setEmail] = useState('');
 	const [phone, setPhone] = useState('');
 	const [name, setName] = useState('');
 	const [kktPassword, setKktPassword] = useState('');
 	const [fetchToFns, setFetchToFns] = useState(false);
+	const [canBack, setCanBack] = useState(true);
 	//TODO Использовать {response, error} чтобы делать переход или показывать ошибки
 	const [{response}, doApiFetch] = useApi(`/users/profile`);
 	const [startFetchData, setStartFetchData] = useState(false);
@@ -43,10 +44,12 @@ const Profile = ({go, fetchedUser}) =>{
 	}, []);
 
 	useEffect(() => {
-		setEmail(currentUserState.currentUser.email || '');
-		setName(currentUserState.currentUser.name || '');
-		setPhone(currentUserState.currentUser.phone || '');
-		setKktPassword(currentUserState.currentUser.password || '');
+		const { email, name, phone, password } = currentUserState.currentUser;
+		setEmail(email || '');
+		setName(name || '');
+		setPhone(phone || '');
+		setKktPassword(password || '');
+		setCanBack(!!email && !!name && !!phone && !!password);
 	}, [currentUserState]);
 
 	useEffect(()=>{
@@ -77,7 +80,9 @@ const Profile = ({go, fetchedUser}) =>{
 	return(
 		<Fragment>
 			<PanelHeader
-				left={<PanelHeaderButton onClick={go} data-to="home">
+				left={canBack && <PanelHeaderButton onClick={() => {
+					dispatch({type: 'SET_VIEW', payload: {view: 'balance', panel: 'home'}})
+				}}>
 					{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
 				</PanelHeaderButton>}
 			>
