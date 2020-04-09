@@ -1,6 +1,5 @@
 import React, {useState, useEffect, Fragment, useContext, useCallback} from 'react';
 import useApi from "../hooks/useApi";
-import PanelHeader from "@vkontakte/vkui/dist/components/PanelHeader/PanelHeader";
 import {List, Placeholder, Separator} from "@vkontakte/vkui";
 import ColoredSum from "./ColoredSum";
 import prepare from "../handlers/prepare";
@@ -10,11 +9,14 @@ import Cell from "@vkontakte/vkui/dist/components/Cell/Cell";
 import Icon56GoodsCollection from '@vkontakte/icons/dist/56/goods_collection';
 import Icon16Up from '@vkontakte/icons/dist/16/up';
 import Icon16Down from '@vkontakte/icons/dist/16/down';
+
 import {RouterContext} from "../contexts/routerContext";
 import Calendar from "../components/Calendar";
 import {format} from 'date-fns';
+import MainMenu from "../components/mainMenu/MainMenu";
 
 const Balance = () => {
+	const viewTitle = 'Баланс'
 	const [initialFetch, setInitialFetch] = useState(true);
 	const [currentDate, setCurrentDate] = useState(new Date());
 	const [receipts, setReceipts] = useState([]);
@@ -44,7 +46,8 @@ const Balance = () => {
 
 	return(
 		<Fragment>
-			<PanelHeader>Balance</PanelHeader>
+			<MainMenu title={viewTitle} />
+
 			<Placeholder
 				icon={<Icon56GoodsCollection />}
 				header={<ColoredSum sum={prepare.totalReceiptSum(receipts)} fs={'2em'}/>}
