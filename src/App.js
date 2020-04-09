@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect, useCallback} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import '@vkontakte/vkui/dist/vkui.css';
 import {Root, Panel, View, platform, ModalRoot, ModalPage, ModalPageHeader, IOS, List} from "@vkontakte/vkui";
 import Authorization from "./panels/Authorization";
@@ -17,23 +17,6 @@ const App = () => {
 	const [activeModal, setActiveModal] = useState(null);
 	const [modal, setModal] = useState(null);
 	const [receipts, setReceipts] = useState(null);
-
-	const setReceiptsFromBalance = useCallback((receipts) => {
-		setReceipts(null);
-		setReceipts(receipts);
-	}, []);
-
-	const setModalFromBalance = useCallback((modal) => {
-		setModal(modal);
-	}, [])
-
-	const onClickActiveModal = (id) => {
-		setActiveModal(id);
-	}
-
-	useEffect(() => {
-		console.log(activeModal);
-	},[activeModal]);
 
 	const modalBack = () => {
 		setActiveModal(null);
@@ -67,10 +50,10 @@ const App = () => {
 				})}
 			</ModalRoot>
 		);
-	}, [receipts, activeModal])
+	}, [receipts, activeModal]);
 
 	return (
-		<Root activeView={routerContext.view} popout={routerContext.popout}>
+		<Root activeView={routerContext.view} popout={routerContext.popout} modal={modal} onTransition={null}>
 			<View id={'authorization'} activePanel={routerContext.panel}>
 				<Panel id={'authorization.login'}>
 					<Authorization type={'login'} />
@@ -84,12 +67,11 @@ const App = () => {
 					<Profile />
 				</Panel>
 			</View>
-			<View id={'balance'} activePanel={routerContext.panel} modal={modal} >
+			<View id={'balance'} activePanel={routerContext.panel} >
 				<Panel id={'balance.home'}>
 					<Balance
-						setReceiptsFromBalance={setReceiptsFromBalance}
-						onClickActiveModal={onClickActiveModal}
-						setModalFromBalance={setModalFromBalance}
+						setReceiptsFromBalance={setReceipts}
+						onClickActiveModal={setActiveModal}
 					/>
 				</Panel>
 				<Panel id={'balance.add'}>
