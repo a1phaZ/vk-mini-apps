@@ -35,7 +35,7 @@ const SearchComponent = ({ receipts }) => {
       setSearchResult([]);
       return;
     }
-    setSearchResult(searchTarget.filter(({name}) => name.toLowerCase().indexOf(search) > -1)).sort((a, b) => b.dateTime - a.dateTime);
+    setSearchResult(searchTarget.filter(({name}) => name.toLowerCase().indexOf(search) > -1));
   }, [search, searchTarget]);
 
   return (
