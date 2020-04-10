@@ -14,9 +14,10 @@ import {RouterContext} from "../contexts/routerContext";
 import Calendar from "../components/Calendar";
 import {format} from 'date-fns';
 import MainMenu from "../components/mainMenu/MainMenu";
+import SearchComponent from "../components/search";
 
 const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
-	const viewTitle = 'Баланс'
+	const viewTitle = 'Баланс';
 	const [initialFetch, setInitialFetch] = useState(true);
 	const [currentDate, setCurrentDate] = useState(new Date());
 	const [receipts, setReceipts] = useState([]);
@@ -47,7 +48,7 @@ const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
 	return(
 		<Fragment>
 			<MainMenu title={viewTitle} />
-
+			<SearchComponent receipts={receipts} />
 			<Placeholder
 				icon={<Icon56GoodsCollection />}
 				header={<ColoredSum sum={prepare.totalReceiptSum(receipts)} fs={'2em'}/>}
