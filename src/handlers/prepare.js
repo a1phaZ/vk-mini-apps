@@ -89,7 +89,17 @@ export default class Prepare {
 		if (arr.length === 0) return 0;
 		const reducer = (previousValue, currentValue) => previousValue + currentValue;
 		return arr.map((item) => {
-			return item.totalSum;
+			return item.sum || item.totalSum;
+		}).reduce(reducer);
+	}
+
+	static totalSumWithParams(arr) {
+		if (arr.length === 0) return 0;
+		const reducer = (previousValue, currentValue) => previousValue + currentValue;
+		return arr.map((item) => {
+			const {income, sum} = item;
+			if (income) return sum;
+			return -1*sum;
 		}).reduce(reducer);
 	}
 
