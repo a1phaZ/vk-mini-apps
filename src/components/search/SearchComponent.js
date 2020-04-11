@@ -43,7 +43,7 @@ const SearchComponent = ({ receipts }) => {
       <Search value={search} onChange={onSearchChange}/>
       <Group title='Поиск'>
         {
-          searchResult.length > 0 && <Receipt id={searchResult._id} dateTime={searchResult.dateTime} items={searchResult}/>
+          searchResult.length > 0 && <Receipt id={searchResult._id} isSearch={true} items={searchResult}/>
         }
       </Group>
     </Fragment>

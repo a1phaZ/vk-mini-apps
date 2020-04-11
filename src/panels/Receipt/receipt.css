@@ -1,22 +1,49 @@
 .receipt-item-wrapper{
-    padding-left: 1em;
+    padding: 0 1em;
 }
 
-.receipt-item{
+.receipt-item,
+.receipt-total{
     display: flex;
     flex: 1 1 auto;
     justify-content: space-between;
     font-size: 0.8em;
 }
 
-.receipt-item span {
-    width: calc(55%/3);
+.receipt-total span{
+    font-size: 1.1em;
+    font-weight: bold;
 }
 
-.receipt-item .receipt-item-name{
-    width: 45%;
+/*.receipt-item-3 span {*/
+/*    width: calc(60%/3);*/
+/*}*/
+
+/*.receipt-item-2 span {*/
+/*    width: calc(60%/2);*/
+/*}*/
+
+.receipt-item-name,
+.receipt-item-sum,
+.receipt-item-quantity,
+.receipt-item-price
+{
+    width: 40%;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    padding-right: 5px;
+    /*padding-right: 5px;*/
+}
+
+.receipt-item-sum,
+.receipt-item-quantity,
+.receipt-item-price
+{
+    width: 25%;
+    text-align: right;
+}
+
+.receipt-item-quantity
+{
+    width: 10%;
 }
