@@ -21,7 +21,7 @@ const Receipt = ({items, id}) => {
 	}));
 
 	return(
-		<FormLayout id={id}>
+		<FormLayout id={id} className={'receipt-item-wrapper'}>
 			<div className={'receipt-item'}>
 				<span className={'receipt-item-name'}>Наименование</span>
 				<span>Цена</span>
@@ -30,6 +30,11 @@ const Receipt = ({items, id}) => {
 			</div>
 			<Separator />
 			{receiptItem}
+			<Separator />
+			<div className={'receipt-total'}>
+				<span className={''}>Итого:</span>
+				<span><ColoredSum sum={prepare.totalSumWithParams(items)} fs={'2em'}/></span>
+			</div>
 		</FormLayout>
 	)
 };
