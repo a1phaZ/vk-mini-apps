@@ -53,6 +53,7 @@ export default url => {
 				.catch(e => {
 					setIsLoading(false);
 					dispatch({ type: 'HIDE_LOADING' });
+					dispatch({type: 'SET_ERROR', payload: {error: e}});
 					setError(e);
 				});
 		};

@@ -5,6 +5,7 @@ const initialState = {
 	view: 'authorization',
 	panel: 'authorization.login',
 	popout: null,
+  error: null
 };
 
 const reducer = (state, action) => {
@@ -34,6 +35,16 @@ const reducer = (state, action) => {
 				...state,
 				popout: null
 			};
+    case 'SET_ERROR':
+      return {
+        ...state,
+        error: action.payload.error
+      }
+    case 'UNSET_ERROR' :
+      return {
+        ...state,
+        error: null
+      }
 		default:
 			return state;
 	}
