@@ -2,7 +2,7 @@ import 'core-js/features/map';
 import 'core-js/features/set';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import connect from '@vkontakte/vk-connect';
+import bridge from '@vkontakte/vk-bridge';
 import App from './App';
 import {CurrentUserProvider} from "./contexts/currentUser";
 import {AppSignProvider} from "./contexts/appSign";
@@ -12,7 +12,7 @@ import {RouterContextProvider} from "./contexts/routerContext";
 // import registerServiceWorker from './sw';
 
 // Init VK  Mini App
-connect.send('VKWebAppInit');
+bridge.send('VKWebAppInit', {});
 
 // Если вы хотите, чтобы ваше веб-приложение работало в оффлайне и загружалось быстрее,
 // расскомментируйте строку с registerServiceWorker();

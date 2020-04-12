@@ -14,6 +14,7 @@ import {RouterContext} from "../contexts/routerContext";
 import useApi from "../hooks/useApi";
 import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
 import Icon16Done from '@vkontakte/icons/dist/16/done';
+import bridge from '@vkontakte/vk-bridge';
 
 const AddDay = () => {
   const SUCCESS_MESSAGE = 'Добавление прошло успешно';
@@ -28,10 +29,27 @@ const AddDay = () => {
   const [price, setPrice] = useState('');
   const [income, setIncome] = useState(false);
   const [snackbar, setSnackbar] = useState(null);
+  const [, setQR] = useState(null);
   const [, dispatch] = useContext(RouterContext);
   const [{response}, doApiFetch] = useApi('/day');
   const [startFetchData, setStartFetchData] = useState(false);
   const osname = platform();
+
+  useEffect(()=>{
+    bridge.subscribe(({ detail: { type, data }}) => {
+      switch (type) {
+        case 'VKWebAppOpenCodeReaderResult':
+          setQR(data.code_data);
+          console.log('add day',data);
+          break;
+        case 'VKWebAppOpenCodeReaderFailed':
+          console.log('add day error',data);
+          break;
+        default:
+          break;
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (!startFetchData) return;
@@ -80,7 +98,7 @@ const AddDay = () => {
         }
       >
         <PanelHeaderContent
-          before={<PanelHeaderButton key={'qr'}><Icon24Qr /></PanelHeaderButton>}
+          before={<PanelHeaderButton key={'qr'} onClick={() => {bridge.send("VKWebAppOpenCodeReader", {})}}><Icon24Qr /></PanelHeaderButton>}
         >
           Добавление записи
         </PanelHeaderContent>

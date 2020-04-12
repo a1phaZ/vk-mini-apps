@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import connect from '@vkontakte/vk-connect';
+import bridge from '@vkontakte/vk-bridge';
 
 export default method => {
   const [response, setResponse] = useState(null);
@@ -17,7 +17,7 @@ export default method => {
       return
     }
     async function fetchData() {
-			await connect.send(method, options)
+			await bridge.send(method, options)
         .then(res => {
           setResponse(res.data);
           setIsLoading(false);

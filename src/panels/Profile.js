@@ -8,7 +8,7 @@ import {
 } from '@vkontakte/vkui';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
-import connect from "@vkontakte/vk-connect";
+import bridge from "@vkontakte/vk-bridge";
 import useApi from "../hooks/useApi";
 import {CurrentUserContext} from "../contexts/currentUser";
 import {RouterContext} from "../contexts/routerContext";
@@ -20,7 +20,6 @@ const Profile = () =>{
 	const [kktPassword, setKktPassword] = useState('');
 	const [fetchToFns, setFetchToFns] = useState(false);
 	const [canBack, setCanBack] = useState(true);
-	//TODO Использовать {response, error} чтобы делать переход или показывать ошибки
 	const [{response}, doApiFetch] = useApi(`/users/profile`);
 	const [startFetchData, setStartFetchData] = useState(false);
 	const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext);
@@ -28,12 +27,15 @@ const Profile = () =>{
 	const osName = platform();
 
 	useEffect(()=>{
-		//TODO Перейти с connect на bridge!!!!
-		connect.subscribe(({ detail: { type, data }}) => {
+		bridge.subscribe(({ detail: { type, data }}) => {
 			switch (type) {
 				case 'VKWebAppGetPersonalCardResult':
 					setEmail(data.email);
 					setPhone(data.phone);
+					console.log('profile', data);
+					break;
+				case 'VKWebAppGetPersonalCardFailed':
+					console.log('profile error', data);
 					break;
 				default:
 					break;
@@ -122,7 +124,8 @@ const Profile = () =>{
 					/>
 					<Button size="xl" onClick={() => {
 						//TODO Перейти с connect на bridge!!!!
-						connect.send("VKWebAppGetPersonalCard", {"type": ["phone", "email"]});
+						bridge.send("VKWebAppGetPersonalCard", {"type": ["phone", "email"]});
+						console.log('bridge.send("VKWebAppGetPersonalCard", {"type": ["phone", "email"]});');
 					}}>
 						Получить данные из VK
 					</Button>
