@@ -10,8 +10,8 @@ export default url => {
 	const [options, setOptions] = useState({});
 	const [token] = useLocalStorage('token');
 	const [,dispatch] = useContext(RouterContext);
-	const _apiBase = `http://localhost:3000/api`;
-	// const _apiBase = `https://35.238.182.107:8080/api`;
+	const _apiBase = process.env.REACT_APP_BASEURL;
+	// const _apiBase = `https://35.238.182.107:8080/api`; `http://localhost:3000/api`
 
 	const doApiFetch = useCallback((options = {}) => {
 		setOptions(options);

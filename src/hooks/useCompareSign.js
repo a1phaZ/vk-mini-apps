@@ -31,7 +31,7 @@ export default () => {
 
 		const stringParams = qs.stringify(ordered);
 		const paramsHash = crypto
-			.createHmac('sha256', 'Zs6DYRE8Z2mZ44LfciKW')
+			.createHmac('sha256', process.env.REACT_APP_VK)
 			.update(stringParams)
 			.digest()
 			.toString('base64')
