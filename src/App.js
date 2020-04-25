@@ -11,6 +11,7 @@ import PanelHeaderButton from "@vkontakte/vkui/dist/components/PanelHeaderButton
 import prepare from "./handlers/prepare";
 import Icon24Cancel from '@vkontakte/icons/dist/24/cancel';
 import Icon24Dismiss from '@vkontakte/icons/dist/24/dismiss';
+import Qr from "./panels/Qr";
 
 const App = () => {
 	const [routerContext] = useContext(RouterContext);
@@ -69,6 +70,9 @@ const App = () => {
 				</Panel>
 				<Panel id={'balance.add'}>
 					<AddDay />
+				</Panel>
+				<Panel id={'balance.qr'}>
+					<Qr />
 				</Panel>
 			</View>
 		</Root>

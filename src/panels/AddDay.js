@@ -98,7 +98,15 @@ const AddDay = () => {
         }
       >
         <PanelHeaderContent
-          before={<PanelHeaderButton key={'qr'} onClick={() => {bridge.send("VKWebAppOpenCodeReader", {})}}><Icon24Qr /></PanelHeaderButton>}
+          before={
+            <PanelHeaderButton
+              key={'qr'}
+              data-to={'qr'}
+              onClick={(e) => {
+                dispatch({type: 'SET_PANEL', payload: { panel: e.currentTarget.dataset.to}});
+              }}
+            ><Icon24Qr /></PanelHeaderButton>
+          }
         >
           Добавление записи
         </PanelHeaderContent>
