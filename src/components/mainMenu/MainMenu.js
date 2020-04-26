@@ -1,18 +1,34 @@
-import React, {Fragment, useContext, useState} from 'react';
+import React, {Fragment, useContext, useState, useEffect} from 'react';
 import PanelHeader from "@vkontakte/vkui/dist/components/PanelHeader/PanelHeader";
-import {List, PanelHeaderContent, PanelHeaderContext, Separator} from "@vkontakte/vkui";
-import Cell from "@vkontakte/vkui/dist/components/Cell/Cell";
+import {List, PanelHeaderContent, PanelHeaderContext} from "@vkontakte/vkui";
 
 import Icon16Dropdown from '@vkontakte/icons/dist/16/dropdown';
 import Icon28UsersOutline from '@vkontakte/icons/dist/28/user_outline';
-import Icon28SettingsOutline from '@vkontakte/icons/dist/28/settings_outline';
 import Icon28MoneyCircleOutline from '@vkontakte/icons/dist/28/money_circle_outline';
 import {RouterContext} from "../../contexts/routerContext";
 import MenuItem from "./MenuItem";
+import bridge from '@vkontakte/vk-bridge';
 
 const MainMenu = () => {
 	const [contextOpened, setContextOpened] = useState(false);
 	const [, dispatch] = useContext(RouterContext);
+
+	useEffect(() => {
+		bridge.subscribe(({ detail: { type, data }}) => {
+			switch (type) {
+				case 'VKWebAppOpenPayFormResult':
+					if (data.status) {
+						console.log('Платеж успешно совершен');
+					}
+					break;
+				case 'VKWebAppOpenPayFormFailed':
+					console.log('profile error', data);
+					break;
+				default:
+					break;
+			}
+		});
+	});
 
 	const toggleContext = () => {
 		setContextOpened(!contextOpened);
@@ -43,23 +59,22 @@ const MainMenu = () => {
 						title={'Профиль пользователя'}
 					/>
 					<MenuItem
-						before={<Icon28SettingsOutline />}
-						// onClick={selectMenu}
-						view={'settings'}
-						mode={'edit'}
-						title={'Настройки приложения *'}
-					/>
-					<MenuItem
 						before={<Icon28MoneyCircleOutline />}
-						// onClick={selectMenu}
+						onClick={() => {
+							bridge.send("VKWebAppOpenPayForm", {
+								"app_id": +process.env.REACT_APP_ID,
+								"action": "pay-to-user",
+								"params": {
+									"amount": 100,
+									"description": "На кофе разработчику",
+									"user_id": +process.env.REACT_APP_USER_ID
+								}
+							});
+						}}
 						view={'donation'}
 						mode={'donate'}
-						title={'На кофе разработчику*'}
+						title={'На кофе разработчику'}
 					/>
-					<Separator />
-					<Cell>
-						* в разработке
-					</Cell>
 				</List>
 			</PanelHeaderContext>
 		</Fragment>
