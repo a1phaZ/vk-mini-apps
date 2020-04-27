@@ -15,6 +15,7 @@ import useApi from "../hooks/useApi";
 import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
 import Icon16Done from '@vkontakte/icons/dist/16/done';
 import bridge from '@vkontakte/vk-bridge';
+import prepare from "../handlers/prepare";
 
 const AddDay = () => {
   const SUCCESS_MESSAGE = 'Добавление прошло успешно';
@@ -29,9 +30,10 @@ const AddDay = () => {
   const [price, setPrice] = useState('');
   const [income, setIncome] = useState(false);
   const [snackbar, setSnackbar] = useState(null);
-  const [, setQR] = useState(null);
+  const [qr, setQR] = useState(null);
   const [, dispatch] = useContext(RouterContext);
   const [{response}, doApiFetch] = useApi('/day');
+  const [receipts, doFnsFetch] = useApi('/receipt');
   const [startFetchData, setStartFetchData] = useState(false);
   const osname = platform();
 
@@ -40,7 +42,11 @@ const AddDay = () => {
       switch (type) {
         case 'VKWebAppOpenCodeReaderResult':
           setQR(data.code_data);
-          console.log('add day',data);
+          const body = {
+            method: 'POST',
+            ...prepare.qr(qr)
+          }
+          doFnsFetch(body);
           break;
         case 'VKWebAppOpenCodeReaderFailed':
           console.log('add day error',data);
@@ -87,6 +93,11 @@ const AddDay = () => {
       {SUCCESS_MESSAGE}
     </Snackbar>)
   }, [response]);
+
+  useEffect(() => {
+    if (!receipts.response) return;
+    console.log(receipts.response);
+  }, [receipts.response]);
 
   return(
     <Fragment>
