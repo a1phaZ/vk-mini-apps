@@ -4,7 +4,8 @@ import {
 	IOS,
 	PanelHeader,
 	platform,
-	PanelHeaderButton, Button, Input, FormLayoutGroup, FormStatus
+	PanelHeaderButton, Button, Input, FormLayoutGroup, FormStatus, Snackbar,
+	Div
 } from '@vkontakte/vkui';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
@@ -12,6 +13,8 @@ import bridge from "@vkontakte/vk-bridge";
 import useApi from "../hooks/useApi";
 import {CurrentUserContext} from "../contexts/currentUser";
 import {RouterContext} from "../contexts/routerContext";
+import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
+import Icon16Done from '@vkontakte/icons/dist/16/done';
 
 const Profile = () =>{
 	const [email, setEmail] = useState('');
@@ -20,7 +23,10 @@ const Profile = () =>{
 	const [kktPassword, setKktPassword] = useState('');
 	const [fetchToFns, setFetchToFns] = useState(false);
 	const [canBack, setCanBack] = useState(true);
+	const [snackbar, setSnackbar] = useState(null);
+	const [fnsPasswordType, setFnsPasswordType] = useState('');
 	const [{response}, doApiFetch] = useApi(`/users/profile`);
+	const [fnsResponse, doFnsFetch] = useApi(`/fns/password`);
 	const [startFetchData, setStartFetchData] = useState(false);
 	const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext);
 	const [, dispatch] = useContext(RouterContext);
@@ -69,6 +75,25 @@ const Profile = () =>{
 	},[startFetchData, doApiFetch, email, phone, name, kktPassword]);
 
 	useEffect(() => {
+		if (!fetchToFns) return;
+		let body = {};
+
+		if (fnsPasswordType !== 'restore') {
+			body.name = name;
+			body.email = email;
+		}
+
+		body.params = {
+			type: fnsPasswordType
+		};
+		body.phone = phone.replace(/[ ()-]/g, '');
+		body.method = 'POST';
+
+		doFnsFetch(body);
+		setFetchToFns(false);
+	}, [fetchToFns, fnsPasswordType, doFnsFetch, name, email, phone]);
+
+	useEffect(() => {
 		if (!response) return;
 		const { user } = response;
 		if (!user.name || !user.phone || !user.email || !user.password) {
@@ -82,6 +107,19 @@ const Profile = () =>{
 		}));
 		dispatch({type: 'SET_VIEW', payload: { view: 'balance', panel: 'home'}});
 	}, [response, dispatch, setCurrentUserState]);
+
+	useEffect(() => {
+		if (!fnsResponse.response) return;
+		setSnackbar(
+			<Snackbar
+				layout="vertical"
+				onClose={() => setSnackbar(null)}
+				before={<Avatar size={24} style={{backgroundColor: 'var(--accent)'}}><Icon16Done fill="#fff" width={14} height={14} /></Avatar>}
+			>
+				{fnsResponse.response.message}
+			</Snackbar>
+		)
+	}, [fnsResponse.response]);
 
 	return(
 		<Fragment>
@@ -123,9 +161,7 @@ const Profile = () =>{
 						onChange={(e) => {setPhone(e.target.value)}}
 					/>
 					<Button size="xl" onClick={() => {
-						//TODO Перейти с connect на bridge!!!!
 						bridge.send("VKWebAppGetPersonalCard", {"type": ["phone", "email"]});
-						console.log('bridge.send("VKWebAppGetPersonalCard", {"type": ["phone", "email"]});');
 					}}>
 						Получить данные из VK
 					</Button>
@@ -139,11 +175,20 @@ const Profile = () =>{
 						value={kktPassword}
 						onChange={(e) => {setKktPassword(e.target.value)}}
 					/>
-					<Button size="xl" onClick={() => {
-						setFetchToFns(true);
-					}}>
-						Получить пароль от ФНС
-					</Button>
+					<Div  style={{display: 'flex'}}>
+						<Button size='l' data-type={'signup'} onClick={(e) => {
+							setFnsPasswordType(e.currentTarget.dataset.type);
+							setFetchToFns(true);
+						}}>
+							Получить пароль
+						</Button>
+						<Button size='l' data-type={'restore'} onClick={(e) => {
+							setFnsPasswordType(e.currentTarget.dataset.type);
+							setFetchToFns(true);
+						}}>
+							Восстановить пароль
+						</Button>
+					</Div>
 				</FormLayoutGroup>
 
 				<Button size="xl" mode="commerce" onClick={() => {
@@ -152,6 +197,7 @@ const Profile = () =>{
 					Обновить профиль пользователя
 				</Button>
 			</FormLayout>
+			{snackbar}
 		</Fragment>
 	)
 };
