@@ -114,6 +114,7 @@ const AddDay = () => {
               key={'qr'}
               data-to={'qr'}
               onClick={(e) => {
+                //TODO Проверить qr
                 dispatch({type: 'SET_PANEL', payload: { panel: e.currentTarget.dataset.to}});
               }}
             ><Icon24Qr /></PanelHeaderButton>
