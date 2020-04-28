@@ -70,9 +70,6 @@ const App = () => {
 				<Panel id={'balance.add'}>
 					<AddDay />
 				</Panel>
-				<Panel id={'balance.qr'}>
-					<Qr />
-				</Panel>
 			</View>
 		</Root>
 	);
