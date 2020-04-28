@@ -13,7 +13,7 @@ export default class Prepare {
 
 		return {
 			dt,
-			sum,
+			sum: sum.replace(/[.]/g, ''),
 			fn,
 			i,
 			fp

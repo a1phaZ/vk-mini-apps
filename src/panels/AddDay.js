@@ -33,8 +33,9 @@ const AddDay = () => {
   const [qr, setQR] = useState(null);
   const [, dispatch] = useContext(RouterContext);
   const [{response}, doApiFetch] = useApi('/day');
-  const [receipts, doFnsFetch] = useApi('/receipt');
+  const [receipts, doFnsFetch] = useApi('/day/receipt');
   const [startFetchData, setStartFetchData] = useState(false);
+  const [checkReceipt, setCheckReceipt] = useState(false);
   const osname = platform();
 
   useEffect(()=>{
@@ -42,14 +43,9 @@ const AddDay = () => {
       switch (type) {
         case 'VKWebAppOpenCodeReaderResult':
           setQR(data.code_data);
-          const body = {
-            method: 'POST',
-            ...prepare.qr(qr)
-          }
-          doFnsFetch(body);
           break;
         case 'VKWebAppOpenCodeReaderFailed':
-          console.log('add day error',data);
+          console.log('add day error', data);
           break;
         default:
           break;
@@ -95,9 +91,38 @@ const AddDay = () => {
   }, [response]);
 
   useEffect(() => {
+    if (!qr) return;
+
+    const action = checkReceipt ? 'receive' : 'check';
+
+    const body = {
+      method: 'POST',
+      ...prepare.qr(qr),
+      params: {
+        action
+      }
+    }
+    doFnsFetch(body);
+  }, [qr, doFnsFetch, checkReceipt]);
+
+  useEffect(() => {
     if (!receipts.response) return;
-    console.log(receipts.response);
-  }, [receipts.response]);
+    setCheckReceipt(receipts.response.check);
+    if (receipts.response.statusCode === 202) {
+      const body = {
+        method: 'POST',
+        ...prepare.qr(qr),
+        params: {
+          action: 'receive'
+        }
+      }
+      doFnsFetch(body);
+    }
+    if (receipts.response._id) {
+      setCheckReceipt(false);
+      setQR(null);
+    }
+  }, [receipts.response, doFnsFetch, qr]);
 
   return(
     <Fragment>
@@ -113,9 +138,8 @@ const AddDay = () => {
             <PanelHeaderButton
               key={'qr'}
               data-to={'qr'}
-              onClick={(e) => {
-                //TODO Проверить qr
-                dispatch({type: 'SET_PANEL', payload: { panel: e.currentTarget.dataset.to}});
+              onClick={() => {
+                bridge.send('VKWebAppOpenCodeReader', {});
               }}
             ><Icon24Qr /></PanelHeaderButton>
           }
