@@ -88,9 +88,9 @@ const AddDay = () => {
    * Выводим сообщение об успехе
    */
   useEffect(() => {
-    if (!response || !receipts.response._id) return;
+    if (!response) return;
     setSnackbar(<CustomSnackBar message={SUCCESS_MESSAGE} isError={false}/>)
-  }, [response, receipts.response]);
+  }, [response]);
 
   /**
    * Добавление QR кода
@@ -136,6 +136,7 @@ const AddDay = () => {
       doFnsFetch(body);
     }
     if (receipts.response._id) {
+      setSnackbar(<CustomSnackBar message={SUCCESS_MESSAGE} isError={false}/>)
       setCheckReceipt(false);
       setQR(null);
     }
