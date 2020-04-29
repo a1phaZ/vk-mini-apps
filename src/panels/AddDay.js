@@ -3,7 +3,7 @@ import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader
 import FormLayout from "@vkontakte/vkui/dist/components/FormLayout/FormLayout";
 import Input from "@vkontakte/vkui/dist/components/Input/Input";
 import PanelHeaderButton from "@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton";
-import {IOS, platform, Snackbar} from "@vkontakte/vkui";
+import {IOS, platform} from "@vkontakte/vkui";
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Checkbox from "@vkontakte/vkui/dist/components/Checkbox/Checkbox";
@@ -12,10 +12,9 @@ import Icon24Qr from '@vkontakte/icons/dist/24/qr';
 import PanelHeaderContent from "@vkontakte/vkui/dist/components/PanelHeaderContent/PanelHeaderContent";
 import {RouterContext} from "../contexts/routerContext";
 import useApi from "../hooks/useApi";
-import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
-import Icon16Done from '@vkontakte/icons/dist/16/done';
 import bridge from '@vkontakte/vk-bridge';
 import prepare from "../handlers/prepare";
+import CustomSnackBar from "../components/CustomSnackbar";
 
 const AddDay = () => {
   const SUCCESS_MESSAGE = 'Добавление прошло успешно';
@@ -31,13 +30,16 @@ const AddDay = () => {
   const [income, setIncome] = useState(false);
   const [snackbar, setSnackbar] = useState(null);
   const [qr, setQR] = useState(null);
-  const [, dispatch] = useContext(RouterContext);
-  const [{response}, doApiFetch] = useApi('/day');
+  const [routerContext, dispatch] = useContext(RouterContext);
+  const [{response, error}, doApiFetch] = useApi('/day');
   const [receipts, doFnsFetch] = useApi('/day/receipt');
   const [startFetchData, setStartFetchData] = useState(false);
   const [checkReceipt, setCheckReceipt] = useState(false);
   const osname = platform();
 
+  /***
+   * Подписываемся на события
+   */
   useEffect(()=>{
     bridge.subscribe(({ detail: { type, data }}) => {
       switch (type) {
@@ -53,6 +55,9 @@ const AddDay = () => {
     });
   }, []);
 
+  /***
+   * Добавляем данные на сервер
+   */
   useEffect(() => {
     if (!startFetchData) return;
     const body = {
@@ -79,32 +84,44 @@ const AddDay = () => {
     setStartFetchData(false);
   }, [startFetchData, setStartFetchData, date, doApiFetch, income, name, price, quantity]);
 
+  /**
+   * Выводим сообщение об успехе
+   */
   useEffect(() => {
-    if (!response) return;
-    setSnackbar(<Snackbar
-      layout="vertical"
-      onClose={() => setSnackbar(null)}
-      before={<Avatar size={24} style={{backgroundColor: 'var(--accent)'}}><Icon16Done fill="#fff" width={14} height={14} /></Avatar>}
-    >
-      {SUCCESS_MESSAGE}
-    </Snackbar>)
-  }, [response]);
+    if (!response || !receipts.response._id) return;
+    setSnackbar(<CustomSnackBar message={SUCCESS_MESSAGE} isError={false}/>)
+  }, [response, receipts.response]);
 
+  /**
+   * Добавление QR кода
+   */
   useEffect(() => {
     if (!qr) return;
+
+    const preparedQR = prepare.qr(qr);
+
+    if (preparedQR.error) {
+      const e = preparedQR.error;
+      dispatch({ type: 'SET_ERROR', payload: { e }});
+      setQR(null);
+      return;
+    }
 
     const action = checkReceipt ? 'receive' : 'check';
 
     const body = {
       method: 'POST',
-      ...prepare.qr(qr),
+      ...preparedQR,
       params: {
         action
       }
     }
     doFnsFetch(body);
-  }, [qr, doFnsFetch, checkReceipt]);
+  }, [qr, doFnsFetch, checkReceipt, dispatch]);
 
+  /**
+   * Костыль. Проверка есть ли тело в ответе от ФНС. Сохраняем чек на сервере
+   */
   useEffect(() => {
     if (!receipts.response) return;
     setCheckReceipt(receipts.response.check);
@@ -124,6 +141,23 @@ const AddDay = () => {
     }
   }, [receipts.response, doFnsFetch, qr]);
 
+  /**
+   * Вывод сообщения об ощибке
+   */
+  useEffect(() => {
+    if (!routerContext.error) return;
+    dispatch({
+      type: 'SET_ERROR',
+      payload: {
+        error: receipts.error || error
+      }
+    })
+    setSnackbar(<CustomSnackBar message={routerContext.error.message} isError={true}/>);
+    setCheckReceipt(false);
+    setQR(null);
+
+  }, [receipts.error, error, dispatch, routerContext.error]);
+
   return(
     <Fragment>
       <PanelHeader
@@ -135,10 +169,12 @@ const AddDay = () => {
       >
         <PanelHeaderContent
           before={
+            bridge.supports('VKWebAppOpenCodeReader') &&
             <PanelHeaderButton
               key={'qr'}
               data-to={'qr'}
               onClick={() => {
+                dispatch({ type: 'UNSET_ERROR'});
                 bridge.send('VKWebAppOpenCodeReader', {});
               }}
             ><Icon24Qr /></PanelHeaderButton>
