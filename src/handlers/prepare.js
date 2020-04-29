@@ -11,6 +11,14 @@ export default class Prepare {
 			[, dt, sum, fn, i, fp] = str.match(/t=(\w{8}T\w+)&s=(\w+\.*\w+)&fn=(\w+)&i=(\w+)&fp=(\w+)/);
 		}
 
+		if (!dt || !sum || !fn || !i || !fp) {
+			return {
+				error: {
+					message: 'Ошибка чтения QR кода'
+				}
+			}
+		}
+
 		return {
 			dt,
 			sum: sum.replace(/[.]/g, ''),
