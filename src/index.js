@@ -20,9 +20,6 @@ import {RouterContextProvider} from "./contexts/routerContext";
 //   tool: ['console', 'elements']
 // });
 
-// Init VK  Mini App
-bridge.send('VKWebAppInit');
-
 bridge.subscribe(({ detail: { type, data }}) => {
 	if (type === 'VKWebAppUpdateConfig') {
 		const schemeAttribute = document.createAttribute('scheme');
@@ -30,6 +27,9 @@ bridge.subscribe(({ detail: { type, data }}) => {
 		document.body.attributes.setNamedItem(schemeAttribute);
 	}
 });
+
+// Init VK  Mini App
+bridge.send('VKWebAppInit');
 
 // Если вы хотите, чтобы ваше веб-приложение работало в оффлайне и загружалось быстрее,
 // расскомментируйте строку с registerServiceWorker();
