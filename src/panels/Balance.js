@@ -1,6 +1,6 @@
 import React, {useState, useEffect, Fragment, useContext, useCallback} from 'react';
 import useApi from "../hooks/useApi";
-import {List, Placeholder, Separator} from "@vkontakte/vkui";
+import {List, Placeholder, PullToRefresh, Separator} from "@vkontakte/vkui";
 import ColoredSum from "./ColoredSum";
 import prepare from "../handlers/prepare";
 import Button from "@vkontakte/vkui/dist/components/Button/Button";
@@ -21,6 +21,7 @@ const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
 	const [initialFetch, setInitialFetch] = useState(true);
 	const [currentDate, setCurrentDate] = useState(new Date());
 	const [receipts, setReceipts] = useState([]);
+	const [fetching, setFetching] = useState(false);
 	const [{response}, doApiFetch] = useApi('/day');
 	const [, dispatch] = useContext(RouterContext);
 	const dateFormat = 'yyyy-MM-dd';
@@ -30,6 +31,11 @@ const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
 		setInitialFetch(true);
 	}, []);
 
+	const onRefresh = () => {
+		setFetching(true);
+		setInitialFetch(true);
+	}
+
 	useEffect(() => {
 		if (!initialFetch) return;
 		doApiFetch({
@@ -38,6 +44,7 @@ const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
 			}
 		});
 		setInitialFetch(false);
+		setFetching(false);
 	}, [initialFetch, setInitialFetch, doApiFetch, currentDate]);
 
 	useEffect(() => {
@@ -80,28 +87,29 @@ const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
 					</div>
 				</div>
 			</div>
-
-			<Group title='Чеки'>
-				<List>
-					<Calendar setDateFromCalendar={setDateFromCalendar}/>
-					{receipts.map((receipt, index) => {
-						return (
-							<Cell
-								key={index}
-								expandable
-								onClick={() => {
-									onClickActiveModal('modal-page');
-									setReceiptFromBalance(receipt);
-								}}
-								data-to={receipt._id}
-								indicator={<ColoredSum sum={receipt.totalSum}/>}
-							>
-								{prepare.date(receipt.dateTime)}
-							</Cell>
-						)
-					})}
-				</List>
-			</Group>
+			<PullToRefresh onRefresh={onRefresh} isFetching={fetching} >
+				<Group title='Чеки'>
+					<List>
+						<Calendar setDateFromCalendar={setDateFromCalendar}/>
+						{receipts.map((receipt, index) => {
+							return (
+								<Cell
+									key={index}
+									expandable
+									onClick={() => {
+										onClickActiveModal('modal-page');
+										setReceiptFromBalance(receipt);
+									}}
+									data-to={receipt._id}
+									indicator={<ColoredSum sum={receipt.totalSum}/>}
+								>
+									{prepare.date(receipt.dateTime)}
+								</Cell>
+							)
+						})}
+					</List>
+				</Group>
+			</PullToRefresh>
 		</Fragment>
 	)
 };
