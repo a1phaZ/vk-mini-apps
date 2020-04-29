@@ -6,13 +6,30 @@ import bridge from '@vkontakte/vk-bridge';
 import App from './App';
 import {CurrentUserProvider} from "./contexts/currentUser";
 import {AppSignProvider} from "./contexts/appSign";
-import InstallingTheme from "./components/InstallingTheme";
 import CurrentUserChecker from "./components/CurrentUserChecker";
 import {RouterContextProvider} from "./contexts/routerContext";
+// import InstallingTheme from "./components/InstallingTheme";
+// import * as eruda from 'eruda';
 // import registerServiceWorker from './sw';
 
+// const el = document.createElement('div');
+// document.body.appendChild(el);
+//
+// eruda.init({
+//   container: el,
+//   tool: ['console', 'elements']
+// });
+
 // Init VK  Mini App
-bridge.send('VKWebAppInit', {});
+bridge.send('VKWebAppInit');
+
+bridge.subscribe(({ detail: { type, data }}) => {
+	if (type === 'VKWebAppUpdateConfig') {
+		const schemeAttribute = document.createAttribute('scheme');
+		schemeAttribute.value = data.scheme ? data.scheme : 'client_light';
+		document.body.attributes.setNamedItem(schemeAttribute);
+	}
+});
 
 // Если вы хотите, чтобы ваше веб-приложение работало в оффлайне и загружалось быстрее,
 // расскомментируйте строку с registerServiceWorker();
@@ -20,18 +37,21 @@ bridge.send('VKWebAppInit', {});
 // Подробнее про сервис воркеры можно почитать тут — https://vk.cc/8MHpmT
 // registerServiceWorker();
 
-ReactDOM.render(
-	<InstallingTheme>
-		<AppSignProvider>
-			<RouterContextProvider>
-				<CurrentUserProvider>
-					<CurrentUserChecker>
-						<App />
-					</CurrentUserChecker>
-				</CurrentUserProvider>
-			</RouterContextProvider>
-		</AppSignProvider>
-	</InstallingTheme>
-	,
-	document.getElementById('root')
-);
+window.onload = () => {
+	ReactDOM.render(
+		// <InstallingTheme>
+			<AppSignProvider>
+				<RouterContextProvider>
+					<CurrentUserProvider>
+						<CurrentUserChecker>
+							<App/>
+
+						</CurrentUserChecker>
+					</CurrentUserProvider>
+				</RouterContextProvider>
+			</AppSignProvider>
+		// </InstallingTheme>
+		,
+		document.getElementById('root')
+	);
+};
