@@ -15,7 +15,6 @@ const SearchComponent = ({ receipts }) => {
   useEffect(() => {
     if (!receipts) return;
     let arr = [];
-    console.time('prepare array');
     const tmp = receipts.map((receipt) => {
       let dateTime = receipt.dateTime;
       return receipt.items.map((item) => {
@@ -26,7 +25,6 @@ const SearchComponent = ({ receipts }) => {
     tmp.forEach((item) => {
       arr.push(...item);
     });
-    console.timeEnd('prepare array');
     setSearchTarget(arr);
   }, [receipts]);
 
