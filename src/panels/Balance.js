@@ -1,7 +1,7 @@
 import React, {useState, useEffect, Fragment, useContext, useCallback} from 'react';
 import useApi from "../hooks/useApi";
 import {List, Placeholder, PullToRefresh, Separator} from "@vkontakte/vkui";
-import ColoredSum from "./ColoredSum";
+import ColoredSum from "../components/ColoredSum";
 import prepare from "../handlers/prepare";
 import Button from "@vkontakte/vkui/dist/components/Button/Button";
 import Group from "@vkontakte/vkui/dist/components/Group/Group";

@@ -1,6 +1,6 @@
 import React, {Fragment, useState, useEffect} from 'react';
 import {Search} from "@vkontakte/vkui";
-import Receipt from "../../panels/Receipt";
+import Receipt from "../Receipt";
 import Group from "@vkontakte/vkui/dist/components/Group/Group";
 
 const SearchComponent = ({ receipts }) => {

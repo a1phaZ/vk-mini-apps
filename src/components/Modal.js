@@ -1,6 +1,6 @@
 import React from 'react';
 import {List} from "@vkontakte/vkui";
-import Receipt from "../panels/Receipt";
+import Receipt from "./Receipt";
 
 const Modal = ({receipt}) => {
 	return (
