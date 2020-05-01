@@ -91,8 +91,7 @@ const Profile = () =>{
 		body.phone = body.phone.replace(/^[8]/g, '+7');
 		body.method = 'POST';
 
-		console.log(body);
-		//doFnsFetch(body);
+		doFnsFetch(body);
 		setFetchToFns(false);
 	}, [fetchToFns, fnsPasswordType, doFnsFetch, name, email, phone]);
 
@@ -133,7 +132,7 @@ const Profile = () =>{
 					{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
 				</PanelHeaderButton>}
 			>
-				Профиль
+				{canBack ? 'Профиль' : 'Регистрация'}
 			</PanelHeader>
 			<FormLayout>
 				{fetchToFns && <FormStatus header="Запрос на получение пароля успешно отправлен" mode="default">
@@ -201,7 +200,7 @@ const Profile = () =>{
 				<Button size="xl" mode="commerce" onClick={() => {
 					setStartFetchData(true);
 				}}>
-					Обновить профиль пользователя
+					{canBack ? 'Обновить профиль пользователя' : 'Завершить регистрацию'}
 				</Button>
 			</FormLayout>
 			{snackbar}
