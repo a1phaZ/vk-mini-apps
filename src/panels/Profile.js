@@ -135,9 +135,13 @@ const Profile = () =>{
 				{canBack ? 'Профиль' : 'Регистрация'}
 			</PanelHeader>
 			<FormLayout>
-				{fetchToFns && <FormStatus header="Запрос на получение пароля успешно отправлен" mode="default">
-					Пароль должен придти к вам в смс. Введите пароль в соответствующее поле. Если пароль не пришел повторите попытку позже.
-				</FormStatus>}
+				{
+					!canBack && <FormStatus header="Разъяснение" mode="default">
+						Приложение позволяет считывать данные по чекам.
+						Ни какие данные о ваших покупках не передаются в налоговую,
+						налоговая и так все знает %)
+					</FormStatus>
+				}
 				<Input
 					type={'text'}
 					top={'Имя'}
@@ -172,7 +176,7 @@ const Profile = () =>{
 						Получить данные из VK
 					</Button>
 				</FormLayoutGroup>
-				<FormLayoutGroup top={'Пароль от ФНС'}>
+				<FormLayoutGroup top={'Пароль от ФНС'} bottom={'Если не хотите получать пароль по каким то причинам, введите 0 в поле ввода пароля'}>
 					<Input
 						type={'number'}
 						top={'Пароль от ФНС'}
