@@ -86,10 +86,13 @@ const Profile = () =>{
 		body.params = {
 			type: fnsPasswordType
 		};
+
 		body.phone = phone.replace(/[ ()-]/g, '');
+		body.phone = body.phone.replace(/^[8]/g, '+7');
 		body.method = 'POST';
 
-		doFnsFetch(body);
+		console.log(body);
+		//doFnsFetch(body);
 		setFetchToFns(false);
 	}, [fetchToFns, fnsPasswordType, doFnsFetch, name, email, phone]);
 
@@ -158,7 +161,11 @@ const Profile = () =>{
 						name={'phone'}
 						value={phone}
 						placeholder={'Введите телефон'}
-						onChange={(e) => {setPhone(e.target.value)}}
+						onChange={(e) => {
+							e.target.value.replace(/^[8]/, '+7');
+							setPhone(e.target.value);
+							console.log(phone);
+						}}
 					/>
 					<Button size="xl" onClick={() => {
 						bridge.send("VKWebAppGetPersonalCard", {"type": ["phone", "email"]});
