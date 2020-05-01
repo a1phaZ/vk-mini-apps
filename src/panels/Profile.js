@@ -181,17 +181,19 @@ const Profile = () =>{
 						value={kktPassword}
 						onChange={(e) => {setKktPassword(e.target.value)}}
 					/>
-					<Div  style={{display: 'flex'}}>
+					<Div  style={{display: 'flex', justifyContent:'space-between'}}>
 						<Button size='l' data-type={'signup'} onClick={(e) => {
 							setFnsPasswordType(e.currentTarget.dataset.type);
 							setFetchToFns(true);
-						}}>
+						}}
+							style={{margin: '0px', width: '49%'}}
+						>
 							Получить пароль
 						</Button>
 						<Button size='l' data-type={'restore'} onClick={(e) => {
 							setFnsPasswordType(e.currentTarget.dataset.type);
 							setFetchToFns(true);
-						}}>
+						}} style={{margin: '0px', width: '49%'}}	>
 							Восстановить пароль
 						</Button>
 					</Div>
@@ -200,7 +202,7 @@ const Profile = () =>{
 				<Button size="xl" mode="commerce" onClick={() => {
 					setStartFetchData(true);
 				}}>
-					{canBack ? 'Обновить профиль пользователя' : 'Завершить регистрацию'}
+					{canBack ? 'Обновить профиль' : 'Завершить регистрацию'}
 				</Button>
 			</FormLayout>
 			{snackbar}
