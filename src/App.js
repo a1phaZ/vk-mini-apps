@@ -11,6 +11,7 @@ import PanelHeaderButton from "@vkontakte/vkui/dist/components/PanelHeaderButton
 import prepare from "./handlers/prepare";
 import Icon24Cancel from '@vkontakte/icons/dist/24/cancel';
 import Icon24Dismiss from '@vkontakte/icons/dist/24/dismiss';
+import Registration from "./panels/Registration";
 
 const App = () => {
 	const [routerContext] = useContext(RouterContext);
@@ -58,6 +59,11 @@ const App = () => {
 			<View id={'profile'} activePanel={routerContext.panel}>
 				<Panel id={'profile.edit'}>
 					<Profile />
+				</Panel>
+			</View>
+			<View id={'registration'} activePanel={routerContext.panel}>
+				<Panel id={'registration.finish'}>
+					<Registration />
 				</Panel>
 			</View>
 			<View id={'balance'} activePanel={routerContext.panel} >
