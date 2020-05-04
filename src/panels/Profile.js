@@ -166,7 +166,6 @@ const Profile = () =>{
 						onChange={(e) => {
 							e.target.value.replace(/^[8]/, '+7');
 							setPhone(e.target.value);
-							console.log(phone);
 						}}
 					/>
 					<Button size="xl" onClick={() => {
