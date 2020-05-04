@@ -25,7 +25,7 @@ const Authorization = ({go, goView, type}) => {
 		if (!currentUserState.isLoggedIn) return;
 		const {name, phone, email, password} = currentUserState.currentUser;
 		if (!name || !phone || !email || !password) {
-			dispatch({type: 'SET_VIEW', payload: { view: 'profile', panel: 'edit'}});
+			dispatch({type: 'SET_VIEW', payload: { view: 'registration', panel: 'finish'}});
 		} else {
 			dispatch({type: 'SET_VIEW', payload: { view: 'balance', panel: 'home'}})
 		}
