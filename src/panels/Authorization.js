@@ -134,7 +134,7 @@ const Authorization = ({go, goView, type}) => {
 						dispatch({type: 'SET_PANEL', payload: { panel: e.currentTarget.dataset.to}});
 					}}
 					data-to={type === 'login' ? 'register' : 'login'}
-				>{type === 'login' ? 'Нет пароля?' : 'Есть пароль?'}</Button>
+				>{type === 'login' ? 'Регистрация' : 'Авторизация'}</Button>
 			</Div>
 		</Fragment>
 	)
