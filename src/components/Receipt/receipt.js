@@ -1,5 +1,5 @@
-import React, {Fragment, useState} from 'react';
-import {Separator, Input, Button, FormLayoutGroup} from "@vkontakte/vkui";
+import React, {Fragment} from 'react';
+import {Separator} from "@vkontakte/vkui";
 import prepare from "../../handlers/prepare";
 import ColoredSum from "../ColoredSum";
 
@@ -7,8 +7,8 @@ import './receipt.css';
 import FormLayout from "@vkontakte/vkui/dist/components/FormLayout/FormLayout";
 
 const Receipt = ({items, id, isSearch=false}) => {
-	const [showEdit, setShowEdit] = useState(false);
-	const [editElId, setEditElId] = useState('');
+	// const [showEdit, setShowEdit] = useState(false);
+	// const [editElId, setEditElId] = useState('');
 	const receiptItem = (items.map((item, index) => {
 		const sum = item.income ? item.sum : (-1) * item.sum ;
 
@@ -16,8 +16,8 @@ const Receipt = ({items, id, isSearch=false}) => {
 		return(
 			<Fragment>
 				<div key={index} className={'receipt-item'} onClick={() => {
-					setShowEdit(true);
-					setEditElId(item._id);
+					// setShowEdit(true);
+					// setEditElId(item._id);
 				}}>
 					<span className={'receipt-item-name'}>{item.name}</span>
 					{item.price && !isSearch ? <span className={'receipt-item-price'}>{prepare.sum(item.price)}</span> : null}
