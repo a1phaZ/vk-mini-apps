@@ -102,8 +102,9 @@ const AddDay = () => {
 
     if (preparedQR.error) {
       const e = preparedQR.error;
-      dispatch({ type: 'SET_ERROR', payload: { e }});
+      dispatch({ type: 'SET_ERROR', payload: { error: e }});
       setQR(null);
+      setCheckReceipt(false);
       return;
     }
 
