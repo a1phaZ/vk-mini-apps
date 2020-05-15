@@ -42,10 +42,12 @@ export default url => {
 				body: method !== 'GET' ? JSON.stringify(bodyFields) : null,
 			})
 				.then(res => {
-					if (!res.ok) throw Error(res.statusText);
+					// console.log(res.json());
+					// if (!res.ok) throw Error(res.statusText);
 					return res.json();
 				})
 				.then(r => {
+					if (r.error) {throw Error(r.error.message);}
 					setIsLoading(false);
 					dispatch({ type: 'HIDE_LOADING' });
 					setResponse(r);
