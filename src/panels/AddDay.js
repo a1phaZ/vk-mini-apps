@@ -154,11 +154,16 @@ const AddDay = () => {
         error: receipts.error || error
       }
     })
-    setSnackbar(<CustomSnackBar message={routerContext.error.message} isError={true}/>);
+    setSnackbar(<CustomSnackBar message={routerContext.error.message} isError={true} onClose={onClose}/>);
     setCheckReceipt(false);
     setQR(null);
 
   }, [receipts.error, error, dispatch, routerContext.error]);
+
+  const onClose = () => {
+    dispatch({ type: 'UNSET_ERROR'});
+    setSnackbar(null);
+  }
 
   return(
     <Fragment>

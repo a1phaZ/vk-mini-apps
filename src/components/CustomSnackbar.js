@@ -5,16 +5,13 @@ import Icon16Done from '@vkontakte/icons/dist/16/done';
 import Icon28ErrorOutline from '@vkontakte/icons/dist/28/error_outline';
 import {RouterContext} from "../contexts/routerContext";
 
-const CustomSnackBar = ({message, isError}) => {
+const CustomSnackBar = ({message, isError, onClose}) => {
 	const [snackbar, setSnackbar] = useState(null);
 	const [, dispatch] = useContext(RouterContext);
 	useEffect(() => {
 		setSnackbar(<Snackbar
 			layout="vertical"
-			onClose={() => {
-				dispatch({ type: 'UNSET_ERROR'});
-				setSnackbar(null);
-			}}
+			onClose={onClose}
 			before={
 				isError
 					? <Avatar size={24} style={{backgroundColor: 'var(--destructive)'}}><Icon28ErrorOutline fill="#fff" width={18} height={18} /></Avatar>
