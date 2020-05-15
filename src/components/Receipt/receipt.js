@@ -11,11 +11,12 @@ const Receipt = ({items, id, isSearch=false}) => {
 	// const [editElId, setEditElId] = useState('');
 	const receiptItem = (items.map((item, index) => {
 		const sum = item.income ? item.sum : (-1) * item.sum ;
+		console.log()
 
 		//TODO Отображение поля для редактирования названия
 		return(
-			<Fragment>
-				<div key={index} className={'receipt-item'} onClick={() => {
+			<Fragment key={index}>
+				<div className={'receipt-item'} onClick={() => {
 					// setShowEdit(true);
 					// setEditElId(item._id);
 				}}>
@@ -36,7 +37,6 @@ const Receipt = ({items, id, isSearch=false}) => {
 				{/*		null*/}
 				{/*}*/}
 			</Fragment>
-
 		)
 	}));
 
