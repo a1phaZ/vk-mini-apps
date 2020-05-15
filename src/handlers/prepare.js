@@ -5,26 +5,27 @@ export default class Prepare {
 	 * @returns {{dt: *, fn: *, i: *, sum: *, fp: *}}
 	 */
 	static qr (str){
-		let dt, sum, fn, i, fp;
+		try {
+			let dt, sum, fn, i, fp;
 
-		if (str) {
-			[, dt, sum, fn, i, fp] = str.match(/t=(\w{8}T\w+)&s=(\w+\.*\w+)&fn=(\w+)&i=(\w+)&fp=(\w+)/);
-		}
+			if (str) {
+				[, dt, sum, fn, i, fp] = str.match(/t=(\w{8}T\w+)&s=(\w+\.*\w+)&fn=(\w+)&i=(\w+)&fp=(\w+)/);
+			}
 
-		if (!dt || !sum || !fn || !i || !fp) {
+			return {
+				dt,
+				sum: sum.replace(/[.]/g, ''),
+				fn,
+				i,
+				fp
+			}
+		} catch (e) {
+			console.log(e);
 			return {
 				error: {
 					message: 'Ошибка чтения QR кода'
 				}
 			}
-		}
-
-		return {
-			dt,
-			sum: sum.replace(/[.]/g, ''),
-			fn,
-			i,
-			fp
 		}
 	}
 
