@@ -77,7 +77,7 @@ const App = () => {
 			selected={routerContext.view === 'balance' && routerContext.panel === 'balance.add'}
 			data-story="balance"
 			data-panel="add"
-			text="Сообщения"
+			text="Добавить"
 		><Icon28AddSquareOutline /></TabbarItem>
 		<TabbarItem
 			onClick={onStoryChange}
