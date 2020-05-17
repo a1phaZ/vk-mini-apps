@@ -20,7 +20,7 @@ const CustomSnackBar = ({message, isError, onClose}) => {
 		>
 			{message}
 		</Snackbar>)
-	}, [setSnackbar, dispatch, isError, message]);
+	}, [setSnackbar, dispatch, isError, message, onClose]);
 	return(
 		snackbar
 	)

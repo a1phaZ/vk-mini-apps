@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext, Fragment} from 'react';
+import React, {useState, useEffect, useContext, Fragment, useCallback} from 'react';
 import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader';
 import FormLayout from "@vkontakte/vkui/dist/components/FormLayout/FormLayout";
 import Input from "@vkontakte/vkui/dist/components/Input/Input";
@@ -36,6 +36,11 @@ const AddDay = () => {
   const [startFetchData, setStartFetchData] = useState(false);
   const [checkReceipt, setCheckReceipt] = useState(false);
   const osname = platform();
+
+  const onClose = useCallback(() => {
+    dispatch({ type: 'UNSET_ERROR'});
+    setSnackbar(null);
+  }, [dispatch]);
 
   /***
    * Подписываемся на события
@@ -89,8 +94,8 @@ const AddDay = () => {
    */
   useEffect(() => {
     if (!response) return;
-    setSnackbar(<CustomSnackBar message={SUCCESS_MESSAGE} isError={false}/>)
-  }, [response]);
+    setSnackbar(<CustomSnackBar message={SUCCESS_MESSAGE} isError={false} onClose={onClose}/>)
+  }, [response, onClose]);
 
   /**
    * Добавление QR кода
@@ -137,11 +142,11 @@ const AddDay = () => {
       doFnsFetch(body);
     }
     if (receipts.response._id) {
-      setSnackbar(<CustomSnackBar message={SUCCESS_MESSAGE} isError={false}/>)
+      setSnackbar(<CustomSnackBar message={SUCCESS_MESSAGE} isError={false} onClose={onClose}/>)
       setCheckReceipt(false);
       setQR(null);
     }
-  }, [receipts.response, doFnsFetch, qr]);
+  }, [receipts.response, doFnsFetch, qr, onClose]);
 
   /**
    * Вывод сообщения об ощибке
@@ -158,12 +163,7 @@ const AddDay = () => {
     setCheckReceipt(false);
     setQR(null);
 
-  }, [receipts.error, error, dispatch, routerContext.error]);
-
-  const onClose = () => {
-    dispatch({ type: 'UNSET_ERROR'});
-    setSnackbar(null);
-  }
+  }, [receipts.error, error, dispatch, routerContext.error, onClose]);
 
   return(
     <Fragment>
