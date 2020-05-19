@@ -18,6 +18,7 @@ import Icon28GraphOutline from '@vkontakte/icons/dist/28/graph_outline';
 import Icon28More from '@vkontakte/icons/dist/28/more';
 import Icon28UserOutline from '@vkontakte/icons/dist/28/user_outline';
 import Icon28AddSquareOutline from '@vkontakte/icons/dist/28/add_square_outline';
+import Analytics from "./panels/Analytics";
 
 const App = () => {
 	const [routerContext, dispatch] = useContext(RouterContext);
@@ -126,6 +127,11 @@ const App = () => {
 				</Panel>
 				<Panel id={'balance.add'}>
 					<AddDay />
+				</Panel>
+			</View>
+			<View id={'analytics'} activePanel={routerContext.panel} popout={routerContext.popout}>
+				<Panel id={'analytics.home'}>
+					<Analytics />
 				</Panel>
 			</View>
 		</Epic>
