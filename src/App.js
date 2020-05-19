@@ -90,6 +90,7 @@ const App = () => {
 			onClick={onStoryChange}
 			selected={routerContext.view === 'more'}
 			data-story="more"
+			data-panel={'more'}
 			text="Ещё"
 		><Icon28More /></TabbarItem>
 	</Tabbar>)
