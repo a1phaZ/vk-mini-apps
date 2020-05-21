@@ -7,35 +7,26 @@ import './receipt.css';
 import FormLayout from "@vkontakte/vkui/dist/components/FormLayout/FormLayout";
 
 const Receipt = ({items, id, isSearch=false}) => {
-	// const [showEdit, setShowEdit] = useState(false);
-	// const [editElId, setEditElId] = useState('');
+	const setDefinition = (item) => {
+		if (!item || !item.definition) return null;
+		const {definition} = item.definition;
+		return definition;
+	}
 	const receiptItem = (items.map((item, index) => {
 		const sum = item.income ? item.sum : (-1) * item.sum ;
-		console.log()
 
-		//TODO Отображение поля для редактирования названия
+		const definition = setDefinition(item);// = item && item.definition.definition ? item.definition.definition : null;
+
+
 		return(
 			<Fragment key={index}>
-				<div className={'receipt-item'} onClick={() => {
-					// setShowEdit(true);
-					// setEditElId(item._id);
-				}}>
-					<span className={'receipt-item-name'}>{item.name}</span>
+				<div className={'receipt-item'} >
+					<span className={'receipt-item-name'}>{definition ? definition : item.name}</span>
 					{item.price && !isSearch ? <span className={'receipt-item-price'}>{prepare.sum(item.price)}</span> : null}
 					{item.quantity && !isSearch ? <span className={'receipt-item-quantity'}>{item.quantity}</span> : null}
 					{item.dateTime && isSearch ? <span className={'receipt-item-dateTime'}>{prepare.date(item.dateTime)}</span> : null}
 					{sum ? <span className={'receipt-item-sum'}>{<ColoredSum sum={sum}/>}</span> : null}
 				</div>
-				{/*{*/}
-				{/*	showEdit && item._id === editElId ?*/}
-				{/*		<FormLayout>*/}
-				{/*			<FormLayoutGroup style={{display: 'flex'}}>*/}
-				{/*				<Input type="text" defaultValue={item.name}/>*/}
-				{/*				<Button>Stretched</Button>*/}
-				{/*			</FormLayoutGroup>*/}
-				{/*		</FormLayout> :*/}
-				{/*		null*/}
-				{/*}*/}
 			</Fragment>
 		)
 	}));
