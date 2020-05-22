@@ -113,14 +113,11 @@ const AddDay = () => {
       return;
     }
 
-    const action = checkReceipt ? 'receive' : 'check';
+    // const action = checkReceipt ? 'receive' : 'check';
 
     const body = {
       method: 'POST',
-      ...preparedQR,
-      params: {
-        action
-      }
+      ...preparedQR
     }
     doFnsFetch(body);
   }, [qr, doFnsFetch, checkReceipt, dispatch]);
@@ -130,17 +127,17 @@ const AddDay = () => {
    */
   useEffect(() => {
     if (!receipts.response) return;
-    setCheckReceipt(receipts.response.check);
-    if (receipts.response.statusCode === 202) {
-      const body = {
-        method: 'POST',
-        ...prepare.qr(qr),
-        params: {
-          action: 'receive'
-        }
-      }
-      doFnsFetch(body);
-    }
+    // setCheckReceipt(receipts.response.check);
+    // if (receipts.response.statusCode === 202) {
+    //   const body = {
+    //     method: 'POST',
+    //     ...prepare.qr(qr),
+    //     params: {
+    //       action: 'receive'
+    //     }
+    //   }
+    //   doFnsFetch(body);
+    // }
     if (receipts.response._id) {
       setSnackbar(<CustomSnackBar message={SUCCESS_MESSAGE} isError={false} onClose={onClose}/>)
       setCheckReceipt(false);
