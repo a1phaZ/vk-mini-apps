@@ -20,6 +20,7 @@ import Icon28UserOutline from '@vkontakte/icons/dist/28/user_outline';
 import Icon28AddSquareOutline from '@vkontakte/icons/dist/28/add_square_outline';
 import Analytics from "./panels/Analytics";
 import More from "./panels/More";
+import Catalog from "./panels/Catalog";
 
 const App = () => {
 	const [routerContext, dispatch] = useContext(RouterContext);
@@ -138,6 +139,9 @@ const App = () => {
 			<View id={'more'} activePanel={routerContext.panel} popout={routerContext.popout}>
 				<Panel id={'more.more'}>
 					<More />
+				</Panel>
+				<Panel id={'more.catalog'}>
+					<Catalog />
 				</Panel>
 			</View>
 		</Epic>

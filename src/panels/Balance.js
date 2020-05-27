@@ -1,6 +1,6 @@
 import React, {useState, useEffect, Fragment, useContext, useCallback} from 'react';
 import useApi from "../hooks/useApi";
-import {List, Placeholder, PullToRefresh, Separator} from "@vkontakte/vkui";
+import {List, PanelHeaderContent, Placeholder, PullToRefresh, Separator, Counter} from "@vkontakte/vkui";
 import ColoredSum from "../components/ColoredSum";
 import prepare from "../handlers/prepare";
 import Button from "@vkontakte/vkui/dist/components/Button/Button";
@@ -13,8 +13,8 @@ import Icon16Down from '@vkontakte/icons/dist/16/down';
 import {RouterContext} from "../contexts/routerContext";
 import Calendar from "../components/Calendar";
 import {format} from 'date-fns';
-import MainMenu from "../components/mainMenu/MainMenu";
 import SearchComponent from "../components/search";
+import PanelHeader from "@vkontakte/vkui/dist/components/PanelHeader/PanelHeader";
 
 const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
 	const viewTitle = 'Баланс';
@@ -54,7 +54,16 @@ const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
 
 	return(
 		<Fragment>
-			<MainMenu title={viewTitle} />
+			<PanelHeader>
+				<PanelHeaderContent
+					aside={<Counter size={'s'} mode={'primary'}>{process.env.REACT_APP_VERSION}</Counter>}
+					//aside={<Icon16Dropdown style={{ transform: `rotate(${contextOpened ? '180deg' : '0'})` }} />}
+					// onClick={toggleContext}
+				>
+					{viewTitle}
+				</PanelHeaderContent>
+			</PanelHeader>
+			{/*<MainMenu title={viewTitle} />*/}
 			<SearchComponent receipts={receipts} />
 			<Placeholder
 				icon={<Icon56GoodsCollection />}
