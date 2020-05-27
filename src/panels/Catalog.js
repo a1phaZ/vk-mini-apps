@@ -8,13 +8,14 @@ import {
 } from '@vkontakte/vkui';
 import useApi from "../hooks/useApi";
 import Icon28EditOutline from '@vkontakte/icons/dist/28/edit_outline';
+import Icon16Cancel from '@vkontakte/icons/dist/16/cancel';
 
 const Catalog = () => {
 	const [updateStr, setUpdateStr] = useState('');
 	const [{response}, doApiFetch] = useApi(`/catalog${updateStr}`);
 	const [catalog, setCatalog] = useState([]);
 	const [initialFetch, setInitialFetch] = useState(true);
-	const [action, setAction] = useState('get');
+	const [action] = useState('get');
 	const [editedElementId, setEditedElementId] = useState('');
 	const [catalogToSave, setCatalogToSave] = useState(new Set());
 
@@ -57,6 +58,7 @@ const Catalog = () => {
 					editedElementId === item._id
 					&&
 					<Input
+						id={editedElementId}
 						type={'text'}
 						defaultValue={item.definition}
 						placeholder={'Введите расшифровку'}
@@ -65,17 +67,24 @@ const Catalog = () => {
 						}}
 					/>
 				}
-				onClick={(e) => {onClickToEditElement(e)}}
+				onClick={(e) => {
+					onClickToEditElement(e);
+				}}
 				actions={
 					<Fragment>
-						<Button>icon1</Button>
-						<Button mode={'secondary'}>icon2</Button>
+						<Button disabled style={{display: 'none'}}><Icon16Cancel /></Button>
+						<Button disabled style={{display: 'none'}} mode={'secondary'}><Icon16Cancel /></Button>
 					</Fragment>
 				}>
-				{item.definition ? item.definition : 'Нет расшифровки'}
+				<b>{item.definition ? item.definition : 'Нет расшифровки'}</b>
 			</RichCell>
 		)
 	});
+
+	useEffect(() => {
+		if(!editedElementId) return;
+		document.getElementById(editedElementId).focus();
+	},[editedElementId]);
 
 	useEffect(() => {
 		if (!initialFetch) return;
@@ -89,14 +98,19 @@ const Catalog = () => {
 
 	useEffect(() => {
 		if (!updateStr) return;
-		doApiFetch({
-
-		});
-	}, [updateStr]);
+		const body = {
+			method: 'PUT',
+			update: [...catalogToSave]
+		}
+		doApiFetch(body);
+	}, [updateStr, catalogToSave, doApiFetch]);
 
 	useEffect(() => {
 		if (!response) return;
 		setCatalog(response);
+		setCatalogToSave(new Set());
+		setUpdateStr('');
+		setEditedElementId('');
 	}, [response]);
 
 	return (
@@ -110,7 +124,7 @@ const Catalog = () => {
 
 			{[...catalogToSave].length !== 0 && <FixedLayout vertical="bottom">
 				<Separator wide/>
-				<Button size={'xl'} onClick={() => {console.log('catalogToSave',[...catalogToSave]);}}>Сохранить изменения</Button>
+				<Button size={'xl'} onClick={() => {setUpdateStr('/update')}}>Сохранить изменения</Button>
 			</FixedLayout>}
 
 		</Fragment>
