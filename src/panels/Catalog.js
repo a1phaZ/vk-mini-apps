@@ -46,13 +46,7 @@ const Catalog = () => {
 		}
 	}
 
-	const catalogList = catalog.sort((a, b) => {
-		const defA = a.definition ? a.definition.toLowerCase() : '!Нет расшифровки' ;
-		const defB = b.definition ? b.definition.toLowerCase() : '!Нет расшифровки';
-		if (defA > defB) return 1;
-		if (defA < defB) return -1;
-		return 0;
-	}).map((item, i) => {
+	const catalogList = catalog.map((item, i) => {
 		return (
 			<Fragment key={i}>
 				<RichCell
