@@ -46,38 +46,45 @@ const Catalog = () => {
 		}
 	}
 
-	const catalogList = catalog.map((item, i) => {
+	const catalogList = catalog.sort((a, b) => {
+		const defA = a.definition ? a.definition.toLowerCase() : '!Нет расшифровки' ;
+		const defB = b.definition ? b.definition.toLowerCase() : '!Нет расшифровки';
+		if (defA > defB) return 1;
+		if (defA < defB) return -1;
+		return 0;
+	}).map((item, i) => {
 		return (
-			<RichCell
-				key={i}
-				data-id={item._id}
-				multiline
-				caption={item.name}
-				after={<Icon28EditOutline />}
-				bottom={
-					editedElementId === item._id
-					&&
-					<Input
-						id={editedElementId}
-						type={'text'}
-						defaultValue={item.definition}
-						placeholder={'Введите расшифровку'}
-						onChange={async (e) => {
-							await editCatalogElement(editedElementId, e.target.value);
-						}}
-					/>
-				}
-				onClick={(e) => {
-					onClickToEditElement(e);
-				}}
-				actions={
-					<Fragment>
-						<Button disabled style={{display: 'none'}}><Icon16Cancel /></Button>
-						<Button disabled style={{display: 'none'}} mode={'secondary'}><Icon16Cancel /></Button>
-					</Fragment>
-				}>
-				<b>{item.definition ? item.definition : 'Нет расшифровки'}</b>
-			</RichCell>
+			<Fragment key={i}>
+				<RichCell
+					data-id={item._id}
+					multiline
+					caption={item.name}
+					after={<Icon28EditOutline />}
+					bottom={
+						editedElementId === item._id
+						&&
+						<Input
+							id={editedElementId}
+							type={'text'}
+							defaultValue={item.definition}
+							placeholder={'Введите расшифровку'}
+							onChange={async (e) => {
+								await editCatalogElement(editedElementId, e.target.value);
+							}}
+						/>
+					}
+					onClick={(e) => {
+						onClickToEditElement(e);
+					}}
+					actions={
+						<Fragment>
+							<Button disabled style={{display: 'none'}}><Icon16Cancel /></Button>
+							<Button disabled style={{display: 'none'}} mode={'secondary'}><Icon16Cancel /></Button>
+						</Fragment>
+					}>
+					<b>{item.definition ? item.definition : 'Нет расшифровки'}</b>
+				</RichCell>
+			</Fragment>
 		)
 	});
 
