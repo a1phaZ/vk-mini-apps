@@ -1,6 +1,6 @@
 {
   "name": "vk-mini-apps-empty",
-  "version": "2.1.0-0",
+  "version": "0.5.1",
   "description": "",
   "main": "index.js",
   "homepage": "https://a1phaZ.github.io/vk-mini-apps/",
@@ -9,7 +9,10 @@
     "dev": "cross-env PORT=10888 react-scripts start",
     "predeploy": "yarn build",
     "deploy": "gh-pages -d build",
-    "build": "react-scripts build"
+    "build": "react-scripts build",
+    "patch": "npm version patch && yarn deploy",
+    "minor": "npm version minor && yarn deploy",
+    "major": "npm version major && yarn deploy"
   },
   "keywords": [],
   "author": "",
