@@ -153,7 +153,7 @@ const Catalog = () => {
 	});
 
 	const filterList = state.filterItems.map((item, i) => {
-		const defaultChecked = item ? state.filterRules.includes(item) : state.filterRules.includes('*Нет расшифровки');
+		const defaultChecked = item !== '*Нет расшифровки' ? state.filterRules.includes(item) : state.filterRules.includes(undefined);
 		return(
 			<SimpleCell key={i} after={<Switch data-definition={item} onChange={(e) => {
 				const {definition} = e.currentTarget.dataset;
