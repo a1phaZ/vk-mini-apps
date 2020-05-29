@@ -68,7 +68,7 @@ const reducer = (state, action) => {
 			}
 		case 'SET_FILTER_ITEMS':
 			const filterItems = state.catalog.map(item => {
-				return item.definition;
+				return item.definition ? item.definition : '*Нет расшифровки';
 			}).reduce((uniq, item) => {
 				return uniq.includes(item) ? uniq : [ ...uniq, item ];
 			}, []);
