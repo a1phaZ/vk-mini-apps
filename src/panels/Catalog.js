@@ -87,6 +87,11 @@ const reducer = (state, action) => {
 				filteredCatalog = [...filteredCatalog, ...filterByRule];
 			} else {
 				rules.splice(rules.findIndex((item) => item === action.payload.definition), 1);
+				filteredCatalog = rules.map((rule) => {
+					return state.catalog.filter((item) => {
+						return item.definition === rule && item;
+					});
+				}).flat();
 			}
 
 			return {
