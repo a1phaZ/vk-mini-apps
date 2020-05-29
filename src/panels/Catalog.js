@@ -155,8 +155,11 @@ const Catalog = () => {
 	const filterList = state.filterItems.map((item, i) => {
 		const defaultChecked = state.filterRules.includes(item);
 		return(
-			<SimpleCell key={i} after={<Switch data-definition={item} onChange={
-				(e) => {dispatch({type: 'SET_FILTER_RULES', payload: {checked: e.currentTarget.checked, definition: e.currentTarget.dataset.definition}})}
+			<SimpleCell key={i} after={<Switch data-definition={item} onChange={(e) => {
+				const {definition} = e.currentTarget.dataset;
+				const {checked} = e.currentTarget;
+				dispatch({type: 'SET_FILTER_RULES', payload: {checked, definition: definition !== '*Нет расшифровки' ? definition : undefined}})
+			}
 			} defaultChecked={defaultChecked}/>}>{item}</SimpleCell>
 		)
 	});
