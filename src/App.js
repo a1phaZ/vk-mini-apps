@@ -14,13 +14,15 @@ import Icon24Dismiss from '@vkontakte/icons/dist/24/dismiss';
 import Registration from "./panels/Registration";
 import {CurrentUserContext} from "./contexts/currentUser";
 import Icon28MarketOutline from '@vkontakte/icons/dist/28/market_outline';
-import Icon28GraphOutline from '@vkontakte/icons/dist/28/graph_outline';
+// import Icon28GraphOutline from '@vkontakte/icons/dist/28/graph_outline';
 import Icon28More from '@vkontakte/icons/dist/28/more';
 import Icon28UserOutline from '@vkontakte/icons/dist/28/user_outline';
 import Icon28AddSquareOutline from '@vkontakte/icons/dist/28/add_square_outline';
+import Icon28ListOutline from '@vkontakte/icons/dist/28/list_outline';
 import Analytics from "./panels/Analytics";
 import More from "./panels/More";
 import Catalog from "./panels/Catalog";
+import ShoppingList from "./panels/ShoppingList";
 
 const App = () => {
 	const [routerContext, dispatch] = useContext(RouterContext);
@@ -70,11 +72,11 @@ const App = () => {
 		><Icon28MarketOutline /></TabbarItem>
 		<TabbarItem
 			onClick={onStoryChange}
-			selected={routerContext.view === 'analytics'}
-			data-story="analytics"
-			data-panel={'home'}
-			text="Аналитика"
-		><Icon28GraphOutline /></TabbarItem>
+			selected={routerContext.view === 'list'}
+			data-story="list"
+			data-panel={'list'}
+			text="Список покупок"
+		><Icon28ListOutline /></TabbarItem>
 		<TabbarItem
 			onClick={onStoryChange}
 			selected={routerContext.view === 'balance' && routerContext.panel === 'balance.add'}
@@ -142,6 +144,11 @@ const App = () => {
 				</Panel>
 				<Panel id={'more.catalog'}>
 					<Catalog />
+				</Panel>
+			</View>
+			<View id={'list'} activePanel={routerContext.panel} popout={routerContext.popout}>
+				<Panel id={'list.list'}>
+					<ShoppingList />
 				</Panel>
 			</View>
 		</Epic>
