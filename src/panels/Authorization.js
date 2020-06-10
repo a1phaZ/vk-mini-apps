@@ -54,7 +54,7 @@ const Authorization = ({go, goView, type}) => {
 		doApiFetch(body);
 		setStartFetchData(false);
 		dispatch({type: 'UNSET_PASSWORD'});
-	},[startFetchData, doApiFetch, state.password, vkUserId]);
+	},[startFetchData, doApiFetch, state.password, vkUserId, dispatch]);
 
 	useEffect(() => {
 		if (!response) return;
