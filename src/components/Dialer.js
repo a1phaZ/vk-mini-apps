@@ -1,10 +1,12 @@
-import React, { Fragment, useReducer, useContext } from 'react';
+import React, { useContext } from 'react';
 import { Button } from "@vkontakte/vkui";
 import {RouterContext} from "../contexts/routerContext";
+import Icon28BackspaceOutline from '@vkontakte/icons/dist/28/backspace_outline';
 import './dialer.component.css';
 
+
 const Dialer = ({confirm = false}) => {
-	const [state, dispatch] = useContext(RouterContext);
+	const [, dispatch] = useContext(RouterContext);
 	const digits = [
 		{item: '1'}, 
 		{item: '2'},
@@ -18,7 +20,7 @@ const Dialer = ({confirm = false}) => {
 		{item: null},
 		{item: '0'},
 		{
-			item: '<-',
+			item: <Icon28BackspaceOutline />,
 			onClick: () => {dispatch({type: 'UNSET_PASSWORD'})},
 			mode: 'destructive'
 		}
@@ -43,7 +45,7 @@ const Dialer = ({confirm = false}) => {
 						data-digit={digit.item} 
 						onClick={digit.onClick || onClick}
 					>
-						{digit.item}
+						<b>{digit.item}</b>
 					</Button>
 				}
 			</div>
