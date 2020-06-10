@@ -1,5 +1,5 @@
 import React, {Fragment, useState, useEffect, useContext} from 'react';
-import {Div, FormLayout, FormLayoutGroup, Input, Placeholder, FormStatus} from "@vkontakte/vkui";
+import {Div, FormLayout, Placeholder, FormStatus} from "@vkontakte/vkui";
 import PanelHeader from "@vkontakte/vkui/dist/components/PanelHeader/PanelHeader";
 import Button from "@vkontakte/vkui/dist/components/Button/Button";
 import Icon56LockOutline from '@vkontakte/icons/dist/56/lock_outline';
@@ -12,8 +12,6 @@ import {RouterContext} from "../contexts/routerContext";
 import Dialer from '../components/Dialer';
 
 const Authorization = ({go, goView, type}) => {
-	const [password, setPassword] = useState('');
-	const [confirmPassword, setConfirmPassword] = useState('');
 	const [formError, setFormError] = useState(null);
 	const [{response, error}, doApiFetch] = useApi(`/users/${type}`);
 	const [{vkUserId}] = useContext(AppSignContext);
@@ -33,8 +31,6 @@ const Authorization = ({go, goView, type}) => {
 	},[currentUserState, dispatch]);
 
 	useEffect(()=>{
-		if (type === 'login') return;
-
 		if ((state.password.length !== state.confirmPassword.length) || (!state.password.length && !state.confirmPassword.length)) {
 			setFormError(null);
 			return;
@@ -51,13 +47,14 @@ const Authorization = ({go, goView, type}) => {
 			method: 'POST',
 			user: {
 				id: +vkUserId,
-				password: password || state.password
+				password: state.password
 			}
 		};
 
 		doApiFetch(body);
 		setStartFetchData(false);
-	},[startFetchData, doApiFetch, password, state.password, vkUserId]);
+		dispatch({type: 'UNSET_PASSWORD'});
+	},[startFetchData, doApiFetch, state.password, vkUserId]);
 
 	useEffect(() => {
 		if (!response) return;
@@ -78,17 +75,8 @@ const Authorization = ({go, goView, type}) => {
 
 	useEffect(() => {
 		if (!error) return;
-		setFormError(error);
+		setFormError({message: error.message});
 	}, [error]);
-
-	const onChange = (e) => {
-		e.target.value = Math.max(0, parseInt(e.target.value) ).toString().slice(0,4);
-		if (e.target.name === 'password') {
-			setPassword(e.target.value);
-		} else {
-			setConfirmPassword(e.target.value);
-		}
-	};
 
 	const formStatus = () => {
 		if (!formError) return null;
@@ -126,7 +114,7 @@ const Authorization = ({go, goView, type}) => {
 		} else {
 			str = confPassString;
 		}
-		return str;
+		return (<b>{str}</b>);
 	}
 
 	return (
@@ -136,15 +124,9 @@ const Authorization = ({go, goView, type}) => {
 				icon={type === 'login' ? <Icon56LockOutline /> : <Icon56UserAddOutline />}
 				header={headerString()/*state.password.length !== 4 ? loginPassString : confPassString*/}
 			>
-					{
-						type !== 'login'
-							?
-							<FormLayout>
-								{formStatus()}
-							</FormLayout>
-							:
-						null
-					}
+				<FormLayout>
+					{formStatus()}
+				</FormLayout>
 				{digitCount()}
 			</Placeholder>
 			<Dialer confirm={(state.password.length === 4)} />
