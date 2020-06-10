@@ -5,7 +5,9 @@ const initialState = {
 	view: 'authorization',
 	panel: 'authorization.login',
 	popout: null,
-  error: null
+  error: null,
+  password: '',
+  confirmPassword: ''
 };
 
 const reducer = (state, action) => {
@@ -19,6 +21,8 @@ const reducer = (state, action) => {
 		case 'SET_PANEL':
 			return {
 				...state,
+				password: '',
+				confirmPassword: '',
 				panel: `${state.view}.${action.payload.panel}`
 			};
 		case 'SHOW_LOADING':
@@ -45,6 +49,22 @@ const reducer = (state, action) => {
         ...state,
         error: null
       }
+    case 'SET_PASSWORD':
+			return {
+				...state,
+				password: state.password.length < 4 ? state.password+action.payload.digit : state.password
+			}
+		case 'SET_CONFIRM_PASSWORD':
+			return {
+				...state,
+				confirmPassword: state.confirmPassword.length < 4 ? state.confirmPassword+action.payload.digit : state.confirmPassword
+			}
+		case 'UNSET_PASSWORD':
+			return {
+				...state,
+				password: '',
+				confirmPassword: ''
+			}
 		default:
 			return state;
 	}

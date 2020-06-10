@@ -9,6 +9,7 @@ import {AppSignContext} from "../contexts/appSign";
 import {CurrentUserContext} from "../contexts/currentUser";
 import useLocalStorage from "../hooks/useLocalStorage";
 import {RouterContext} from "../contexts/routerContext";
+import Dialer from '../components/Dialer';
 
 const Authorization = ({go, goView, type}) => {
 	const [password, setPassword] = useState('');
@@ -19,7 +20,7 @@ const Authorization = ({go, goView, type}) => {
 	const [startFetchData, setStartFetchData] = useState(false);
 	const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext);
 	const [, setToken] = useLocalStorage('token');
-	const [,dispatch] = useContext(RouterContext);
+	const [state, dispatch] = useContext(RouterContext);
 
 	useEffect(() => {
 		if (!currentUserState.isLoggedIn) return;
@@ -34,15 +35,15 @@ const Authorization = ({go, goView, type}) => {
 	useEffect(()=>{
 		if (type === 'login') return;
 
-		if ((password.length !== confirmPassword.length)) {
+		if ((state.password.length !== state.confirmPassword.length) || (!state.password.length && !state.confirmPassword.length)) {
 			setFormError(null);
 			return;
 		}
 
-		if (password !== confirmPassword) {
+		if (state.password !== state.confirmPassword) {
 			setFormError({status: 'Ошибка валидации', message: 'Пароли не совпадают. Проверьте ввод и повторите попытку.'});
 		}
-	}, [password, confirmPassword, type]);
+	}, [state.password, state.confirmPassword, type]);
 
 	useEffect(()=>{
 		if (!startFetchData) return;
@@ -50,13 +51,13 @@ const Authorization = ({go, goView, type}) => {
 			method: 'POST',
 			user: {
 				id: +vkUserId,
-				password: password
+				password: password || state.password
 			}
 		};
 
 		doApiFetch(body);
 		setStartFetchData(false);
-	},[startFetchData, doApiFetch, password, vkUserId]);
+	},[startFetchData, doApiFetch, password, state.password, vkUserId]);
 
 	useEffect(() => {
 		if (!response) return;
@@ -102,30 +103,65 @@ const Authorization = ({go, goView, type}) => {
 		setStartFetchData(true);
 	};
 
+	const loginPassString = state.password.replace(/[0-9]/g, '*') || 'Введите пароль'
+	const confPassString = state.confirmPassword.replace(/[0-9]/g, '*') ||  'Повторите пароль'
+	const digitCount = () => {
+		let str;
+		if (state.password.length !== 4) {
+			str = state.password.length+' из 4';
+		} else if (type==='login') {
+			str = state.password.length+' из 4';
+		} else {
+			str = state.confirmPassword.length+' из 4';
+		}
+		// state.password.length !== 4 ? state.password.length+' из 4' : state.confirmPassword.length+' из 4'
+		return str;
+	}
+	const headerString = () => {
+		let str;
+		if (state.password.length !== 4) {
+			str = loginPassString;
+		} else if (type==='login') {
+			str = loginPassString;
+		} else {
+			str = confPassString;
+		}
+		return str;
+	}
+
 	return (
 		<Fragment>
-			<PanelHeader>{type === 'login' ? 'Авторизация' : 'Регистрация'}</PanelHeader>
+			<PanelHeader>{type === 'login' ? 'Введите пароль' : 'Регистрация'}</PanelHeader>
 			<Placeholder
 				icon={type === 'login' ? <Icon56LockOutline /> : <Icon56UserAddOutline />}
-				header={type === 'login' ? 'Введите пароль' : 'Придумайте пароль'}
+				header={headerString()/*state.password.length !== 4 ? loginPassString : confPassString*/}
 			>
-				<FormLayout>
-					{formStatus()}
-					<FormLayoutGroup top={'Введите пароль'}>
-						<Input name={'password'} type={'number'} onChange = {onChange} align="center" value={password}/>
-					</FormLayoutGroup>
 					{
 						type !== 'login'
 							?
-							<FormLayoutGroup top={'Повторите пароль'}>
-								<Input type={'number'} name={'confirmPassword'} onChange = {onChange} align="center" value={confirmPassword}/>
-							</FormLayoutGroup>
+							<FormLayout>
+								{formStatus()}
+							</FormLayout>
 							:
 						null
 					}
-					<Button size="l" onClick={formButtonClick}>{type === 'login' ? 'Авторизация' : 'Регистрация'}</Button>
-				</FormLayout>
+				{digitCount()}
 			</Placeholder>
+			<Dialer confirm={(state.password.length === 4)} />
+			<FormLayout style={{textAlign: 'center'}}>
+			{
+				(type === 'login' && state.password.length === 4)
+				&& 
+					<Button size="xl" mode='commerce' onClick={formButtonClick}>{type === 'login' ? 'Авторизация' : 'Регистрация'}</Button>
+			}
+			{
+				(type !== 'login' && state.password && state.confirmPassword && state.password === state.confirmPassword)
+				&& 
+				
+					<Button mode='commerce' size="xl" onClick={formButtonClick}>{type === 'login' ? 'Авторизация' : 'Регистрация'}</Button>
+				
+			}
+			</FormLayout>
 			<Div>
 				<Button
 					stretched
