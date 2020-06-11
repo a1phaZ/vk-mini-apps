@@ -9,3 +9,7 @@
 .dialer > .digit {
 	text-align: center;
 }
+
+.dialer > .digit > button {
+	height: 23vw;
+}
