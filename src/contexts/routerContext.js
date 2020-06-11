@@ -39,6 +39,11 @@ const reducer = (state, action) => {
 				...state,
 				popout: null
 			};
+		case 'SET_POPOUT':
+			return {
+				...state,
+				popout: action.payload.popout
+			}
     case 'SET_ERROR':
       return {
         ...state,
