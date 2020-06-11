@@ -74,7 +74,7 @@ const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
       </Alert>
 		)
 		dispatch({type: 'SET_POPOUT', payload: { popout: popout }});
-	}, [receipts.length, dispatch, response]);
+	}, [receipts.length, dispatch, response, currentDate]);
 
 	return(
 		<Fragment>
