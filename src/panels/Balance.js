@@ -1,6 +1,6 @@
 import React, {useState, useEffect, Fragment, useContext, useCallback} from 'react';
 import useApi from "../hooks/useApi";
-import {List, PanelHeaderContent, Placeholder, PullToRefresh, Separator, Counter} from "@vkontakte/vkui";
+import {List, PanelHeaderContent, Placeholder, PullToRefresh, Separator, Counter, Alert} from "@vkontakte/vkui";
 import ColoredSum from "../components/ColoredSum";
 import prepare from "../handlers/prepare";
 import Button from "@vkontakte/vkui/dist/components/Button/Button";
@@ -50,7 +50,31 @@ const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
 	useEffect(() => {
 		if (!response) return;
 		setReceipts(response);
-	}, [response, setReceiptFromBalance]);
+	}, [response]);
+
+	useEffect(() => {
+		if (!response) return;
+		if (!!response.length || !!receipts.length) return;
+		if (currentDate.getMonth() !== new Date().getMonth()) return;
+		const popout = (
+			<Alert
+				actions={[{
+					title: 'Отмена',
+					autoclose: true,
+					mode: 'cancel'
+				}, {
+					title: 'Добавить остаток',
+					autoclose: true,
+					action: () => dispatch({type: 'SET_PANEL', payload: { panel: 'add'}})
+				}]}
+				onClose={() => dispatch({type: 'SET_POPOUT', payload: { popout: null }})}
+			>
+				<h2>За текущий месяц данных нет</h2>
+        <p>Добавьте остаток денежных средств, для правильной калькуляции баланса</p>
+      </Alert>
+		)
+		dispatch({type: 'SET_POPOUT', payload: { popout: popout }});
+	}, [receipts.length, dispatch, response]);
 
 	return(
 		<Fragment>
