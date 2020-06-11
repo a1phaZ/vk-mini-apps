@@ -3,7 +3,7 @@ import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader
 import FormLayout from "@vkontakte/vkui/dist/components/FormLayout/FormLayout";
 import Input from "@vkontakte/vkui/dist/components/Input/Input";
 import PanelHeaderButton from "@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton";
-import {IOS, platform} from "@vkontakte/vkui";
+import {IOS, platform, FixedLayout} from "@vkontakte/vkui";
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Checkbox from "@vkontakte/vkui/dist/components/Checkbox/Checkbox";
@@ -127,17 +127,6 @@ const AddDay = () => {
    */
   useEffect(() => {
     if (!receipts.response) return;
-    // setCheckReceipt(receipts.response.check);
-    // if (receipts.response.statusCode === 202) {
-    //   const body = {
-    //     method: 'POST',
-    //     ...prepare.qr(qr),
-    //     params: {
-    //       action: 'receive'
-    //     }
-    //   }
-    //   doFnsFetch(body);
-    // }
     if (receipts.response._id) {
       setSnackbar(<CustomSnackBar message={SUCCESS_MESSAGE} isError={false} onClose={onClose}/>)
       setCheckReceipt(false);
@@ -187,7 +176,7 @@ const AddDay = () => {
           Добавление записи
         </PanelHeaderContent>
       </PanelHeader>
-      <FormLayout>
+      <FormLayout style={{paddingBottom: 40}}>
         <Input
           type={'date'}
           top={'Дата'}
@@ -195,6 +184,11 @@ const AddDay = () => {
           value={date}
           onChange={(e)=>{setDate(e.currentTarget.value)}}
         />
+        <Checkbox
+          name={'income'}
+          checked={income}
+          onChange={(e)=>{setIncome(e.currentTarget.checked)}}
+        >Доход</Checkbox>
         <Input
           type={'text'}
           top={'Название'}
@@ -216,20 +210,19 @@ const AddDay = () => {
           value={price}
           onChange={(e)=>{setPrice(e.currentTarget.value)}}
         />
-        <Checkbox
-          name={'income'}
-          checked={income}
-          onChange={(e)=>{setIncome(e.currentTarget.checked)}}
-        >Доход</Checkbox>
 
-        <Button
-          size="xl"
-          disabled={!date || !name || !quantity || !price}
-          mode={income ? "commerce" : "destructive"}
-          onClick={() => {setStartFetchData(true)}}
-        >
-          Добавить {income ? "доход" : "расход"}
-        </Button>
+        <FixedLayout style={{marginBottom: '1em'}} vertical="bottom">
+          <Button
+            size="xl"
+            disabled={!date || !name || !quantity || !price}
+            mode={income ? "commerce" : "destructive"}
+            onClick={() => {setStartFetchData(true)}}
+          >
+            Добавить {income ? "доход" : "расход"}
+          </Button>
+        </FixedLayout>
+
+        
       </FormLayout>
 
       {snackbar}

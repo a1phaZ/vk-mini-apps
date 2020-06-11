@@ -5,7 +5,7 @@ import {
 	PanelHeader,
 	platform,
 	PanelHeaderButton, Button, Input, FormLayoutGroup, FormStatus, Snackbar,
-	Div
+	Div, FixedLayout
 } from '@vkontakte/vkui';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
@@ -134,7 +134,7 @@ const Profile = () =>{
 			>
 				{canBack ? 'Профиль' : 'Регистрация'}
 			</PanelHeader>
-			<FormLayout>
+			<FormLayout style={{paddingBottom: 40}}>
 				{
 					!canBack && <FormStatus header="Разъяснение" mode="default">
 						Приложение позволяет считывать данные по чекам.
@@ -201,11 +201,13 @@ const Profile = () =>{
 					</Div>
 				</FormLayoutGroup>
 
-				<Button size="xl" mode="commerce" onClick={() => {
-					setStartFetchData(true);
-				}}>
-					{canBack ? 'Обновить профиль' : 'Завершить регистрацию'}
-				</Button>
+				<FixedLayout style={{marginBottom: '1em'}} vertical="bottom">
+					<Button size="xl" mode="commerce" onClick={() => {
+						setStartFetchData(true);
+					}}>
+						{canBack ? 'Обновить профиль' : 'Завершить регистрацию'}
+					</Button>
+				</FixedLayout>
 			</FormLayout>
 			{snackbar}
 		</Fragment>
