@@ -1,43 +1,52 @@
 import { useEffect, useContext } from 'react';
 import useApi from "../hooks/useApi";
-import { CurrentUserContext } from '../contexts/currentUser';
-import { AppSignContext } from "../contexts/appSign";
+import { RouterContext } from "../contexts/routerContext";
 import useLocalStorage from "../hooks/useLocalStorage";
 
 const CurrentUserChecker = ({ children }) => {
 	const [{response}, doFetch] = useApi('/users/profile');
-	const [, setCurrentUserState] = useContext(CurrentUserContext);
-	const [{vkUserId, matchUrlParams}] = useContext(AppSignContext);
+	const [findUser, doFindFetch] = useApi('/users/find')
+	const [state, dispatch] = useContext(RouterContext);
 	const [token] = useLocalStorage('token');
 
 	useEffect(() => {
-		if (!token || !matchUrlParams) {
-			setCurrentUserState(state => ({
-				...state,
-				isLoggedIn: false
-			}));
+		if (!token && state.vkUser.matchUrlParams && state.vkUser.id) {
+			doFindFetch({
+				params: {
+					id: state.vkUser.id
+				}
+			});
+			dispatch({type: 'SHOW_LOADING'});
+		}
+	}, [token, state.vkUser.matchUrlParams, state.vkUser.id, dispatch, doFindFetch]);
+
+	useEffect(() => {
+		if (!findUser.response) return;
+		if (findUser.response.result) {
+			dispatch({type: 'SET_VIEW', payload: { view: 'authorization', panel: 'login'}})
+		} else {
+			dispatch({type: 'SET_VIEW', payload: { view: 'authorization', panel: 'register'}})
+		}
+		dispatch({type: 'HIDE_LOADING'});
+	}, [findUser.response, dispatch]);
+
+	useEffect(() => {
+		if (!token || !state.vkUser.matchUrlParams) {
+			dispatch({type: 'SET_USER', payload: { user: null, isLoggedIn: false}});
 			return;
 		}
 		doFetch();
-		setCurrentUserState(state => ({
-			...state,
-			isLoading: true
-		}))
-	}, [doFetch, setCurrentUserState, token, matchUrlParams]);
+		dispatch({type: 'SHOW_LOADING'});
+	}, [doFetch, token, state.vkUser.matchUrlParams, dispatch]);
 
 	useEffect(() => {
 		if (!response) return;
 
-		const user = response.user.vk_id.toString() === vkUserId ? response.user : null;
+		const user = response.user.vk_id.toString() === state.vkUser.id ? response.user : null;
 
-		setCurrentUserState(state => ({
-			...state,
-			isLoading: false,
-			isLoggedIn: !!user,
-			currentUser: user
-		}));
+		dispatch({type: 'SET_USER', payload: { user: user, isLoggedIn: !!user}});
 
-	}, [response, setCurrentUserState, vkUserId]);
+	}, [response, state.vkUser.id, dispatch ]);
 	return children;
 };
 
