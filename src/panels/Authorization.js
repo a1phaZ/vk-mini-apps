@@ -5,30 +5,21 @@ import Button from "@vkontakte/vkui/dist/components/Button/Button";
 import Icon56LockOutline from '@vkontakte/icons/dist/56/lock_outline';
 import Icon56UserAddOutline from '@vkontakte/icons/dist/56/user_add_outline';
 import useApi from "../hooks/useApi";
-import {AppSignContext} from "../contexts/appSign";
-import {CurrentUserContext} from "../contexts/currentUser";
 import useLocalStorage from "../hooks/useLocalStorage";
 import {RouterContext} from "../contexts/routerContext";
 import Dialer from '../components/Dialer';
 
-const Authorization = ({go, goView, type}) => {
+const Authorization = ({type}) => {
 	const [formError, setFormError] = useState(null);
 	const [{response, error}, doApiFetch] = useApi(`/users/${type}`);
-	const [{vkUserId}] = useContext(AppSignContext);
 	const [startFetchData, setStartFetchData] = useState(false);
-	const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext);
 	const [, setToken] = useLocalStorage('token');
 	const [state, dispatch] = useContext(RouterContext);
 
 	useEffect(() => {
-		if (!currentUserState.isLoggedIn) return;
-		const {name, phone, email, password} = currentUserState.currentUser;
-		if (!name || !phone || !email || !password) {
-			dispatch({type: 'SET_VIEW', payload: { view: 'registration', panel: 'finish'}});
-		} else {
-			dispatch({type: 'SET_VIEW', payload: { view: 'balance', panel: 'home'}})
-		}
-	},[currentUserState, dispatch]);
+		if (!state.isLoggedIn) return;
+		dispatch({type: 'SET_VIEW', payload: { view: 'balance', panel: 'home'}})
+	},[state, dispatch]);
 
 	useEffect(()=>{
 		if ((state.password.length !== state.confirmPassword.length) || (!state.password.length && !state.confirmPassword.length)) {
@@ -46,7 +37,7 @@ const Authorization = ({go, goView, type}) => {
 		const body = {
 			method: 'POST',
 			user: {
-				id: +vkUserId,
+				id: +state.vkUser.id,
 				password: state.password
 			}
 		};
@@ -54,7 +45,7 @@ const Authorization = ({go, goView, type}) => {
 		doApiFetch(body);
 		setStartFetchData(false);
 		dispatch({type: 'UNSET_PASSWORD'});
-	},[startFetchData, doApiFetch, state.password, vkUserId, dispatch]);
+	},[startFetchData, doApiFetch, state.password, state.vkUser.id, dispatch]);
 
 	useEffect(() => {
 		if (!response) return;
@@ -64,14 +55,9 @@ const Authorization = ({go, goView, type}) => {
 		} else {
 			setToken(response.user.token);
 		}
-		setCurrentUserState(state => ({
-			...state,
-			isLoading: false,
-			isLoggedIn: !!response.user,
-			currentUser: response.user || null
-		}));
+		dispatch({type: 'SET_USER', payload: { user: response.user || null, isLoggedIn: !!response.user}});
 
-	}, [response, setCurrentUserState, go, goView, setToken]);
+	}, [response, setToken, dispatch]);
 
 	useEffect(() => {
 		if (!error) return;
