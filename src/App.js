@@ -11,10 +11,7 @@ import PanelHeaderButton from "@vkontakte/vkui/dist/components/PanelHeaderButton
 import prepare from "./handlers/prepare";
 import Icon24Cancel from '@vkontakte/icons/dist/24/cancel';
 import Icon24Dismiss from '@vkontakte/icons/dist/24/dismiss';
-import Registration from "./panels/Registration";
-import {CurrentUserContext} from "./contexts/currentUser";
 import Icon28MarketOutline from '@vkontakte/icons/dist/28/market_outline';
-// import Icon28GraphOutline from '@vkontakte/icons/dist/28/graph_outline';
 import Icon28More from '@vkontakte/icons/dist/28/more';
 import Icon28UserOutline from '@vkontakte/icons/dist/28/user_outline';
 import Icon28AddSquareOutline from '@vkontakte/icons/dist/28/add_square_outline';
@@ -25,11 +22,10 @@ import Catalog from "./panels/Catalog";
 import ShoppingList from "./panels/ShoppingList";
 
 const App = () => {
-	const [routerContext, dispatch] = useContext(RouterContext);
+	const [state, dispatch] = useContext(RouterContext);
 	const [activeModal, setActiveModal] = useState(null);
 	const [modal, setModal] = useState(null);
 	const [receipt, setReceipt] = useState(null);
-	const [currentUserContext] = useContext(CurrentUserContext);
 
 	const modalBack = useCallback(() => {
 		setActiveModal(null);
@@ -62,38 +58,38 @@ const App = () => {
 		dispatch({type: 'SET_VIEW', payload: { view: e.currentTarget.dataset.story, panel: e.currentTarget.dataset.panel}});
 	}
 
-	const tb = currentUserContext.currentUser && (<Tabbar>
+	const tb = state.currentUser && (<Tabbar>
 		<TabbarItem
 			onClick={onStoryChange}
-			selected={routerContext.view === 'balance' && routerContext.panel === 'balance.home'}
+			selected={state.view === 'balance' && state.panel === 'balance.home'}
 			data-story="balance"
 			data-panel={'home'}
 			text="Баланс"
 		><Icon28MarketOutline /></TabbarItem>
 		<TabbarItem
 			onClick={onStoryChange}
-			selected={routerContext.view === 'list'}
+			selected={state.view === 'list'}
 			data-story="list"
 			data-panel={'list'}
 			text="Список покупок"
 		><Icon28ListOutline /></TabbarItem>
 		<TabbarItem
 			onClick={onStoryChange}
-			selected={routerContext.view === 'balance' && routerContext.panel === 'balance.add'}
+			selected={state.view === 'balance' && state.panel === 'balance.add'}
 			data-story="balance"
 			data-panel="add"
 			text="Добавить"
 		><Icon28AddSquareOutline /></TabbarItem>
 		<TabbarItem
 			onClick={onStoryChange}
-			selected={routerContext.view === 'profile'}
+			selected={state.view === 'profile'}
 			data-story="profile"
 			data-panel={'edit'}
 			text="Профиль"
 		><Icon28UserOutline /></TabbarItem>
 		<TabbarItem
 			onClick={onStoryChange}
-			selected={routerContext.view === 'more'}
+			selected={state.view === 'more'}
 			data-story="more"
 			data-panel={'more'}
 			text="Ещё"
@@ -101,10 +97,10 @@ const App = () => {
 	</Tabbar>)
 
 	return (
-		<Epic activeStory={routerContext.view}
+		<Epic activeStory={state.view}
 					tabbar={tb}
 		>
-			<View id={'authorization'} activePanel={routerContext.panel} popout={routerContext.popout}>
+			<View id={'authorization'} activePanel={state.panel} popout={state.popout}>
 				<Panel id={'authorization.login'}>
 					<Authorization type={'login'} />
 				</Panel>
@@ -112,17 +108,12 @@ const App = () => {
 					<Authorization type={'register'} />
 				</Panel>
 			</View>
-			<View id={'profile'} activePanel={routerContext.panel} popout={routerContext.popout}>
+			<View id={'profile'} activePanel={state.panel} popout={state.popout}>
 				<Panel id={'profile.edit'}>
 					<Profile />
 				</Panel>
 			</View>
-			<View id={'registration'} activePanel={routerContext.panel} popout={routerContext.popout}>
-				<Panel id={'registration.finish'}>
-					<Registration />
-				</Panel>
-			</View>
-			<View id={'balance'} activePanel={routerContext.panel} popout={routerContext.popout} modal={modal}>
+			<View id={'balance'} activePanel={state.panel} popout={state.popout} modal={modal}>
 				<Panel id={'balance.home'}>
 					<Balance
 						setReceiptFromBalance={setReceipt}
@@ -133,12 +124,12 @@ const App = () => {
 					<AddDay />
 				</Panel>
 			</View>
-			<View id={'analytics'} activePanel={routerContext.panel} popout={routerContext.popout}>
+			<View id={'analytics'} activePanel={state.panel} popout={state.popout}>
 				<Panel id={'analytics.home'}>
 					<Analytics />
 				</Panel>
 			</View>
-			<View id={'more'} activePanel={routerContext.panel} popout={routerContext.popout}>
+			<View id={'more'} activePanel={state.panel} popout={state.popout}>
 				<Panel id={'more.more'}>
 					<More />
 				</Panel>
@@ -146,7 +137,7 @@ const App = () => {
 					<Catalog />
 				</Panel>
 			</View>
-			<View id={'list'} activePanel={routerContext.panel} popout={routerContext.popout}>
+			<View id={'list'} activePanel={state.panel} popout={state.popout}>
 				<Panel id={'list.list'}>
 					<ShoppingList />
 				</Panel>
