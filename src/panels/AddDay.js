@@ -3,7 +3,7 @@ import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader
 import FormLayout from "@vkontakte/vkui/dist/components/FormLayout/FormLayout";
 import Input from "@vkontakte/vkui/dist/components/Input/Input";
 import PanelHeaderButton from "@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton";
-import {IOS, platform, FixedLayout} from "@vkontakte/vkui";
+import {IOS, platform, FixedLayout, Alert} from "@vkontakte/vkui";
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Checkbox from "@vkontakte/vkui/dist/components/Checkbox/Checkbox";
@@ -30,7 +30,7 @@ const AddDay = () => {
   const [income, setIncome] = useState(false);
   const [snackbar, setSnackbar] = useState(null);
   const [qr, setQR] = useState(null);
-  const [routerContext, dispatch] = useContext(RouterContext);
+  const [state, dispatch] = useContext(RouterContext);
   const [{response, error}, doApiFetch] = useApi('/day');
   const [receipts, doFnsFetch] = useApi('/day/receipt');
   const [startFetchData, setStartFetchData] = useState(false);
@@ -138,18 +138,36 @@ const AddDay = () => {
    * Вывод сообщения об ощибке
    */
   useEffect(() => {
-    if (!routerContext.error) return;
+    if (!state.error) return;
     dispatch({
       type: 'SET_ERROR',
       payload: {
         error: receipts.error || error
       }
     })
-    setSnackbar(<CustomSnackBar message={routerContext.error.message} isError={true} onClose={onClose}/>);
+    setSnackbar(<CustomSnackBar message={state.error.message} isError={true} onClose={onClose}/>);
     setCheckReceipt(false);
     setQR(null);
 
-  }, [receipts.error, error, dispatch, routerContext.error, onClose]);
+  }, [receipts.error, error, dispatch, state.error, onClose]);
+
+  const popout = (
+    <Alert
+      actions={[{
+        title: 'Отмена',
+        autoclose: true,
+        mode: 'cancel'
+      }, {
+        title: 'Заполнить',
+        autoclose: true,
+        action: () => dispatch({type: 'SET_VIEW', payload: { view: 'profile', panel: 'edit'}})
+      }]}
+      onClose={() => dispatch({type: 'SET_POPOUT', payload: { popout: null }})}
+    >
+      <h2>Незаполнен профиль</h2>
+      <p>Для сканирования QR кодов и получения детально информации по чекам необходимо заполнить профиль, ввести email, телефон и получить пароль с сервера ФНС.</p>
+    </Alert>
+  )
 
   return(
     <Fragment>
@@ -168,7 +186,11 @@ const AddDay = () => {
               data-to={'qr'}
               onClick={() => {
                 dispatch({ type: 'UNSET_ERROR'});
-                bridge.send('VKWebAppOpenCodeReader', {});
+                if (!!state.currentUser.email || !!state.currentUser.phone || !!state.currentUser.password) {
+                  dispatch({type: 'SET_POPOUT', payload: { popout: popout }});
+                } else {
+                  bridge.send('VKWebAppOpenCodeReader', {});
+                }
               }}
             ><Icon24Qr /></PanelHeaderButton>
           }
