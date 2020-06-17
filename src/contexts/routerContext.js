@@ -7,7 +7,13 @@ const initialState = {
 	popout: null,
   error: null,
   password: '',
-  confirmPassword: ''
+  confirmPassword: '',
+	vkUser: {
+		id: null,
+		matchUrlParams: false
+	},
+	currentUser: null,
+	isLoggedIn: false
 };
 
 const reducer = (state, action) => {
@@ -70,6 +76,20 @@ const reducer = (state, action) => {
 				password: '',
 				confirmPassword: ''
 			}
+		case 'SET_VK_USER':
+			return {
+				...state,
+				vkUser: {
+					id: action.payload.id,
+					matchUrlParams: action.payload.match
+				}
+			}
+		case 'SET_USER':
+			return {
+				...state,
+				currentUser: action.payload.user,
+				isLoggedIn: action.payload.isLoggedIn,
+			}
 		default:
 			return state;
 	}
@@ -79,6 +99,7 @@ export const RouterContext = createContext();
 
 export const RouterContextProvider = ({ children }) => {
 	const value = useReducer(reducer, initialState);
+	// console.log('state', value);
 	return (
 		<RouterContext.Provider value={value}>
 			{children}
