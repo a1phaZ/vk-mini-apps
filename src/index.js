@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import bridge from '@vkontakte/vk-bridge';
 import App from './App';
 import {CurrentUserProvider} from "./contexts/currentUser";
-import {AppSignProvider} from "./contexts/appSign";
+import {AppSign} from "./contexts/appSign";
 import CurrentUserChecker from "./components/CurrentUserChecker";
 import {RouterContextProvider} from "./contexts/routerContext";
 // import InstallingTheme from "./components/InstallingTheme";
@@ -40,16 +40,18 @@ bridge.send('VKWebAppInit');
 window.onload = () => {
 	ReactDOM.render(
 		// <InstallingTheme>
-			<AppSignProvider>
-				<RouterContextProvider>
+
+			<RouterContextProvider>
+				<AppSign>
 					<CurrentUserProvider>
 						<CurrentUserChecker>
 							<App/>
 
 						</CurrentUserChecker>
 					</CurrentUserProvider>
-				</RouterContextProvider>
-			</AppSignProvider>
+				</AppSign>
+			</RouterContextProvider>
+
 		// </InstallingTheme>
 		,
 		document.getElementById('root')
