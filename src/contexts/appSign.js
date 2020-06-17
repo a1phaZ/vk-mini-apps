@@ -1,14 +1,10 @@
-import React, { useState, createContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import useCompareSign from "../hooks/useCompareSign";
+import {RouterContext} from "./routerContext";
 
-export const AppSignContext = createContext([{}, () => {}]);
-
-export const AppSignProvider = ({ children }) => {
+export const AppSign = ({ children }) => {
+  const [, dispatch] = useContext(RouterContext);
   const [{vkUserId, matchUrlParams}, setParams] = useCompareSign();
-  const [state, setState] = useState({
-    vkUserId: null,
-    matchUrlParams: false
-  });
 
   useEffect(()=>{
     setParams(window.location.search.slice(1));
@@ -16,12 +12,8 @@ export const AppSignProvider = ({ children }) => {
 
   useEffect(() => {
     if (!vkUserId) return;
-    setState({vkUserId, matchUrlParams});
-  }, [vkUserId, matchUrlParams]);
+    dispatch({type: 'SET_VK_USER', payload: { id: vkUserId, match: matchUrlParams }});
+  }, [vkUserId, matchUrlParams, dispatch]);
 
-  return (
-    <AppSignContext.Provider value={[state, setState]}>
-      {children}
-    </AppSignContext.Provider>
-  )
+  return children;
 };
