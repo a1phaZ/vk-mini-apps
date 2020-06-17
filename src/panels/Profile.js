@@ -1,43 +1,81 @@
-import React, {useState, useEffect, Fragment, useContext} from 'react';
+import React, {useState, useEffect, Fragment, useContext, useReducer} from 'react';
 import {
 	FormLayout,
 	IOS,
 	PanelHeader,
 	platform,
-	PanelHeaderButton, Button, Input, FormLayoutGroup, FormStatus, Snackbar,
+	PanelHeaderButton, Button, Input, FormLayoutGroup, Snackbar,
 	Div, FixedLayout
 } from '@vkontakte/vkui';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import bridge from "@vkontakte/vk-bridge";
 import useApi from "../hooks/useApi";
-import {CurrentUserContext} from "../contexts/currentUser";
 import {RouterContext} from "../contexts/routerContext";
 import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
 import Icon16Done from '@vkontakte/icons/dist/16/done';
 
+const initialState = {
+	email: '',
+	phone: '',
+	name: '',
+	kktPassword: ''
+}
+
+const reducer = (state, action) => {
+	switch (action.type) {
+		case 'SET_EMAIL':
+			return {
+				...state,
+				email: action.payload.email
+			}
+		case 'SET_PHONE':
+			return {
+				...state,
+				phone: action.payload.phone
+			}
+		case 'SET_NAME':
+			return {
+				...state,
+				name: action.payload.name
+			}
+		case 'SET_PASSWORD':
+			return {
+				...state,
+				kktPassword: action.payload.password
+			}
+		case 'INIT':
+			const { email, name, phone, password } = action.payload.currentUser;
+			return {
+				...state,
+				email: email || '',
+				name: name || '',
+				phone: phone || '',
+				kktPassword: password || ''
+			}
+		default:
+			return state;
+	}
+}
+
 const Profile = () =>{
-	const [email, setEmail] = useState('');
-	const [phone, setPhone] = useState('');
-	const [name, setName] = useState('');
-	const [kktPassword, setKktPassword] = useState('');
 	const [fetchToFns, setFetchToFns] = useState(false);
-	const [canBack, setCanBack] = useState(true);
 	const [snackbar, setSnackbar] = useState(null);
+	const [init, setInit] = useState(true);
 	const [fnsPasswordType, setFnsPasswordType] = useState('');
 	const [{response}, doApiFetch] = useApi(`/users/profile`);
 	const [fnsResponse, doFnsFetch] = useApi(`/fns/password`);
 	const [startFetchData, setStartFetchData] = useState(false);
-	const [currentUserState, setCurrentUserState] = useContext(CurrentUserContext);
-	const [, dispatch] = useContext(RouterContext);
+	const [state, dispatch] = useContext(RouterContext);
+	const [formState, dispatchForm] = useReducer(reducer, initialState);
 	const osName = platform();
 
 	useEffect(()=>{
 		bridge.subscribe(({ detail: { type, data }}) => {
 			switch (type) {
 				case 'VKWebAppGetPersonalCardResult':
-					setEmail(data.email);
-					setPhone(data.phone);
+					dispatchForm({type: 'SET_EMAIL', payload: {email: data.email}});
+					dispatchForm({type: 'SET_PHONE', payload: {email: data.phone}});
 					console.log('profile', data);
 					break;
 				case 'VKWebAppGetPersonalCardFailed':
@@ -50,65 +88,43 @@ const Profile = () =>{
 	}, []);
 
 	useEffect(() => {
-		const { email, name, phone, password } = currentUserState.currentUser;
-		setEmail(email || '');
-		setName(name || '');
-		setPhone(phone || '');
-		setKktPassword(password || '');
-		setCanBack(!!email && !!name && !!phone && !!password);
-	}, [currentUserState]);
+		if (!init) return;
+		dispatchForm({type: 'INIT', payload: {currentUser: state.currentUser}});
+		setInit(false);
+	}, [state, init]);
 
 	useEffect(()=>{
 		if (!startFetchData) return;
 		const body = {
 			method: 'PUT',
-			update: {
-				email,
-				phone,
-				name,
-				kktPassword
-			}
+			update: formState
 		};
-
 		doApiFetch(body);
 		setStartFetchData(false);
-	},[startFetchData, doApiFetch, email, phone, name, kktPassword]);
+	},[startFetchData, doApiFetch, formState]);
 
 	useEffect(() => {
 		if (!fetchToFns) return;
 		let body = {};
-
 		if (fnsPasswordType !== 'restore') {
-			body.name = name;
-			body.email = email;
+			body.name = formState.name;
+			body.email = formState.email;
 		}
-
 		body.params = {
 			type: fnsPasswordType
 		};
-
-		body.phone = phone.replace(/[ ()-]/g, '');
+		body.phone = formState.phone.replace(/[ ()-]/g, '');
 		body.phone = body.phone.replace(/^[8]/g, '+7');
 		body.method = 'POST';
-
 		doFnsFetch(body);
 		setFetchToFns(false);
-	}, [fetchToFns, fnsPasswordType, doFnsFetch, name, email, phone]);
+	}, [fetchToFns, fnsPasswordType, doFnsFetch, formState]);
 
 	useEffect(() => {
 		if (!response) return;
-		const { user } = response;
-		if (!user.name || !user.phone || !user.email || !user.password) {
-			return;
-		}
-		setCurrentUserState(state => ({
-			...state,
-			isLoading: false,
-			isLoggedIn: !!response.user,
-			currentUser: response.user || null
-		}));
+		dispatch({type: 'SET_USER', payload: { user: response.user || null, isLoggedIn: !!response.user}});
 		dispatch({type: 'SET_VIEW', payload: { view: 'balance', panel: 'home'}});
-	}, [response, dispatch, setCurrentUserState]);
+	}, [response, dispatch]);
 
 	useEffect(() => {
 		if (!fnsResponse.response) return;
@@ -123,65 +139,69 @@ const Profile = () =>{
 		)
 	}, [fnsResponse.response]);
 
+	const getDataFromVK = () => {
+		bridge.send("VKWebAppGetPersonalCard", {"type": ["phone", "email"]});
+	}
+
 	return(
 		<Fragment>
 			<PanelHeader
-				left={canBack && <PanelHeaderButton onClick={() => {
+				left={<PanelHeaderButton onClick={() => {
 					dispatch({type: 'SET_VIEW', payload: {view: 'balance', panel: 'home'}})
 				}}>
 					{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
 				</PanelHeaderButton>}
 			>
-				{canBack ? 'Профиль' : 'Регистрация'}
+				Профиль
 			</PanelHeader>
 			<FormLayout style={{paddingBottom: 40}}>
-				{
-					!canBack && <FormStatus header="Разъяснение" mode="default">
-						Приложение позволяет считывать данные по чекам.
-						Ни какие данные о ваших покупках не передаются в налоговую.
-					</FormStatus>
-				}
 				<Input
 					type={'text'}
 					top={'Имя'}
 					name={'name'}
-					value={name}
-					onChange={(e) => {setName(e.target.value)}}
+					value={formState.name}
+					onChange={(e) => {dispatchForm({type: 'SET_NAME', payload: {name: e.currentTarget.value}})}}
 				/>
-				<FormLayoutGroup top="E-mail и Телефон" bottom="Эти данные можно получить через персональные карточки Вконтакте. Они нужны для того, чтобы получить пароль от ФНС для расшифровки чеков.">
+				<FormLayoutGroup
+					top="E-mail и Телефон"
+					bottom="Эти данные нужны для того, чтобы пройти регистрацию в сервисе проверки чеков ФНС.
+					Регистрация дает возможность получать расшифровку данных по чекам при сканировании QR кода"
+				>
 					<Input
 						type={'email'}
 						top={'e-mail'}
 						name={'email'}
 						placeholder={'Введите e-mail'}
-						value={email}
-						onChange={(e) => {setEmail(e.target.value)}}
+						value={formState.email}
+						onChange={(e) => {dispatchForm({type: 'SET_EMAIL', payload: { email: e.currentTarget.value }})}}
+						onClick={getDataFromVK}
 					/>
 					<Input
 						type={'phone'}
 						top={'Телефон'}
 						name={'phone'}
-						value={phone}
+						value={formState.phone}
 						placeholder={'Введите телефон'}
 						onChange={(e) => {
 							e.target.value.replace(/^[8]/, '+7');
-							setPhone(e.target.value);
+							dispatchForm({type: 'SET_PHONE', payload: { phone: e.currentTarget.value }})
 						}}
+						onClick={getDataFromVK}
 					/>
-					<Button size="xl" onClick={() => {
-						bridge.send("VKWebAppGetPersonalCard", {"type": ["phone", "email"]});
-					}}>
-						Получить данные из VK
-					</Button>
 				</FormLayoutGroup>
-				<FormLayoutGroup top={'Пароль от ФНС'} bottom={'Если не хотите получать пароль по каким то причинам, введите 0 в поле ввода пароля'}>
+				<FormLayoutGroup
+					top={'Пароль от ФНС'}
+					bottom={'Если вы когда-либо регистрировались в сервисе проверки чеков ФНС, но забыли пароль нажмите "Восстановить пароль". ' +
+					'Если не хотите получать пароль по каким то причинам, оставьте поле ввода пароля пустым, но тогда у вас не будет возможности' +
+					' сканировать чеки и получать расшифровку по чекам'}
+				>
 					<Input
 						type={'number'}
 						top={'Пароль от ФНС'}
 						placeholder={'Введите пароль ФНС'}
 						name={'kktPassword'}
-						value={kktPassword}
-						onChange={(e) => {setKktPassword(e.target.value)}}
+						value={formState.kktPassword}
+						onChange={(e) => {dispatchForm({type: 'SET_PASSWORD', payload: {password: e.currentTarget.value}})}}
 					/>
 					<Div  style={{display: 'flex', justifyContent:'space-between'}}>
 						<Button size='l' data-type={'signup'} onClick={(e) => {
@@ -205,7 +225,7 @@ const Profile = () =>{
 					<Button size="xl" mode="commerce" onClick={() => {
 						setStartFetchData(true);
 					}}>
-						{canBack ? 'Обновить профиль' : 'Завершить регистрацию'}
+						Обновить профиль
 					</Button>
 				</FixedLayout>
 			</FormLayout>
