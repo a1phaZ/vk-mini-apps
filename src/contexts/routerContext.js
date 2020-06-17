@@ -1,5 +1,6 @@
 import React, { createContext, useReducer } from 'react';
 import {PopoutWrapper, ScreenSpinner} from "@vkontakte/vkui";
+import {historyPush} from "../handlers/history";
 
 const initialState = {
 	view: 'authorization',
@@ -19,12 +20,14 @@ const initialState = {
 const reducer = (state, action) => {
 	switch (action.type) {
 		case 'SET_VIEW':
+			historyPush(action.payload.view, action.payload.panel);
 			return {
 				...state,
 				view: action.payload.view,
 				panel: `${action.payload.view}.${action.payload.panel}`
 			};
 		case 'SET_PANEL':
+			historyPush(state.view, action.payload.panel);
 			return {
 				...state,
 				password: '',
@@ -99,7 +102,6 @@ export const RouterContext = createContext();
 
 export const RouterContextProvider = ({ children }) => {
 	const value = useReducer(reducer, initialState);
-	// console.log('state', value);
 	return (
 		<RouterContext.Provider value={value}>
 			{children}

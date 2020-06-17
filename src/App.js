@@ -32,6 +32,12 @@ const App = () => {
 	}, []);
 
 	useEffect(() => {
+		window.onpopstate = e => {
+			dispatch({type: 'SET_VIEW', payload: {panel: e.state.panel, view: e.state.view}});
+		}
+	}, [dispatch]);
+
+	useEffect(() => {
 		if (!receipt) return;
 		const osName = platform();
 		setModal(
