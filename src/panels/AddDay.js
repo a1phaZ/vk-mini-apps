@@ -186,7 +186,7 @@ const AddDay = () => {
               data-to={'qr'}
               onClick={() => {
                 dispatch({ type: 'UNSET_ERROR'});
-                if (!!state.currentUser.email || !!state.currentUser.phone || !!state.currentUser.password) {
+                if (!(!!state.currentUser.email && !!state.currentUser.phone && !!state.currentUser.password)) {
                   dispatch({type: 'SET_POPOUT', payload: { popout: popout }});
                 } else {
                   bridge.send('VKWebAppOpenCodeReader', {});
