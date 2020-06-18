@@ -15,6 +15,7 @@ export default url => {
 
 	const doApiFetch = useCallback((options = {}) => {
 		setOptions(options);
+		setResponse(null);
 		setIsLoading(true);
 		dispatch({ type: 'SHOW_LOADING' });
 	}, [dispatch]);
