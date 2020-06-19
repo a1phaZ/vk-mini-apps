@@ -10,6 +10,8 @@ const Calendar = () => {
   const [state, dispatch] = useContext(RouterContext);
   const dateFormat = 'LLLL yyyy';
 
+  const disabled = new Date().getMonth() <= state.currentDate.getMonth();
+
   const nextMonth = () => {
     dispatch({type: 'SET_DATE', payload: { date: (addMonths(state.currentDate, 1))}});
   };
@@ -23,7 +25,7 @@ const Calendar = () => {
       <List>
         <Cell
           before={<Button onClick={prevMonth} mode={'secondary'}><Icon24BrowserBack /></Button>}
-          asideContent={<Button onClick={nextMonth} mode={'secondary'}><Icon24BrowserForward /></Button>}
+          asideContent={<Button disabled={disabled} onClick={nextMonth} mode={'secondary'}><Icon24BrowserForward /></Button>}
           style={{textAlign: 'center', fontWeight: 'bold'}}
         >
           {format(state.currentDate, dateFormat, {locale: ru}).toLocaleUpperCase()}
