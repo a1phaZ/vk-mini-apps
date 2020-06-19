@@ -14,7 +14,9 @@ const initialState = {
 		matchUrlParams: false
 	},
 	currentUser: null,
-	isLoggedIn: false
+	isLoggedIn: false,
+	receipts: [],
+	currentDate: new Date()
 };
 
 const reducer = (state, action) => {
@@ -92,6 +94,16 @@ const reducer = (state, action) => {
 				...state,
 				currentUser: action.payload.user,
 				isLoggedIn: action.payload.isLoggedIn,
+			}
+		case 'SET_RECEIPTS':
+			return {
+				...state,
+				receipts: action.payload.receipts,
+			}
+		case 'SET_DATE':
+			return {
+				...state,
+				currentDate: action.payload.date
 			}
 		default:
 			return state;
