@@ -1,6 +1,6 @@
-import React, {useState, useEffect, Fragment, useContext, useCallback} from 'react';
+import React, {useState, useEffect, Fragment, useContext} from 'react';
 import useApi from "../hooks/useApi";
-import {List, PanelHeaderContent, Placeholder, PullToRefresh, Separator, Counter, Alert} from "@vkontakte/vkui";
+import {List, PanelHeaderContent, Placeholder, Separator, Counter, Alert} from "@vkontakte/vkui";
 import ColoredSum from "../components/ColoredSum";
 import prepare from "../handlers/prepare";
 import Button from "@vkontakte/vkui/dist/components/Button/Button";
@@ -19,43 +19,38 @@ import PanelHeader from "@vkontakte/vkui/dist/components/PanelHeader/PanelHeader
 const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
 	const viewTitle = 'Баланс';
 	const [initialFetch, setInitialFetch] = useState(true);
-	const [currentDate, setCurrentDate] = useState(new Date());
-	const [receipts, setReceipts] = useState([]);
-	const [fetching, setFetching] = useState(false);
-	const [{response}, doApiFetch] = useApi('/day');
-	const [, dispatch] = useContext(RouterContext);
+	const [changeDate, setChangeDate] = useState(false);
+	const [state, dispatch] = useContext(RouterContext);
+	const [{response, isLoading}, doApiFetch] = useApi('/day');
 	const dateFormat = 'yyyy-MM-dd';
-
-	const setDateFromCalendar = useCallback((date) => {
-		setCurrentDate(date);
-		setInitialFetch(true);
-	}, []);
-
-	const onRefresh = () => {
-		setFetching(true);
-		setInitialFetch(true);
-	}
 
 	useEffect(() => {
 		if (!initialFetch) return;
 		doApiFetch({
 			params: {
-				date: format(currentDate, dateFormat)
+				date: format(state.currentDate, dateFormat)
 			}
 		});
 		setInitialFetch(false);
-		setFetching(false);
-	}, [initialFetch, setInitialFetch, doApiFetch, currentDate]);
+	}, [initialFetch, setInitialFetch, doApiFetch, state.currentDate]);
+
+	useEffect(() => {
+		setInitialFetch(true);
+		setChangeDate(true);
+	}, [state.currentDate]);
 
 	useEffect(() => {
 		if (!response) return;
-		setReceipts(response);
-	}, [response]);
+		setChangeDate(false);
+		dispatch({type: 'SET_RECEIPTS', payload: {receipts: response}});
+	}, [response, dispatch]);
 
 	useEffect(() => {
+		if (!changeDate) return;
+		if (isLoading) return;
 		if (!response) return;
-		if (!!response.length || !!receipts.length) return;
-		if (currentDate.getMonth() !== new Date().getMonth()) return;
+		if (!!response.length || (state.currentDate.getMonth() !== new Date().getMonth())) return;
+
 		const popout = (
 			<Alert
 				actions={[{
@@ -70,11 +65,11 @@ const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
 				onClose={() => dispatch({type: 'SET_POPOUT', payload: { popout: null }})}
 			>
 				<h2>За текущий месяц данных нет</h2>
-        <p>Добавьте остаток денежных средств, для правильной калькуляции баланса</p>
-      </Alert>
+				<p>Добавьте остаток денежных средств, для правильной калькуляции баланса</p>
+			</Alert>
 		)
 		dispatch({type: 'SET_POPOUT', payload: { popout: popout }});
-	}, [receipts.length, dispatch, response, currentDate]);
+	}, [changeDate, isLoading, dispatch, response, state.currentDate]);
 
 	return(
 		<Fragment>
@@ -87,11 +82,10 @@ const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
 					{viewTitle}
 				</PanelHeaderContent>
 			</PanelHeader>
-			{/*<MainMenu title={viewTitle} />*/}
-			<SearchComponent receipts={receipts} />
+			<SearchComponent receipts={state.receipts} />
 			<Placeholder
 				icon={<Icon56GoodsCollection />}
-				header={<ColoredSum sum={prepare.totalReceiptSum(receipts)} fs={'2em'}/>}
+				header={<ColoredSum sum={prepare.totalReceiptSum(state.receipts)} fs={'2em'}/>}
 				action={<Button size="l" onClick={(e)=>{
 					dispatch({type: 'SET_PANEL', payload: { panel: e.currentTarget.dataset.to}});
 				}} data-to={'add'}>Добавить доход / расход</Button>}
@@ -108,7 +102,7 @@ const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
 				<div style={{flex: '0 1 50%', display: 'flex',justifyContent: 'flex-end',}}>
 					<div style={{display: 'flex', flexDirection: 'column', paddingRight: '10px'}}>
 						<span style={{color: '#6F6F6F', fontSize: '0.7em', textAlign: 'end'}}>Доходы</span>
-						<ColoredSum sum={prepare.totalSum(receipts, true)} fs={'1.4em'}/>
+						<ColoredSum sum={prepare.totalSum(state.receipts, true)} fs={'1.4em'}/>
 					</div>
 					<Icon16Up width={16} height={40} fill={'#28a745'}/>
 				</div>
@@ -116,33 +110,31 @@ const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
 					<Icon16Down width={16} height={40} fill={'#dc3545'}/>
 					<div style={{display: 'flex', flexDirection: 'column', paddingLeft: '10px'}}>
 						<span style={{color: '#6F6F6F', fontSize: '0.7em'}}>Расходы</span>
-						<ColoredSum sum={prepare.totalSum(receipts, false)} fs={'1.4em'}/>
+						<ColoredSum sum={prepare.totalSum(state.receipts, false)} fs={'1.4em'}/>
 					</div>
 				</div>
 			</div>
-			<PullToRefresh onRefresh={onRefresh} isFetching={fetching} >
-				<Group title='Чеки'>
-					<List>
-						<Calendar setDateFromCalendar={setDateFromCalendar}/>
-						{receipts.map((receipt, index) => {
-							return (
-								<Cell
-									key={index}
-									expandable
-									onClick={() => {
-										onClickActiveModal('modal-page');
-										setReceiptFromBalance(receipt);
-									}}
-									data-to={receipt._id}
-									indicator={<ColoredSum sum={receipt.totalSum}/>}
-								>
-									{prepare.date(receipt.dateTime)}
-								</Cell>
-							)
-						})}
-					</List>
-				</Group>
-			</PullToRefresh>
+			<Group title='Чеки'>
+				<List>
+					<Calendar />
+					{state.receipts.map((receipt, index) => {
+						return (
+							<Cell
+								key={index}
+								expandable
+								onClick={() => {
+									onClickActiveModal('modal-page');
+									setReceiptFromBalance(receipt);
+								}}
+								data-to={receipt._id}
+								indicator={<ColoredSum sum={receipt.totalSum}/>}
+							>
+								{prepare.date(receipt.dateTime)}
+							</Cell>
+						)
+					})}
+				</List>
+			</Group>
 		</Fragment>
 	)
 };

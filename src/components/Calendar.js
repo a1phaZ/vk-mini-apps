@@ -1,24 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import {format, addMonths, subMonths} from 'date-fns';
 import { ru } from 'date-fns/locale'
 import {Group, List, Cell, Button} from "@vkontakte/vkui";
 import Icon24BrowserBack from '@vkontakte/icons/dist/24/browser_back';
 import Icon24BrowserForward from '@vkontakte/icons/dist/24/browser_forward';
+import {RouterContext} from "../contexts/routerContext";
 
-const Calendar = ({setDateFromCalendar}) => {
-  const [currentDate, setCurrentDate] = useState(new Date());
+const Calendar = () => {
+  const [state, dispatch] = useContext(RouterContext);
   const dateFormat = 'LLLL yyyy';
 
-  useEffect(() => {
-    setDateFromCalendar(currentDate);
-  }, [currentDate, setDateFromCalendar]);
-
   const nextMonth = () => {
-    setCurrentDate(addMonths(currentDate, 1));
+    dispatch({type: 'SET_DATE', payload: { date: (addMonths(state.currentDate, 1))}});
   };
 
   const prevMonth = () => {
-    setCurrentDate(subMonths(currentDate, 1));
+    dispatch({type: 'SET_DATE', payload: { date: (subMonths(state.currentDate, 1))}});
   };
 
   return(
@@ -29,7 +26,7 @@ const Calendar = ({setDateFromCalendar}) => {
           asideContent={<Button onClick={nextMonth} mode={'secondary'}><Icon24BrowserForward /></Button>}
           style={{textAlign: 'center', fontWeight: 'bold'}}
         >
-          {format(currentDate, dateFormat, {locale: ru}).toLocaleUpperCase()}
+          {format(state.currentDate, dateFormat, {locale: ru}).toLocaleUpperCase()}
         </Cell>
       </List>
     </Group>
