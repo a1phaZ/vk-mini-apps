@@ -227,7 +227,7 @@ const Catalog = () => {
 
 				}}><Icon24Filter /></PanelHeaderButton>}
 			>
-				Справочник
+				{!state.openFilter ? 'Справочник' : 'Фильтр'}
 			</PanelHeader>
 			<Group style={style}>
 				{!state.openFilter ? catalogList : filterList}

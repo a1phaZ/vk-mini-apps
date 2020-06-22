@@ -195,7 +195,7 @@ const AddDay = () => {
             ><Icon24Qr /></PanelHeaderButton>
           }
         >
-          Добавление записи
+          Добавить запись
         </PanelHeaderContent>
       </PanelHeader>
       <FormLayout style={{paddingBottom: 40}}>

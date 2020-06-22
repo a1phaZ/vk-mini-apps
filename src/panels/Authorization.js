@@ -105,7 +105,7 @@ const Authorization = ({type}) => {
 
 	return (
 		<Fragment>
-			<PanelHeader>{type === 'login' ? 'Введите пароль' : 'Регистрация'}</PanelHeader>
+			<PanelHeader>{type === 'login' ? 'Авторизация' : 'Регистрация'}</PanelHeader>
 			<Placeholder
 				icon={type === 'login' ? <Icon56LockOutline /> : <Icon56UserAddOutline />}
 				header={headerString()/*state.password.length !== 4 ? loginPassString : confPassString*/}
