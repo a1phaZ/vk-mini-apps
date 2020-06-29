@@ -49,7 +49,7 @@ const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
 		if (!changeDate) return;
 		if (isLoading) return;
 		if (!response) return;
-		if (!!response.length || (state.currentDate.getMonth() !== new Date().getMonth())) return;
+		if (!!response.length || (format(state.currentDate, 'yyyy.M') !== format(new Date(), 'yyyy.M'))) return;
 
 		const popout = (
 			<Alert

@@ -9,8 +9,7 @@ import {RouterContext} from "../contexts/routerContext";
 const Calendar = () => {
   const [state, dispatch] = useContext(RouterContext);
   const dateFormat = 'LLLL yyyy';
-
-  const disabled = new Date().getMonth() <= state.currentDate.getMonth();
+	const disabled = format(new Date(), 'yyyy.M') <= format(state.currentDate, 'yyyy.M');
 
   const nextMonth = () => {
     dispatch({type: 'SET_DATE', payload: { date: (addMonths(state.currentDate, 1))}});
