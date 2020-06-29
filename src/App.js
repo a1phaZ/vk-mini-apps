@@ -77,7 +77,7 @@ const App = () => {
 			selected={state.view === 'list'}
 			data-story="list"
 			data-panel={'list'}
-			text="Список покупок"
+			text="Покупки"
 		><Icon28ListOutline /></TabbarItem>
 		<TabbarItem
 			onClick={onStoryChange}
