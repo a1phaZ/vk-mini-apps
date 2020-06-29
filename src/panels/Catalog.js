@@ -212,7 +212,9 @@ const Catalog = () => {
 
 	const fixedLayoutStyle = {
 		paddingRight: 10,
-		paddingLeft: 10
+		paddingLeft: 10,
+		marginBottom: '1em',
+		marginTop: '1em',
 	}
 
 	return (
