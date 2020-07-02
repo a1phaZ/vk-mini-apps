@@ -28,8 +28,9 @@ const App = () => {
 	const [receipt, setReceipt] = useState(null);
 
 	const modalBack = useCallback(() => {
-		setActiveModal(null);
-	}, []);
+		dispatch({type: 'HIDE_MODAL'});
+		// setActiveModal(null);
+	}, [dispatch]);
 
 	useEffect(() => {
 		window.onpopstate = e => {
@@ -41,7 +42,7 @@ const App = () => {
 		if (!receipt) return;
 		const osName = platform();
 		setModal(
-			<ModalRoot activeModal={activeModal} onClose={modalBack}>
+			<ModalRoot activeModal={state.modal} onClose={modalBack}>
 				<ModalPage
 					id={'modal-page'}
 					onClose={modalBack}
@@ -58,7 +59,7 @@ const App = () => {
 				</ModalPage>
 			</ModalRoot>
 		);
-	}, [receipt, activeModal, modalBack]);
+	}, [receipt, activeModal, modalBack, state.modal]);
 
 	const onStoryChange = (e) => {
 		dispatch({type: 'SET_VIEW', payload: { view: e.currentTarget.dataset.story, panel: e.currentTarget.dataset.panel}});
@@ -127,7 +128,7 @@ const App = () => {
 					/>
 				</Panel>
 				<Panel id={'balance.add'}>
-					<AddDay />
+					<AddDay item={state.item} />
 				</Panel>
 			</View>
 			<View id={'analytics'} activePanel={state.panel} popout={state.popout}>

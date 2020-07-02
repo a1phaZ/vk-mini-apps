@@ -16,7 +16,7 @@ import {format} from 'date-fns';
 import SearchComponent from "../components/search";
 import PanelHeader from "@vkontakte/vkui/dist/components/PanelHeader/PanelHeader";
 
-const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
+const Balance = ({setReceiptFromBalance}) => {
 	const viewTitle = 'Баланс';
 	const [initialFetch, setInitialFetch] = useState(true);
 	const [changeDate, setChangeDate] = useState(false);
@@ -123,7 +123,8 @@ const Balance = ({setReceiptFromBalance, onClickActiveModal}) => {
 								key={index}
 								expandable
 								onClick={() => {
-									onClickActiveModal('modal-page');
+									// onClickActiveModal('modal-page');
+									dispatch({type: 'SHOW_MODAL', payload: {modal: 'modal-page'}});
 									setReceiptFromBalance(receipt);
 								}}
 								data-to={receipt._id}
