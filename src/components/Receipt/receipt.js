@@ -1,12 +1,14 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, useContext} from 'react';
 import {Separator} from "@vkontakte/vkui";
 import prepare from "../../handlers/prepare";
 import ColoredSum from "../ColoredSum";
+import {RouterContext} from "../../contexts/routerContext";
 
 import './receipt.css';
 import FormLayout from "@vkontakte/vkui/dist/components/FormLayout/FormLayout";
 
 const Receipt = ({items, id, isSearch=false}) => {
+	const [, dispatch] = useContext(RouterContext);
 	const setDefinition = (item) => {
 		if (!item || !item.definition) return null;
 		const {definition} = item.definition;
@@ -20,7 +22,7 @@ const Receipt = ({items, id, isSearch=false}) => {
 
 		return(
 			<Fragment key={index}>
-				<div className={'receipt-item'} >
+				<div className={'receipt-item'} onClick={() => {dispatch({type: 'SET_ITEM_TO_EDIT', payload: {item: item}})}}>
 					<span className={'receipt-item-name'}>{definition ? definition : item.name}</span>
 					{item.price && !isSearch ? <span className={'receipt-item-price'}>{prepare.sum(item.price)}</span> : null}
 					{item.quantity && !isSearch ? <span className={'receipt-item-quantity'}>{item.quantity}</span> : null}
