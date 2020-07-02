@@ -16,7 +16,9 @@ const initialState = {
 	currentUser: null,
 	isLoggedIn: false,
 	receipts: [],
-	currentDate: new Date()
+	item: null,
+	currentDate: new Date(),
+	modal: null
 };
 
 const reducer = (state, action) => {
@@ -26,7 +28,8 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				view: action.payload.view,
-				panel: `${action.payload.view}.${action.payload.panel}`
+				panel: `${action.payload.view}.${action.payload.panel}`,
+				item: null
 			};
 		case 'SET_PANEL':
 			historyPush(state.view, action.payload.panel);
@@ -34,7 +37,8 @@ const reducer = (state, action) => {
 				...state,
 				password: '',
 				confirmPassword: '',
-				panel: `${state.view}.${action.payload.panel}`
+				panel: `${state.view}.${action.payload.panel}`,
+				item: null
 			};
 		case 'SHOW_LOADING':
 			return {
@@ -104,6 +108,25 @@ const reducer = (state, action) => {
 			return {
 				...state,
 				currentDate: action.payload.date
+			}
+		case 'SET_ITEM_TO_EDIT':
+			historyPush('balance', 'balance.add');
+			return {
+				...state,
+				item: action.payload.item,
+				view: 'balance',
+				panel: 'balance.add',
+				modal: null
+			}
+		case 'HIDE_MODAL':
+			return {
+				...state,
+				modal: null
+			}
+		case 'SHOW_MODAL':
+			return {
+				...state,
+				modal: action.payload.modal
 			}
 		default:
 			return state;
