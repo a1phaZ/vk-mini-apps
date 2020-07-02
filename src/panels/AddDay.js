@@ -16,18 +16,26 @@ import bridge from '@vkontakte/vk-bridge';
 import prepare from "../handlers/prepare";
 import CustomSnackBar from "../components/CustomSnackbar";
 
-const AddDay = () => {
+const AddDay = ({item}) => {
   const SUCCESS_MESSAGE = 'Добавление прошло успешно';
-  const [name, setName] = useState('');
+  const [name, setName] = useState(() => {
+    return item?.name || '';
+  });
   const [date, setDate] = useState(() => {
-    const date = new Date();
+    const date = item && item?.canEditDate ? new Date(item.dateTime) : new Date();
     const m = date.getMonth()+1 > 9 ? date.getMonth()+1 : `0${date.getMonth()+1}`;
     const d = date.getDate() > 9 ? date.getDate() : `0${date.getDate()}`;
     return `${date.getFullYear()}-${m}-${d}`;
   });
-  const [quantity, setQuantity] = useState(1);
-  const [price, setPrice] = useState('');
-  const [income, setIncome] = useState(false);
+  const [quantity, setQuantity] = useState(() => {
+    return item?.quantity || 1
+  });
+  const [price, setPrice] = useState(() => {
+    return item?.price / 100 || ''
+  });
+  const [income, setIncome] = useState(() => {
+    return item?.income
+  });
   const [snackbar, setSnackbar] = useState(null);
   const [qr, setQR] = useState(null);
   const [state, dispatch] = useContext(RouterContext);
@@ -77,9 +85,14 @@ const AddDay = () => {
           income,
           modifiers: [],
           properties: [],
+          canDelete: true,
+          canEditDate: true
         }
       ]
     };
+    body.method = item ? 'PUT' : body.method;
+    if (item && item._id) {body.id = item._id}
+    //console.log('body', body);
     doApiFetch(body);
 
     setName('');
@@ -87,7 +100,7 @@ const AddDay = () => {
     setIncome(false);
     setPrice('');
     setStartFetchData(false);
-  }, [startFetchData, setStartFetchData, date, doApiFetch, income, name, price, quantity]);
+  }, [startFetchData, setStartFetchData, date, doApiFetch, income, name, price, quantity, item]);
 
   /**
    * Выводим сообщение об успехе
@@ -112,8 +125,6 @@ const AddDay = () => {
       setCheckReceipt(false);
       return;
     }
-
-    // const action = checkReceipt ? 'receive' : 'check';
 
     const body = {
       method: 'POST',
@@ -169,6 +180,23 @@ const AddDay = () => {
     </Alert>
   )
 
+  const dateInput = (item) => {
+    if (!item) {
+      return (
+        <Input
+          type={'date'}
+          top={'Дата'}
+          name={'date'}
+          value={date}
+          onChange={(e)=>{setDate(e.currentTarget.value)}}
+        />
+      )
+      } else {
+        return null
+      }
+  }
+
+  console.log(item);
   return(
     <Fragment>
       <PanelHeader
@@ -195,17 +223,11 @@ const AddDay = () => {
             ><Icon24Qr /></PanelHeaderButton>
           }
         >
-          Добавить запись
+          {item ? `Редактирование '${item.name}'`: 'Добавить запись'}
         </PanelHeaderContent>
       </PanelHeader>
       <FormLayout style={{paddingBottom: 40}}>
-        <Input
-          type={'date'}
-          top={'Дата'}
-          name={'date'}
-          value={date}
-          onChange={(e)=>{setDate(e.currentTarget.value)}}
-        />
+        {dateInput(item)}
         <Checkbox
           name={'income'}
           checked={income}
@@ -234,14 +256,41 @@ const AddDay = () => {
         />
 
         <FixedLayout style={{marginBottom: '1em'}} vertical="bottom">
-          <Button
-            size="xl"
-            disabled={!date || !name || !quantity || !price}
-            mode={income ? "commerce" : "destructive"}
-            onClick={() => {setStartFetchData(true)}}
-          >
-            Добавить {income ? "доход" : "расход"}
-          </Button>
+          {
+            item
+              ?
+                <Button
+                  size="xl"
+                  disabled={!date || !name || !quantity || !price}
+                  mode={income ? "commerce" : "destructive"}
+                  onClick={() => {
+                    // console.log({
+                    //   date: date,
+                    //   name,
+                    //   quantity,
+                    //   price: price * 100,
+                    //   sum: price * 100 * quantity,
+                    //   income,
+                    //   modifiers: [],
+                    //   properties: [],
+                    // });
+                    setStartFetchData(true)
+                  }}
+                >
+                  Сохранить изменения
+                </Button>
+              :
+                <Button
+                  size="xl"
+                  disabled={!date || !name || !quantity || !price}
+                  mode={income ? "commerce" : "destructive"}
+                  onClick={() => {
+                    setStartFetchData(true)
+                  }}
+                >
+                  Добавить {income ? "доход" : "расход"}
+                </Button>
+          }
         </FixedLayout>
 
         
