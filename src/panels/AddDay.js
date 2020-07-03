@@ -303,6 +303,7 @@ const AddDay = ({item}) => {
           editedItem?.canDelete
           &&
           <Button
+            size="xl"
             mode={'destructive'}
             onClick={() => {dispatch({type: 'SET_POPOUT', payload: { popout: deletePopout }})}}
           >
