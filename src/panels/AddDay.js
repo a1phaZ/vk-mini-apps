@@ -50,6 +50,7 @@ const AddDay = ({item}) => {
   const [receipts, doFnsFetch] = useApi('/day/receipt');
   const [startFetchData, setStartFetchData] = useState(false);
   const [checkReceipt, setCheckReceipt] = useState(false);
+  const [deleteItem, setDeleteItem] = useState(false);
   const osname = platform();
 
   const onClose = useCallback(() => {
@@ -100,6 +101,7 @@ const AddDay = ({item}) => {
     };
 
     body.method = editedItem ? 'PUT' : body.method;
+    body.method = deleteItem ? 'DELETE' : body.method;
     if (editedItem && editedItem._id) {body.id = editedItem._id}
     doApiFetch(body);
     setEditedItem(null);
@@ -110,7 +112,8 @@ const AddDay = ({item}) => {
     setStartFetchData(false);
     setDescription('');
     setGroups([]);
-  }, [startFetchData, setStartFetchData, date, doApiFetch, income, name, price, editedItem, quantity, description, groups]);
+    setDeleteItem(false);
+  }, [startFetchData, setStartFetchData, date, doApiFetch, income, name, price, editedItem, quantity, description, groups, deleteItem]);
 
   /**
    * Выводим сообщение об успехе
@@ -190,6 +193,30 @@ const AddDay = ({item}) => {
     </Alert>
   )
 
+  const deletePopout = (
+    <Alert
+      actions={
+        [{
+          title: 'Отмена',
+          autoclose: true,
+          mode: 'cancel'
+        }, {
+          title: 'Удалить',
+          autoclose: true,
+          mode: 'destructive',
+          action: () => {
+            setDeleteItem(true);
+            setStartFetchData(true);
+          }
+        }]
+      }
+      onClose={() => dispatch({type: 'SET_POPOUT', payload: { popout: null }})}
+    >
+      <h2>Подтвердите действие</h2>
+      <p>Вы действительно хотите удалить? Удаление пройдет безвозвратно. Отменить операцию будет нельзя.</p>
+    </Alert>
+  )
+
   const dateInput = (editedItem) => {
     if (!editedItem) {
       return (
@@ -205,8 +232,6 @@ const AddDay = ({item}) => {
         return null
       }
   }
-
-  //TODO Удаление элемента
 
   return(
     <Fragment>
@@ -274,6 +299,16 @@ const AddDay = ({item}) => {
           value={description}
           onChange={e => setDescription(e.currentTarget.value)}
         />
+        {
+          editedItem?.canDelete
+          &&
+          <Button
+            mode={'destructive'}
+            onClick={() => {dispatch({type: 'SET_POPOUT', payload: { popout: deletePopout }})}}
+          >
+            Удалить {income ? "доход" : "расход"}
+          </Button>
+        }
         <FixedLayout style={{marginBottom: '1em'}} vertical="bottom">
           {
             item
@@ -281,7 +316,7 @@ const AddDay = ({item}) => {
                 <Button
                   size="xl"
                   disabled={!date || !name || !quantity || !price}
-                  mode={income ? "commerce" : "destructive"}
+                  mode={"commerce"}
                   onClick={() => setStartFetchData(true)}
                 >
                   Сохранить изменения
@@ -290,7 +325,7 @@ const AddDay = ({item}) => {
                 <Button
                   size="xl"
                   disabled={!date || !name || !quantity || !price}
-                  mode={income ? "commerce" : "destructive"}
+                  mode={"commerce"}
                   onClick={() => {
                     setStartFetchData(true)
                   }}
