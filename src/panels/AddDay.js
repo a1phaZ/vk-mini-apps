@@ -3,7 +3,7 @@ import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader
 import FormLayout from "@vkontakte/vkui/dist/components/FormLayout/FormLayout";
 import Input from "@vkontakte/vkui/dist/components/Input/Input";
 import PanelHeaderButton from "@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton";
-import {IOS, platform, FixedLayout, Alert} from "@vkontakte/vkui";
+import {IOS, platform, FixedLayout, Alert, Textarea} from "@vkontakte/vkui";
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Checkbox from "@vkontakte/vkui/dist/components/Checkbox/Checkbox";
@@ -35,7 +35,13 @@ const AddDay = ({item}) => {
     return editedItem?.price / 100 || ''
   });
   const [income, setIncome] = useState(() => {
-    return editedItem?.income
+    return editedItem?.income || false
+  });
+  const [description, setDescription] = useState(() => {
+    return editedItem?.description || ''
+  });
+  const [groups, setGroups] = useState(() => {
+    return editedItem?.groups || []
   });
   const [snackbar, setSnackbar] = useState(null);
   const [qr, setQR] = useState(null);
@@ -86,13 +92,15 @@ const AddDay = ({item}) => {
           income,
           modifiers: [],
           properties: [],
+          description,
+          groups,
           canDelete: true,
         }
       ]
     };
-    body.method = item ? 'PUT' : body.method;
-    if (item && item._id) {body.id = item._id}
-    //console.log('body', body);
+
+    body.method = editedItem ? 'PUT' : body.method;
+    if (editedItem && editedItem._id) {body.id = editedItem._id}
     doApiFetch(body);
     setEditedItem(null);
     setName('');
@@ -100,7 +108,9 @@ const AddDay = ({item}) => {
     setIncome(false);
     setPrice('');
     setStartFetchData(false);
-  }, [startFetchData, setStartFetchData, date, doApiFetch, income, name, price, quantity, item]);
+    setDescription('');
+    setGroups([]);
+  }, [startFetchData, setStartFetchData, date, doApiFetch, income, name, price, editedItem, quantity, description, groups]);
 
   /**
    * Выводим сообщение об успехе
@@ -196,6 +206,8 @@ const AddDay = ({item}) => {
       }
   }
 
+  //TODO Удаление элемента
+
   return(
     <Fragment>
       <PanelHeader
@@ -230,8 +242,10 @@ const AddDay = ({item}) => {
         <Checkbox
           name={'income'}
           checked={income}
-          onChange={(e)=>{setIncome(e.currentTarget.checked)}}
-        >Доход</Checkbox>
+          onChange={(e)=>setIncome(e.currentTarget.checked)}
+        >
+          Доход
+        </Checkbox>
         <Input
           type={'text'}
           top={'Название'}
@@ -253,7 +267,13 @@ const AddDay = ({item}) => {
           value={price}
           onChange={(e)=>{setPrice(e.currentTarget.value)}}
         />
-
+        <Textarea
+          top={'Описание'}
+          placeholder={'Почему вы потратили на это деньги?'}
+          name={'description'}
+          value={description}
+          onChange={e => setDescription(e.currentTarget.value)}
+        />
         <FixedLayout style={{marginBottom: '1em'}} vertical="bottom">
           {
             item
@@ -262,19 +282,7 @@ const AddDay = ({item}) => {
                   size="xl"
                   disabled={!date || !name || !quantity || !price}
                   mode={income ? "commerce" : "destructive"}
-                  onClick={() => {
-                    // console.log({
-                    //   date: date,
-                    //   name,
-                    //   quantity,
-                    //   price: price * 100,
-                    //   sum: price * 100 * quantity,
-                    //   income,
-                    //   modifiers: [],
-                    //   properties: [],
-                    // });
-                    setStartFetchData(true)
-                  }}
+                  onClick={() => setStartFetchData(true)}
                 >
                   Сохранить изменения
                 </Button>
