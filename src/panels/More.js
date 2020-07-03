@@ -2,7 +2,7 @@ import React, {Fragment, useContext, useEffect, useState, useCallback} from 'rea
 import {IOS, Group, PanelHeader, Header, SimpleCell, platform} from '@vkontakte/vkui';
 import bridge from '@vkontakte/vk-bridge';
 import Icon28MoneyCircleOutline from '@vkontakte/icons/dist/28/money_circle_outline';
-import Icon28ListOutline from '@vkontakte/icons/dist/28/list_outline';
+// import Icon28ListOutline from '@vkontakte/icons/dist/28/list_outline';
 import {RouterContext} from "../contexts/routerContext";
 import useApi from "../hooks/useApi";
 import CustomSnackBar from "../components/CustomSnackbar";
@@ -33,7 +33,7 @@ const More = () => {
 										name: 'Помощь проекту Balance',
 										quantity: 1,
 										price: data.amount * 100,
-										sum: data.amount * 100 * 1,
+										sum: data.amount * 100,
 										income: false,
 										modifiers: [],
 										properties: [{transactionId: data.transaction_id}],
@@ -52,9 +52,9 @@ const More = () => {
 			});
 		});
 
-	const onCellClick = (e) => {
-		dispatch({type: 'SET_PANEL', payload: { panel: e.currentTarget.dataset.panel }});
-		}
+	// const onCellClick = (e) => {
+	// 	dispatch({type: 'SET_PANEL', payload: { panel: e.currentTarget.dataset.panel }});
+	// 	}
 
 	const onClose = useCallback(() => {
 		dispatch({ type: 'UNSET_ERROR'});
@@ -83,17 +83,17 @@ const More = () => {
 			<PanelHeader>
 				Дополнительно
 			</PanelHeader>
-			<Group>
-				<Header mode={'secondary'}>Дополнительно</Header>
-				<SimpleCell
-					data-panel={'catalog'}
-					expandable
-					before={<Icon28ListOutline />}
-					onClick = {onCellClick}
-				>
-					Справочник
-				</SimpleCell>
-			</Group>
+			{/*<Group>*/}
+			{/*	<Header mode={'secondary'}>Дополнительно</Header>*/}
+			{/*	<SimpleCell*/}
+			{/*		data-panel={'catalog'}*/}
+			{/*		expandable*/}
+			{/*		before={<Icon28ListOutline />}*/}
+			{/*		onClick = {onCellClick}*/}
+			{/*	>*/}
+			{/*		Справочник*/}
+			{/*	</SimpleCell>*/}
+			{/*</Group>*/}
 			{
 				osName !== IOS 
 				&&
