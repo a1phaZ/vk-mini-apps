@@ -15,26 +15,27 @@ import useApi from "../hooks/useApi";
 import bridge from '@vkontakte/vk-bridge';
 import prepare from "../handlers/prepare";
 import CustomSnackBar from "../components/CustomSnackbar";
+import {format} from 'date-fns';
 
 const AddDay = ({item}) => {
   const SUCCESS_MESSAGE = 'Добавление прошло успешно';
+  const [editedItem, setEditedItem] = useState(() => {
+    return item || null;
+  })
   const [name, setName] = useState(() => {
-    return item?.name || '';
+    return editedItem?.name || '';
   });
   const [date, setDate] = useState(() => {
-    const date = item && item?.canEditDate ? new Date(item.dateTime) : new Date();
-    const m = date.getMonth()+1 > 9 ? date.getMonth()+1 : `0${date.getMonth()+1}`;
-    const d = date.getDate() > 9 ? date.getDate() : `0${date.getDate()}`;
-    return `${date.getFullYear()}-${m}-${d}`;
+    return format(new Date(), 'yyyy-MM-dd');
   });
   const [quantity, setQuantity] = useState(() => {
-    return item?.quantity || 1
+    return editedItem?.quantity || 1
   });
   const [price, setPrice] = useState(() => {
-    return item?.price / 100 || ''
+    return editedItem?.price / 100 || ''
   });
   const [income, setIncome] = useState(() => {
-    return item?.income
+    return editedItem?.income
   });
   const [snackbar, setSnackbar] = useState(null);
   const [qr, setQR] = useState(null);
@@ -86,7 +87,6 @@ const AddDay = ({item}) => {
           modifiers: [],
           properties: [],
           canDelete: true,
-          canEditDate: true
         }
       ]
     };
@@ -94,7 +94,7 @@ const AddDay = ({item}) => {
     if (item && item._id) {body.id = item._id}
     //console.log('body', body);
     doApiFetch(body);
-
+    setEditedItem(null);
     setName('');
     setQuantity(1);
     setIncome(false);
@@ -180,8 +180,8 @@ const AddDay = ({item}) => {
     </Alert>
   )
 
-  const dateInput = (item) => {
-    if (!item) {
+  const dateInput = (editedItem) => {
+    if (!editedItem) {
       return (
         <Input
           type={'date'}
@@ -196,7 +196,6 @@ const AddDay = ({item}) => {
       }
   }
 
-  console.log(item);
   return(
     <Fragment>
       <PanelHeader
@@ -223,11 +222,11 @@ const AddDay = ({item}) => {
             ><Icon24Qr /></PanelHeaderButton>
           }
         >
-          {item ? `Редактирование '${item.name}'`: 'Добавить запись'}
+          {editedItem ? `Редактирование '${editedItem.name}'`: 'Добавить запись'}
         </PanelHeaderContent>
       </PanelHeader>
       <FormLayout style={{paddingBottom: 40}}>
-        {dateInput(item)}
+        {dateInput(editedItem)}
         <Checkbox
           name={'income'}
           checked={income}
