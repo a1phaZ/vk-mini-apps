@@ -17,26 +17,31 @@ import prepare from "../handlers/prepare";
 import CustomSnackBar from "../components/CustomSnackbar";
 import {format} from 'date-fns';
 
-const AddDay = ({item}) => {
-  const SUCCESS_MESSAGE = 'Добавление прошло успешно';
+const AddDay = () => {
+  const SUCCESS_MESSAGE = 'Успешно';
+  const [state, dispatch] = useContext(RouterContext);
   const [editedItem, setEditedItem] = useState(() => {
-    return item || null;
+    return state.item || null;
   })
   const [name, setName] = useState(() => {
     return editedItem?.name || '';
   });
   const [date, setDate] = useState(() => {
-    return format(new Date(), 'yyyy-MM-dd');
+    const d = editedItem?.dateTime || new Date();
+    return format(new Date(d), 'yyyy-MM-dd');
   });
   const [quantity, setQuantity] = useState(() => {
     return editedItem?.quantity || 1
   });
+  const [quantityValid, setQuantityValid] = useState(true);
   const [price, setPrice] = useState(() => {
     return editedItem?.price / 100 || ''
   });
+  const [priceValid, setPriceValid] = useState(true);
   const [income, setIncome] = useState(() => {
     return editedItem?.income || false
   });
+
   const [description, setDescription] = useState(() => {
     return editedItem?.description || ''
   });
@@ -45,7 +50,6 @@ const AddDay = ({item}) => {
   });
   const [snackbar, setSnackbar] = useState(null);
   const [qr, setQR] = useState(null);
-  const [state, dispatch] = useContext(RouterContext);
   const [{response, error}, doApiFetch] = useApi('/day');
   const [receipts, doFnsFetch] = useApi('/day/receipt');
   const [startFetchData, setStartFetchData] = useState(false);
@@ -225,7 +229,11 @@ const AddDay = ({item}) => {
           top={'Дата'}
           name={'date'}
           value={date}
-          onChange={(e)=>{setDate(e.currentTarget.value)}}
+          onChange={(e)=>{
+            if (!!e.currentTarget.value) {
+              setDate(e.currentTarget.value)
+            }}
+          }
         />
       )
       } else {
@@ -262,6 +270,13 @@ const AddDay = ({item}) => {
           {editedItem ? `Редактирование '${editedItem.name}'`: 'Добавить запись'}
         </PanelHeaderContent>
       </PanelHeader>
+
+      {/*<Group>*/}
+      {/*  <CardScroll>*/}
+      {/*    <CardItems />*/}
+      {/*  </CardScroll>*/}
+      {/*</Group>*/}
+
       <FormLayout style={{paddingBottom: 40}}>
         {dateInput(editedItem)}
         <Checkbox
@@ -279,26 +294,44 @@ const AddDay = ({item}) => {
           onChange={(e)=>{setName(e.currentTarget.value)}}
         />
         <Input
+          className={'number-input'}
           type={'number'}
           top={'Количество'}
           name={'quantity'}
+          pattern={'[0-9]*[.,]?[0-9]+'}
           value={quantity}
-          onChange={(e)=>{setQuantity(e.currentTarget.value)}}
+          status={quantityValid ? 'valid' : 'error'}
+          bottom={!quantityValid ? 'Введите корректное значение' : null}
+          onChange={(e)=>{
+            setQuantityValid(e.currentTarget.validity.valid);
+            setQuantity(e.currentTarget.value)
+          }}
+          step={'0.000000001'}
         />
         <Input
+          className={'number-input'}
           type={'number'}
           top={'Цена'}
           name={'price'}
+          pattern={'[0-9.]*'}
           value={price}
-          onChange={(e)=>{setPrice(e.currentTarget.value)}}
+          status={priceValid ? 'valid' : 'error'}
+          bottom={!priceValid ? 'Введите корректное значение' : null}
+          onChange={(e)=>{
+            setPriceValid(e.currentTarget.validity.valid);
+            setPrice(e.currentTarget.value)
+          }}
+          step={'0.001'}
         />
-        <Textarea
-          top={'Описание'}
-          placeholder={'Почему вы потратили на это деньги?'}
-          name={'description'}
-          value={description}
-          onChange={e => setDescription(e.currentTarget.value)}
-        />
+        {!income &&
+          <Textarea
+            top={'Описание'}
+            placeholder={'Почему вы потратили на это деньги?'}
+            name={'description'}
+            value={description}
+            onChange={e => setDescription(e.currentTarget.value)}
+          />
+        }
         {
           editedItem?.canDelete
           &&
@@ -312,7 +345,7 @@ const AddDay = ({item}) => {
         }
         <FixedLayout style={{marginBottom: '1em'}} vertical="bottom">
           {
-            item
+            editedItem
               ?
                 <Button
                   size="xl"
