@@ -58,7 +58,7 @@ const Balance = ({setReceiptFromBalance}) => {
 					autoclose: true,
 					mode: 'cancel'
 				}, {
-					title: 'Добавить остаток',
+					title: 'Добавить',
 					autoclose: true,
 					action: () => dispatch({type: 'SET_PANEL', payload: { panel: 'add'}})
 				}]}
