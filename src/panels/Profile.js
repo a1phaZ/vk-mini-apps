@@ -71,8 +71,6 @@ const Profile = () =>{
 	const [formState, dispatchForm] = useReducer(reducer, initialState);
 	const osName = platform();
 
-	console.log({fnsResponse});
-
 	useEffect(()=>{
 		bridge.subscribe(({ detail: { type, data }}) => {
 			switch (type) {
@@ -223,13 +221,13 @@ const Profile = () =>{
 						}}
 							style={{margin: '0px', width: '49%'}}
 						>
-							Получить пароль
+							Регистрация
 						</Button>
 						<Button size='l' data-type={'restore'} onClick={(e) => {
 							setFnsPasswordType(e.currentTarget.dataset.type);
 							setFetchToFns(true);
 						}} style={{margin: '0px', width: '49%'}}	>
-							Восстановить пароль
+							Забыли пароль?
 						</Button>
 					</Div>
 				</FormLayoutGroup>
