@@ -1,4 +1,4 @@
-import React, {useState, useEffect, Fragment, useContext, useReducer} from 'react';
+import React, {useState, useEffect, Fragment, useContext, useReducer, useCallback} from 'react';
 import {
 	FormLayout,
 	IOS,
@@ -14,6 +14,7 @@ import useApi from "../hooks/useApi";
 import {RouterContext} from "../contexts/routerContext";
 import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
 import Icon16Done from '@vkontakte/icons/dist/16/done';
+import CustomSnackBar from "../components/CustomSnackbar";
 
 const initialState = {
 	email: '',
@@ -70,6 +71,8 @@ const Profile = () =>{
 	const [formState, dispatchForm] = useReducer(reducer, initialState);
 	const osName = platform();
 
+	console.log({fnsResponse});
+
 	useEffect(()=>{
 		bridge.subscribe(({ detail: { type, data }}) => {
 			switch (type) {
@@ -86,6 +89,11 @@ const Profile = () =>{
 			}
 		});
 	}, []);
+
+	const onClose = useCallback(() => {
+		dispatch({ type: 'UNSET_ERROR'});
+		setSnackbar(null);
+	}, [dispatch]);
 
 	useEffect(() => {
 		if (!init) return;
@@ -138,6 +146,11 @@ const Profile = () =>{
 			</Snackbar>
 		)
 	}, [fnsResponse.response]);
+
+	useEffect(() => {
+		if (!fnsResponse.error) return;
+		setSnackbar(<CustomSnackBar message={state.error.message} isError={true} onClose={onClose}/>);
+	}, [fnsResponse.error]);
 
 	const getDataFromVK = () => {
 		bridge.send("VKWebAppGetPersonalCard", {"type": ["phone", "email"]});
