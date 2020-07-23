@@ -3,10 +3,9 @@ import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader
 import FormLayout from "@vkontakte/vkui/dist/components/FormLayout/FormLayout";
 import Input from "@vkontakte/vkui/dist/components/Input/Input";
 import PanelHeaderButton from "@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton";
-import {IOS, platform, FixedLayout, Alert, Textarea} from "@vkontakte/vkui";
+import {IOS, platform, FixedLayout, Alert, Textarea, Radio} from "@vkontakte/vkui";
 import Icon24Back from '@vkontakte/icons/dist/24/back';
 import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
-import Checkbox from "@vkontakte/vkui/dist/components/Checkbox/Checkbox";
 import Button from "@vkontakte/vkui/dist/components/Button/Button";
 import Icon24Qr from '@vkontakte/icons/dist/24/qr';
 import PanelHeaderContent from "@vkontakte/vkui/dist/components/PanelHeaderContent/PanelHeaderContent";
@@ -16,6 +15,7 @@ import bridge from '@vkontakte/vk-bridge';
 import prepare from "../handlers/prepare";
 import CustomSnackBar from "../components/CustomSnackbar";
 import {format} from 'date-fns';
+import Validation from "../handlers/validation";
 
 const AddDay = () => {
   const SUCCESS_MESSAGE = 'Успешно';
@@ -33,11 +33,9 @@ const AddDay = () => {
   const [quantity, setQuantity] = useState(() => {
     return editedItem?.quantity || 1
   });
-  const [quantityValid, setQuantityValid] = useState(true);
   const [price, setPrice] = useState(() => {
     return editedItem?.price / 100 || ''
   });
-  const [priceValid, setPriceValid] = useState(true);
   const [income, setIncome] = useState(() => {
     return editedItem?.income || false
   });
@@ -231,7 +229,7 @@ const AddDay = () => {
           value={date}
           onChange={(e)=>{
             if (!!e.currentTarget.value) {
-              setDate(e.currentTarget.value)
+              setDate(Validation.overDate(e.currentTarget.value));
             }}
           }
         />
@@ -240,6 +238,8 @@ const AddDay = () => {
         return null
       }
   }
+
+  console.log(income);
 
   return(
     <Fragment>
@@ -270,22 +270,12 @@ const AddDay = () => {
           {editedItem ? `Редактирование '${editedItem.name}'`: 'Добавить запись'}
         </PanelHeaderContent>
       </PanelHeader>
-
-      {/*<Group>*/}
-      {/*  <CardScroll>*/}
-      {/*    <CardItems />*/}
-      {/*  </CardScroll>*/}
-      {/*</Group>*/}
-
       <FormLayout style={{paddingBottom: 40}}>
         {dateInput(editedItem)}
-        <Checkbox
-          name={'income'}
-          checked={income}
-          onChange={(e)=>setIncome(e.currentTarget.checked)}
-        >
-          Доход
-        </Checkbox>
+        <div>
+          <Radio name={'income'} value={false} onChange={() => {setIncome(false)}} defaultChecked={!income}>Расход</Radio>
+          <Radio name={'income'} value={false} onChange={() => {setIncome(true)}} defaultChecked={income}>Доход</Radio>
+        </div>
         <Input
           type={'text'}
           top={'Название'}
@@ -298,30 +288,24 @@ const AddDay = () => {
           type={'number'}
           top={'Количество'}
           name={'quantity'}
-          pattern={'[0-9]*[.,]?[0-9]+'}
           value={quantity}
-          status={quantityValid ? 'valid' : 'error'}
-          bottom={!quantityValid ? 'Введите корректное значение' : null}
           onChange={(e)=>{
-            setQuantityValid(e.currentTarget.validity.valid);
-            setQuantity(e.currentTarget.value)
+            setQuantity(Validation.overSize(e, 6));
           }}
-          step={'0.000000001'}
+          onKeyDown={ (e) => Validation.typeNumber(e) }
+          step={'0.01'}
         />
         <Input
           className={'number-input'}
           type={'number'}
           top={'Цена'}
           name={'price'}
-          pattern={'[0-9.]*'}
           value={price}
-          status={priceValid ? 'valid' : 'error'}
-          bottom={!priceValid ? 'Введите корректное значение' : null}
           onChange={(e)=>{
-            setPriceValid(e.currentTarget.validity.valid);
-            setPrice(e.currentTarget.value)
+            setPrice(Validation.overSize(e, 6));
           }}
-          step={'0.001'}
+          onKeyDown={ (e) => Validation.typeNumber(e) }
+          step={'0.01'}
         />
         {!income &&
           <Textarea
@@ -368,10 +352,7 @@ const AddDay = () => {
                 </Button>
           }
         </FixedLayout>
-
-        
       </FormLayout>
-
       {snackbar}
     </Fragment>
   )
