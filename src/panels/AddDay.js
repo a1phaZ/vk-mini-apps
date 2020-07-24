@@ -239,8 +239,6 @@ const AddDay = () => {
       }
   }
 
-  console.log(income);
-
   return(
     <Fragment>
       <PanelHeader
