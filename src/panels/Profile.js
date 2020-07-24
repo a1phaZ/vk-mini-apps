@@ -76,6 +76,15 @@ const Profile = () =>{
 	useEffect(()=>{
 		bridge.subscribe(({ detail: { type, data }}) => {
 			switch (type) {
+				case 'VKWebAppGetUserInfoResult':
+					dispatchForm({type: 'SET_NAME', payload: {name: `${data.first_name} ${data.last_name}`}});
+					dispatch({type: 'HIDE_LOADING'});
+					break;
+				case 'VKWebAppGetUserInfoFailed':
+					dispatchForm({type: 'SET_NAME', payload: {name: ``}});
+					dispatch({type: 'HIDE_LOADING'});
+					console.log(data);
+					break;
 				case 'VKWebAppGetPersonalCardResult':
 					dispatchForm({type: 'SET_EMAIL', payload: {email: data.email}});
 					dispatchForm({type: 'SET_PHONE', payload: {email: data.phone}});
@@ -88,7 +97,7 @@ const Profile = () =>{
 					break;
 			}
 		});
-	}, []);
+	}, [dispatch]);
 
 	const onClose = useCallback(() => {
 		dispatch({ type: 'UNSET_ERROR'});
@@ -98,8 +107,12 @@ const Profile = () =>{
 	useEffect(() => {
 		if (!init) return;
 		dispatchForm({type: 'INIT', payload: {currentUser: state.currentUser}});
+		if (state.currentUser.name === '') {
+			dispatch({type: 'SHOW_LOADING'});
+			bridge.send('VKWebAppGetUserInfo', {});
+		}
 		setInit(false);
-	}, [state, init]);
+	}, [state, init, dispatch]);
 
 	useEffect(()=>{
 		if (!startFetchData) return;
