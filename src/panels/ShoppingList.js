@@ -1,7 +1,8 @@
 import React, { useReducer, useEffect, Fragment } from 'react';
-import {Checkbox, FormLayout, Group, Input, PanelHeader, Placeholder, SimpleCell} from "@vkontakte/vkui";
+import {Checkbox, FixedLayout, FormLayout, Group, Input, PanelHeader, Placeholder, SimpleCell} from "@vkontakte/vkui";
 import Icon28DeleteOutline from '@vkontakte/icons/dist/28/delete_outline';
 import useLocalStorage from "../hooks/useLocalStorage";
+import Button from "@vkontakte/vkui/dist/components/Button/Button";
 
 const initialState = {
 	shoppingList: [],
@@ -47,6 +48,9 @@ const reducer = (state, action) => {
 		case 'DELETE_ITEM': {
 			const { shoppingList } = state;
 			shoppingList.splice(action.payload.index, 1);
+			if (shoppingList.length === 0) {
+				localStorage.removeItem('shoppingList');
+			}
 			return {
 				...state,
 				shoppingList
@@ -59,7 +63,6 @@ const reducer = (state, action) => {
 				...state,
 				shoppingList
 			}
-
 		}
 
 		default:
@@ -93,7 +96,11 @@ const ShoppingList = () => {
 	}, [list]);
 
 	useEffect(() => {
-		if (state.shoppingList.length === 0) return;
+		if (state.shoppingList.length === 0) {
+			//setList(JSON.stringify([]));
+			console.log(list);
+			return;
+		}
 		setList(JSON.stringify(state.shoppingList));
 	}, [setList, state]);
 
@@ -108,12 +115,22 @@ const ShoppingList = () => {
 			>
 				<Input
 					type={'text'}
-					top={'Наименование'}
+					top={'Название'}
 					name={'shopping-item'}
 					value={state.shoppingItem.text}
 					onChange={(e) => {dispatch({type: 'SET_SHOPPING_ITEM', payload: {text: e.currentTarget.value}})}}
 					placeholder={'Введите название'}
 				/>
+				<FixedLayout style={{marginBottom: '1em'}} vertical="bottom">
+					<Button
+						size="xl"
+						disabled={!state.shoppingItem.text}
+						mode={"commerce"}
+						onClick={() => dispatch({type: 'ADD_ITEM'})}
+					>
+						Добавить
+					</Button>
+				</FixedLayout>
 			</FormLayout>
 			<Group>
 				{ state.shoppingList.length > 0
@@ -121,10 +138,13 @@ const ShoppingList = () => {
 					shoppingList
 					:
 					<Placeholder>
-						Ваш список покупок пуст.
+						<p>Ваш список покупок пуст.</p>
+						<p>Заполните Ваш список и <strong>обязательно</strong> воспользуйтесь им в магазине.</p>
+						Для добавления элемента введите название и нажмите кнопку "Добавить"
 					</Placeholder>
 				}
 			</Group>
+
 		</Fragment>
 	)
 }
