@@ -146,9 +146,9 @@ const Profile = () =>{
 	}, [fnsResponse.response]);
 
 	useEffect(() => {
-		if (!fnsResponse.error) return;
+		if (!state.error) return;
 		setSnackbar(<CustomSnackBar message={state.error.message} isError={true} onClose={onClose}/>);
-	}, [fnsResponse.error, state.error.message, onClose]);
+	}, [state.error, onClose]);
 
 	const getDataFromVK = () => {
 		bridge.send("VKWebAppGetPersonalCard", {"type": ["phone", "email"]});
