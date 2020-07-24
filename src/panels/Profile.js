@@ -15,6 +15,7 @@ import {RouterContext} from "../contexts/routerContext";
 import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
 import Icon16Done from '@vkontakte/icons/dist/16/done';
 import CustomSnackBar from "../components/CustomSnackbar";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 const initialState = {
 	email: '',
@@ -70,6 +71,7 @@ const Profile = () =>{
 	const [state, dispatch] = useContext(RouterContext);
 	const [formState, dispatchForm] = useReducer(reducer, initialState);
 	const osName = platform();
+	const [, setToken] = useLocalStorage('token');
 
 	useEffect(()=>{
 		bridge.subscribe(({ detail: { type, data }}) => {
@@ -128,9 +130,10 @@ const Profile = () =>{
 
 	useEffect(() => {
 		if (!response) return;
+		setToken(response.user.token);
 		dispatch({type: 'SET_USER', payload: { user: response.user || null, isLoggedIn: !!response.user}});
 		dispatch({type: 'SET_VIEW', payload: { view: 'balance', panel: 'home'}});
-	}, [response, dispatch]);
+	}, [response, dispatch, setToken]);
 
 	useEffect(() => {
 		if (!fnsResponse.response) return;

@@ -7,6 +7,7 @@ import {RouterContext} from "../contexts/routerContext";
 import useApi from "../hooks/useApi";
 import CustomSnackBar from "../components/CustomSnackbar";
 import Icon28UserOutgoingOutline from '@vkontakte/icons/dist/28/user_outgoing_outline';
+import useLocalStorage from "../hooks/useLocalStorage";
 
 const More = () => {
 	const [state, dispatch] = useContext(RouterContext);
@@ -19,6 +20,7 @@ const More = () => {
 		return `${date.getFullYear()}-${m}-${d}`;
 		});
 	const [snackbar, setSnackbar] = useState(null);
+	const [, setToken] = useLocalStorage('token');
 
 	useEffect(() => {
 		bridge.subscribe(({ detail: { type, data }}) => {
@@ -112,7 +114,7 @@ const More = () => {
 				before={<Icon28UserOutgoingOutline />}
 				onClick={() => {
 					dispatch({type: 'LOGOUT'});
-					localStorage.removeItem('token');
+					setToken('');
 				}}
 			>
 				Выйти
