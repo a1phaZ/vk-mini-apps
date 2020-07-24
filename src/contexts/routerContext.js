@@ -130,7 +130,19 @@ const reducer = (state, action) => {
 			}
 		case 'LOGOUT':
 			return {
-				...initialState
+				...state,
+				view: 'authorization',
+				panel: 'authorization.login',
+				popout: null,
+				error: null,
+				password: '',
+				confirmPassword: '',
+				currentUser: null,
+				isLoggedIn: false,
+				receipts: [],
+				item: null,
+				currentDate: new Date(),
+				modal: null
 			}
 		default:
 			return state;
