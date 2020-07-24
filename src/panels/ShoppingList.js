@@ -97,8 +97,6 @@ const ShoppingList = () => {
 
 	useEffect(() => {
 		if (state.shoppingList.length === 0) {
-			//setList(JSON.stringify([]));
-			console.log(list);
 			return;
 		}
 		setList(JSON.stringify(state.shoppingList));
