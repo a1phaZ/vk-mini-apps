@@ -6,6 +6,7 @@ import Icon28MoneyCircleOutline from '@vkontakte/icons/dist/28/money_circle_outl
 import {RouterContext} from "../contexts/routerContext";
 import useApi from "../hooks/useApi";
 import CustomSnackBar from "../components/CustomSnackbar";
+import Icon28UserOutgoingOutline from '@vkontakte/icons/dist/28/user_outgoing_outline';
 
 const More = () => {
 	const [state, dispatch] = useContext(RouterContext);
@@ -52,10 +53,6 @@ const More = () => {
 			});
 		});
 
-	// const onCellClick = (e) => {
-	// 	dispatch({type: 'SET_PANEL', payload: { panel: e.currentTarget.dataset.panel }});
-	// 	}
-
 	const onClose = useCallback(() => {
 		dispatch({ type: 'UNSET_ERROR'});
 		setSnackbar(null);
@@ -73,7 +70,7 @@ const More = () => {
 			payload: {
 				error: error
 				}
-			})
+			});
 		setSnackbar(<CustomSnackBar message={state.error.message} isError={true} onClose={onClose}/>);
 		}, [error, dispatch, state.error, onClose]);
 
@@ -83,24 +80,12 @@ const More = () => {
 			<PanelHeader>
 				Дополнительно
 			</PanelHeader>
-			{/*<Group>*/}
-			{/*	<Header mode={'secondary'}>Дополнительно</Header>*/}
-			{/*	<SimpleCell*/}
-			{/*		data-panel={'catalog'}*/}
-			{/*		expandable*/}
-			{/*		before={<Icon28ListOutline />}*/}
-			{/*		onClick = {onCellClick}*/}
-			{/*	>*/}
-			{/*		Справочник*/}
-			{/*	</SimpleCell>*/}
-			{/*</Group>*/}
 			{
 				osName !== IOS 
 				&&
 				<Group>
 					<Header mode={'secondary'}>Помощь проекту</Header>
 					<SimpleCell
-						data-panel={'catalog'}
 						expandable
 						before={<Icon28MoneyCircleOutline />}
 						onClick = {() => {
@@ -113,15 +98,29 @@ const More = () => {
 									"user_id": +process.env.REACT_APP_USER_ID
 									}
 								});
-							}}
-						>
+							}
+						}
+					>
 							На кофе разработчику
-						</SimpleCell>
-					</Group>
-					}
-					{snackbar}
-				</Fragment>
-		)
+					</SimpleCell>
+				</Group>
+			}
+		<Group>
+			<Header mode={'secondary'}>Управление аккаунтом</Header>
+			<SimpleCell
+				expandable
+				before={<Icon28UserOutgoingOutline />}
+				onClick={() => {
+					dispatch({type: 'LOGOUT'});
+					localStorage.removeItem('token');
+				}}
+			>
+				Выйти
+			</SimpleCell>
+		</Group>
+		{snackbar}
+		</Fragment>
+	)
 };
 
 export default More;

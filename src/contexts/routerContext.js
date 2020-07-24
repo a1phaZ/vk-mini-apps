@@ -128,6 +128,10 @@ const reducer = (state, action) => {
 				...state,
 				modal: action.payload.modal
 			}
+		case 'LOGOUT':
+			return {
+				...initialState
+			}
 		default:
 			return state;
 	}
