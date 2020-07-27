@@ -3,6 +3,7 @@ import {Checkbox, FixedLayout, FormLayout, Group, Input, PanelHeader, Placeholde
 import Icon28DeleteOutline from '@vkontakte/icons/dist/28/delete_outline';
 import useLocalStorage from "../hooks/useLocalStorage";
 import Button from "@vkontakte/vkui/dist/components/Button/Button";
+import Validation from "../handlers/validation";
 
 const initialState = {
 	shoppingList: [],
@@ -116,7 +117,7 @@ const ShoppingList = () => {
 					top={'Название'}
 					name={'shopping-item'}
 					value={state.shoppingItem.text}
-					onChange={(e) => {dispatch({type: 'SET_SHOPPING_ITEM', payload: {text: e.currentTarget.value}})}}
+					onChange={(e) => {dispatch({type: 'SET_SHOPPING_ITEM', payload: {text: Validation.overSize(e, 20)}})}}
 					placeholder={'Введите название'}
 				/>
 				<FixedLayout style={{marginBottom: '1em'}} vertical="bottom">

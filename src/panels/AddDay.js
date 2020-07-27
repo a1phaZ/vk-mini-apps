@@ -279,7 +279,7 @@ const AddDay = () => {
           top={'Название'}
           name={'name'}
           value={name}
-          onChange={(e)=>{setName(e.currentTarget.value)}}
+          onChange={(e)=>{setName(Validation.overSize(e, 20))}}
         />
         <Input
           className={'number-input'}
