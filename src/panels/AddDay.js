@@ -53,6 +53,8 @@ const AddDay = () => {
   const [startFetchData, setStartFetchData] = useState(false);
   const [checkReceipt, setCheckReceipt] = useState(false);
   const [deleteItem, setDeleteItem] = useState(false);
+  const [statusQuantity, setStatusQuantity] = useState(true);
+  const [statusPrice, setStatusPrice] = useState(true);
   const osname = platform();
 
   const onClose = useCallback(() => {
@@ -291,8 +293,13 @@ const AddDay = () => {
           onChange={(e)=>{
             setQuantity(Validation.overSize(e, 6));
           }}
-          onKeyDown={ (e) => Validation.typeNumber(e) }
+          onKeyDown={ (e) => {
+            setStatusQuantity(e.target.validity.valid);
+            Validation.typeNumber(e)
+          } }
           step={'0.01'}
+          bottom={!statusQuantity && 'Введите корректное значение'}
+          status={!statusQuantity && 'error'}
         />
         <Input
           className={'number-input'}
@@ -303,8 +310,13 @@ const AddDay = () => {
           onChange={(e)=>{
             setPrice(Validation.overSize(e, 6));
           }}
-          onKeyDown={ (e) => Validation.typeNumber(e) }
+          onKeyDown={ (e) => {
+            setStatusPrice(e.target.validity.valid);
+            Validation.typeNumber(e)
+          } }
           step={'0.01'}
+          bottom={!statusPrice && 'Введите корректное значение'}
+          status={!statusPrice && 'error'}
         />
         {!income &&
           <Textarea
