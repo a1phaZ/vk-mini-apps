@@ -53,6 +53,7 @@ const Authorization = ({type}) => {
 		if (!response.user && response.error) {
 			setFormError(response.error);
 		} else {
+			console.log(response);
 			setToken(response.user.token);
 		}
 		dispatch({type: 'SET_USER', payload: { user: response.user || null, isLoggedIn: !!response.user}});
@@ -105,7 +106,7 @@ const Authorization = ({type}) => {
 
 	return (
 		<Fragment>
-			<PanelHeader>{type === 'login' ? 'Авторизация' : 'Регистрация'}</PanelHeader>
+			<PanelHeader>{type === 'login' ? 'Авторизация' : (type === 'register' ? 'Регистрация' : 'Сменить пароль')}</PanelHeader>
 			<Placeholder
 				icon={type === 'login' ? <Icon56LockOutline /> : <Icon56UserAddOutline />}
 				header={headerString()/*state.password.length !== 4 ? loginPassString : confPassString*/}
@@ -119,15 +120,25 @@ const Authorization = ({type}) => {
 			<FormLayout style={{textAlign: 'center'}}>
 			{
 				(type === 'login' && state.password.length === 4)
-				&& 
-					<Button size="xl" mode='commerce' onClick={formButtonClick}>{type === 'login' ? 'Авторизация' : 'Регистрация'}</Button>
+				&&
+					<Button
+						size="xl"
+						mode='commerce'
+						onClick={formButtonClick}
+					>
+						{type === 'login' ? 'Авторизация' : 'Регистрация'}
+					</Button>
 			}
 			{
 				(type !== 'login' && state.password && state.confirmPassword && state.password === state.confirmPassword)
-				&& 
-				
-					<Button mode='commerce' size="xl" onClick={formButtonClick}>{type === 'login' ? 'Авторизация' : 'Регистрация'}</Button>
-				
+				&&
+					<Button
+						mode='commerce'
+						size="xl"
+						onClick={formButtonClick}
+					>
+						{type === 'login' ? 'Авторизация' : (type === 'register' ? 'Регистрация' : 'Сменить пароль')}
+					</Button>
 			}
 			</FormLayout>
 			<Div>
@@ -140,6 +151,20 @@ const Authorization = ({type}) => {
 					data-to={type === 'login' ? 'register' : 'login'}
 				>{type === 'login' ? 'Регистрация' : 'Авторизация'}</Button>
 			</Div>
+			{
+				type === 'login'
+				&&
+				<Div>
+					<Button
+						stretched
+						mode="tertiary"
+						onClick={(e) => {
+							dispatch({type: 'SET_PANEL', payload: {panel: e.currentTarget.dataset.to}});
+						}}
+						data-to={'restore'}
+					>Забыли пароль?</Button>
+				</Div>
+			}
 		</Fragment>
 	)
 };

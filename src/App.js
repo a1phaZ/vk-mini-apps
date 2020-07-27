@@ -114,6 +114,9 @@ const App = () => {
 				<Panel id={'authorization.register'}>
 					<Authorization type={'register'} />
 				</Panel>
+				<Panel id={'authorization.restore'}>
+					<Authorization type={'restore'} />
+				</Panel>
 			</View>
 			<View id={'profile'} activePanel={state.panel} popout={state.popout}>
 				<Panel id={'profile.edit'}>
