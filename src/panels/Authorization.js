@@ -53,7 +53,6 @@ const Authorization = ({type}) => {
 		if (!response.user && response.error) {
 			setFormError(response.error);
 		} else {
-			console.log(response);
 			setToken(response.user.token);
 		}
 		dispatch({type: 'SET_USER', payload: { user: response.user || null, isLoggedIn: !!response.user}});
