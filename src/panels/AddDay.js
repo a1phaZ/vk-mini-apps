@@ -280,6 +280,7 @@ const AddDay = () => {
           name={'name'}
           value={name}
           onChange={(e)=>{setName(Validation.overSize(e, 20))}}
+          bottom={`Введено ${name.length} из 20`}
         />
         <Input
           className={'number-input'}

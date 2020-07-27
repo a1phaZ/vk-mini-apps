@@ -118,6 +118,7 @@ const ShoppingList = () => {
 					name={'shopping-item'}
 					value={state.shoppingItem.text}
 					onChange={(e) => {dispatch({type: 'SET_SHOPPING_ITEM', payload: {text: Validation.overSize(e, 20)}})}}
+					bottom={`Введено ${state.shoppingItem.text.length || 0} из 20`}
 					placeholder={'Введите название'}
 				/>
 				<FixedLayout style={{marginBottom: '1em'}} vertical="bottom">
