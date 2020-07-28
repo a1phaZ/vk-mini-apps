@@ -87,7 +87,7 @@ const Profile = () =>{
 					break;
 				case 'VKWebAppGetPersonalCardResult':
 					dispatchForm({type: 'SET_EMAIL', payload: {email: data.email}});
-					dispatchForm({type: 'SET_PHONE', payload: {email: data.phone}});
+					dispatchForm({type: 'SET_PHONE', payload: {phone: data.phone}});
 					console.log('profile', data);
 					break;
 				case 'VKWebAppGetPersonalCardFailed':
