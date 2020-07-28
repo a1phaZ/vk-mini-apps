@@ -29,6 +29,7 @@ const reducer = (state, action) => {
 				...state,
 				view: action.payload.view,
 				panel: `${action.payload.view}.${action.payload.panel}`,
+				error: null,
 				item: null
 			};
 		case 'SET_PANEL':
@@ -38,6 +39,7 @@ const reducer = (state, action) => {
 				password: '',
 				confirmPassword: '',
 				panel: `${state.view}.${action.payload.panel}`,
+				error: null,
 				item: null
 			};
 		case 'SHOW_LOADING':
