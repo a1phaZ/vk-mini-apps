@@ -216,7 +216,7 @@ const Profile = () =>{
 						onClick={getDataFromVK}
 					/>
 				</FormLayoutGroup>
-				<FormLayoutGroup
+				{<FormLayoutGroup
 					top={'Пароль от ФНС'}
 					bottom={'Если вы когда-либо регистрировались в сервисе проверки чеков ФНС, но забыли пароль нажмите "Восстановить пароль". ' +
 					'Если не хотите получать пароль по каким то причинам, оставьте поле ввода пароля пустым, но тогда у вас не будет возможности' +
@@ -228,25 +228,41 @@ const Profile = () =>{
 						placeholder={'Введите пароль ФНС'}
 						name={'kktPassword'}
 						value={formState.kktPassword}
-						onChange={(e) => {dispatchForm({type: 'SET_PASSWORD', payload: {password: e.currentTarget.value}})}}
-					/>
-					<Div  style={{display: 'flex', justifyContent:'space-between'}}>
-						<Button size='l' data-type={'signup'} onClick={(e) => {
-							setFnsPasswordType(e.currentTarget.dataset.type);
-							setFetchToFns(true);
+						onChange={(e) => {
+							dispatchForm({type: 'SET_PASSWORD', payload: {password: e.currentTarget.value}})
 						}}
+					/>
+					<Div style={{display: 'flex', justifyContent: 'space-between'}}>
+						<Button
+							size='l'
+							data-type={'signup'}
+							onClick={
+								(e) => {
+									setFnsPasswordType(e.currentTarget.dataset.type);
+									setFetchToFns(true);
+								}
+							}
 							style={{margin: '0px', width: '49%'}}
+							disabled={!(formState.email && formState.name && formState.phone)}
 						>
 							Регистрация
 						</Button>
-						<Button size='l' data-type={'restore'} onClick={(e) => {
-							setFnsPasswordType(e.currentTarget.dataset.type);
-							setFetchToFns(true);
-						}} style={{margin: '0px', width: '49%'}}	>
+						<Button
+							size='l'
+							data-type={'restore'}
+							onClick={
+								(e) => {
+									setFnsPasswordType(e.currentTarget.dataset.type);
+									setFetchToFns(true);
+								}
+							}
+							style={{margin: '0px', width: '49%'}}
+							disabled={!(formState.email && formState.name && formState.phone)}
+						>
 							Забыли пароль?
 						</Button>
 					</Div>
-				</FormLayoutGroup>
+				</FormLayoutGroup>}
 
 				<FixedLayout style={{marginBottom: '1em'}} vertical="bottom">
 					<Button size="xl" mode="commerce" onClick={() => {
