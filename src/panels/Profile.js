@@ -16,6 +16,7 @@ import Avatar from "@vkontakte/vkui/dist/components/Avatar/Avatar";
 import Icon16Done from '@vkontakte/icons/dist/16/done';
 import CustomSnackBar from "../components/CustomSnackbar";
 import useLocalStorage from "../hooks/useLocalStorage";
+import './styles.css';
 
 const initialState = {
 	email: '',
@@ -264,7 +265,7 @@ const Profile = () =>{
 					</Div>
 				</FormLayoutGroup>}
 
-				<FixedLayout style={{marginBottom: '1em'}} vertical="bottom">
+				<FixedLayout className={'fixed-button'} style={{marginBottom: '1em'}} vertical="bottom">
 					<Button size="xl" mode="commerce" onClick={() => {
 						setStartFetchData(true);
 					}}>

@@ -16,6 +16,7 @@ import prepare from "../handlers/prepare";
 import CustomSnackBar from "../components/CustomSnackbar";
 import {format} from 'date-fns';
 import Validation from "../handlers/validation";
+import './styles.css';
 
 const AddDay = () => {
   const SUCCESS_MESSAGE = 'Успешно';
@@ -267,7 +268,7 @@ const AddDay = () => {
             ><Icon24Qr /></PanelHeaderButton>
           }
         >
-          {editedItem ? `Редактирование '${editedItem.name}'`: 'Добавить запись'}
+          {editedItem ? `Редактировать`: 'Добавить'}
         </PanelHeaderContent>
       </PanelHeader>
       <FormLayout style={{paddingBottom: 40}}>
@@ -324,7 +325,8 @@ const AddDay = () => {
             placeholder={'Почему вы потратили на это деньги?'}
             name={'description'}
             value={description}
-            onChange={e => setDescription(e.currentTarget.value)}
+            onChange={e => setDescription(Validation.overSize(e,50))}
+						bottom={`Введено ${description.length} из 50`}
           />
         }
         {
@@ -338,7 +340,7 @@ const AddDay = () => {
             Удалить {income ? "доход" : "расход"}
           </Button>
         }
-        <FixedLayout style={{marginBottom: '1em'}} vertical="bottom">
+        <FixedLayout className={'fixed-button'} style={{marginBottom: '1em',}} vertical="bottom">
           {
             editedItem
               ?

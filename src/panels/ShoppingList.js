@@ -4,6 +4,7 @@ import Icon28DeleteOutline from '@vkontakte/icons/dist/28/delete_outline';
 import useLocalStorage from "../hooks/useLocalStorage";
 import Button from "@vkontakte/vkui/dist/components/Button/Button";
 import Validation from "../handlers/validation";
+import './styles.css';
 
 const initialState = {
 	shoppingList: [],
@@ -121,7 +122,7 @@ const ShoppingList = () => {
 					bottom={`Введено ${state.shoppingItem.text.length || 0} из 20`}
 					placeholder={'Введите название'}
 				/>
-				<FixedLayout style={{marginBottom: '1em'}} vertical="bottom">
+				<FixedLayout className={'fixed-button'} style={{marginBottom: '1em'}} vertical="bottom">
 					<Button
 						size="xl"
 						disabled={!state.shoppingItem.text}
