@@ -1,14 +1,9 @@
 import React, {useState, useEffect, Fragment, useContext, useReducer, useCallback} from 'react';
 import {
 	FormLayout,
-	IOS,
-	PanelHeader,
-	platform,
-	PanelHeaderButton, Button, Input, FormLayoutGroup, Snackbar,
+	PanelHeader, Button, Input, FormLayoutGroup, Snackbar,
 	Div, FixedLayout
 } from '@vkontakte/vkui';
-import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
-import Icon24Back from '@vkontakte/icons/dist/24/back';
 import bridge from "@vkontakte/vk-bridge";
 import useApi from "../hooks/useApi";
 import {RouterContext} from "../contexts/routerContext";
@@ -71,7 +66,6 @@ const Profile = () =>{
 	const [startFetchData, setStartFetchData] = useState(false);
 	const [state, dispatch] = useContext(RouterContext);
 	const [formState, dispatchForm] = useReducer(reducer, initialState);
-	const osName = platform();
 	const [, setToken] = useLocalStorage('token');
 
 	useEffect(()=>{
@@ -174,11 +168,11 @@ const Profile = () =>{
 	return(
 		<Fragment>
 			<PanelHeader
-				left={<PanelHeaderButton onClick={() => {
-					dispatch({type: 'SET_VIEW', payload: {view: 'balance', panel: 'home'}})
-				}}>
-					{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
-				</PanelHeaderButton>}
+				// left={<PanelHeaderButton onClick={() => {
+				// 	dispatch({type: 'SET_VIEW', payload: {view: 'balance', panel: 'home'}})
+				// }}>
+				// 	{osName === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}
+				// </PanelHeaderButton>}
 			>
 				Профиль
 			</PanelHeader>
