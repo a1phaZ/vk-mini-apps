@@ -3,12 +3,12 @@ import PanelHeader from '@vkontakte/vkui/dist/components/PanelHeader/PanelHeader
 import FormLayout from "@vkontakte/vkui/dist/components/FormLayout/FormLayout";
 import Input from "@vkontakte/vkui/dist/components/Input/Input";
 import PanelHeaderButton from "@vkontakte/vkui/dist/components/PanelHeaderButton/PanelHeaderButton";
-import {IOS, platform, FixedLayout, Alert, Textarea, Radio} from "@vkontakte/vkui";
-import Icon24Back from '@vkontakte/icons/dist/24/back';
-import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
+import {FixedLayout, Alert, Textarea, Radio} from "@vkontakte/vkui";
+// import Icon24Back from '@vkontakte/icons/dist/24/back';
+// import Icon28ChevronBack from '@vkontakte/icons/dist/28/chevron_back';
 import Button from "@vkontakte/vkui/dist/components/Button/Button";
 import Icon24Qr from '@vkontakte/icons/dist/24/qr';
-import PanelHeaderContent from "@vkontakte/vkui/dist/components/PanelHeaderContent/PanelHeaderContent";
+// import PanelHeaderContent from "@vkontakte/vkui/dist/components/PanelHeaderContent/PanelHeaderContent";
 import {RouterContext} from "../contexts/routerContext";
 import useApi from "../hooks/useApi";
 import bridge from '@vkontakte/vk-bridge';
@@ -56,7 +56,7 @@ const AddDay = () => {
   const [deleteItem, setDeleteItem] = useState(false);
   const [statusQuantity, setStatusQuantity] = useState(true);
   const [statusPrice, setStatusPrice] = useState(true);
-  const osname = platform();
+  // const osname = platform();
 
   const onClose = useCallback(() => {
     dispatch({ type: 'UNSET_ERROR'});
@@ -246,30 +246,29 @@ const AddDay = () => {
     <Fragment>
       <PanelHeader
         left={
-          <PanelHeaderButton key={'back'} onClick={(e) => {
-            dispatch({type: 'SET_PANEL', payload: { panel: e.currentTarget.dataset.to}});
-          }} data-to={'home'}>{osname === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}</PanelHeaderButton>
-        }
-      >
-        <PanelHeaderContent
-          before={
+          <>
+          {/*<PanelHeaderButton key={'back'} onClick={(e) => {*/}
+          {/*  dispatch({type: 'SET_PANEL', payload: { panel: e.currentTarget.dataset.to}});*/}
+          {/*}} data-to={'home'}>{osname === IOS ? <Icon28ChevronBack/> : <Icon24Back/>}</PanelHeaderButton>*/}
+          {
             bridge.supports('VKWebAppOpenCodeReader') &&
             <PanelHeaderButton
-              key={'qr'}
-              data-to={'qr'}
-              onClick={() => {
-                dispatch({ type: 'UNSET_ERROR'});
-                if (!(!!state.currentUser.email && !!state.currentUser.phone && !!state.currentUser.password)) {
-                  dispatch({type: 'SET_POPOUT', payload: { popout: popout }});
-                } else {
-                  bridge.send('VKWebAppOpenCodeReader', {});
-                }
-              }}
+            key={'qr'}
+            data-to={'qr'}
+            onClick={() => {
+              dispatch({ type: 'UNSET_ERROR'});
+              if (!(!!state.currentUser.email && !!state.currentUser.phone && !!state.currentUser.password)) {
+                dispatch({type: 'SET_POPOUT', payload: { popout: popout }});
+              } else {
+                bridge.send('VKWebAppOpenCodeReader', {});
+              }
+            }}
             ><Icon24Qr /></PanelHeaderButton>
           }
-        >
-          {editedItem ? `Редактировать`: 'Добавить'}
-        </PanelHeaderContent>
+          </>
+        }
+      >
+        {editedItem ? `Редактировать`: 'Добавить'}
       </PanelHeader>
       <FormLayout style={{paddingBottom: 40}}>
         {dateInput(editedItem)}
